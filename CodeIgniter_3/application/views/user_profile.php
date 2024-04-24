@@ -138,7 +138,10 @@
         <div class="post-grid">
             <?php foreach ($posts as $post): ?>
                 <div class="post">
-                    <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                    <a href="<?= site_url('post/detail/' . $post['id']); ?>">
+                        <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                    </a>
+                    <p><?= htmlspecialchars($post['caption']); ?></p>
                     <!-- Add other post details if needed -->
                 </div>
             <?php endforeach; ?>
