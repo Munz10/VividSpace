@@ -74,4 +74,17 @@ class User_model extends CI_Model {
 
         return $query->num_rows() > 0;
     }  
+
+    public function count_followers($user_id) {
+        $this->db->where('following_id', $user_id);
+        $this->db->from('user_follows');
+        return $this->db->count_all_results();
+    }
+    
+    public function count_following($user_id) {
+        $this->db->where('follower_id', $user_id);
+        $this->db->from('user_follows');
+        return $this->db->count_all_results();
+    }
+    
 }

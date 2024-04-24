@@ -68,9 +68,9 @@
             <p>I am interested in: <!-- Add dynamic bio data when available --></p>
         </div>
         <div class="followers-info">
-            <p><strong>123</strong> Followers</p> <!-- Replace with dynamic data later -->
-            <p><strong>333</strong> Following</p> <!-- Replace with dynamic data later -->
-        </div>
+            <p><strong><?= $followers_count ?></strong> Followers</p>
+            <p><strong><?= $following_count ?></strong> Following</p>
+        </div>>
     </div>
 
     <div class="content-section">
