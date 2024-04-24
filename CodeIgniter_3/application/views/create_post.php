@@ -5,13 +5,18 @@
     <title>Create Post - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
+        body .header-container{
             background-color: #f8f9fa;
+        }
+        .navbar {
+            background: #fff;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         .container {
             background: #fff;
             padding: 2rem;
-            margin-top: 2rem;
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
@@ -55,11 +60,24 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>VividSpace</h1>
+    <!-- Header -->
+    <div class="container header-container">
+        <div class="row align-items-center my-4">
+                <div class="col-6 col-md-8 d-flex align-items-center">
+                    <!-- Logo -->
+                    <h1>VividSpace</h1>
+                    <!-- Home button -->
+                    <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
+                </div>
+                <div class="col-6 col-md-4 d-flex justify-content-end">
+                    <!-- User Icon -->
+                    <a href="<?= site_url('profile'); ?>">
+                        <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
+                    </a>
+                </div>
         </div>
-
+    </div>
+    <div class="container">
         <!-- Create Post Form -->
         <form action="<?= site_url('profile/save_post'); ?>" method="post" enctype="multipart/form-data">
             <div class="form-group">

@@ -86,5 +86,13 @@ class User_model extends CI_Model {
         $this->db->from('user_follows');
         return $this->db->count_all_results();
     }
+
+    public function get_following_user_ids($user_id) {
+        $this->db->select('following_id');
+        $this->db->from('user_follows');
+        $this->db->where('follower_id', $user_id);
+        $query = $this->db->get();
+        return array_column($query->result_array(), 'following_id');
+    }  
     
 }

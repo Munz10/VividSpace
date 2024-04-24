@@ -32,16 +32,16 @@ class Profile extends CI_Controller {
     }
 
     public function feed() {
-        // Hardcoded posts data
-        $data['posts'] = [
-            ['id' => 1, 'content' => 'Post by user1', 'author' => 'user1'],
-            ['id' => 2, 'content' => 'Post by user2', 'author' => 'user2'],
-            // ... add more as needed
-        ];
+        $user_id = $this->session->userdata('user_id');
+        // Get an array of user IDs that the current user is following
+        $following_ids = $this->User_model->get_following_user_ids($user_id);
+        
+        // Get the posts from these users
+        $data['posts'] = $this->Post_model->get_posts_by_user_ids($following_ids);
         
         // Load the feed view with the posts data
         $this->load->view('feed', $data);
-    }
+    }    
     
     public function create_post() {
         // Load the create post view
