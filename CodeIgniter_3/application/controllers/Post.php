@@ -28,5 +28,38 @@ class Post extends CI_Controller {
         }
     }
     
+    // Method to toggle a like
+    public function toggle_like() {
+        $post_id = $this->input->post('post_id');
+        $user_id = $this->session->userdata('user_id');
+        $likes_count = $this->Post_model->toggle_like($post_id, $user_id);
+
+        echo json_encode(['likes_count' => $likes_count]);
+    }
+
+    // Method to add a comment
+    public function add_comment() {
+        $post_id = $this->input->post('post_id');
+        $user_id = $this->session->userdata('user_id');
+        $content = $this->input->post('content');
+        $comment_id = $this->Post_model->add_comment($post_id, $user_id, $content);
+
+        if ($comment_id) {
+            $comment = ['id' => $comment_id, 'content' => $content];
+            echo json_encode(['comment' => $comment]);
+        } else {
+            echo json_encode(['error' => 'Unable to add comment']);
+        }
+    }
+
+    public function get_comments($post_id) {
+        // Get comments from the model
+        $comments = $this->Post_model->get_comments_by_post_id($post_id);
+    
+        // Load a view that formats the comments as HTML
+        $data['comments'] = $comments;
+        $this->load->view('partials/comments', $data);
+    }
+    
     // ... Other methods related to posts ...
 }
