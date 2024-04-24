@@ -15,6 +15,14 @@
                 <?= form_error('username'); ?> 
             </div>
             <div class="form-group">
+                <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                <?= form_error('first_name'); ?> 
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                <?= form_error('last_name'); ?> 
+            </div>
+            <div class="form-group">
                 <input type="email" class="form-control" name="email" placeholder="Email" required>
                 <?= form_error('email'); ?> 
             </div>
