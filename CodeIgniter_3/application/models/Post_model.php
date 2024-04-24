@@ -68,4 +68,14 @@ class Post_model extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+
+    public function get_posts_by_user_ids($user_ids) {
+        $this->db->select('posts.*, users.username as author_username');
+        $this->db->from('posts');
+        $this->db->join('users', 'users.id = posts.user_id');
+        $this->db->where_in('posts.user_id', $user_ids);
+        $query = $this->db->get();
+        return $query->result_array();
+    }   
+    
 }
