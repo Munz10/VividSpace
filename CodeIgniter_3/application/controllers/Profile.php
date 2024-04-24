@@ -86,7 +86,24 @@ class Profile extends CI_Controller {
     
     public function view($username) {
         $data['user_profile'] = $this->User_model->get_user_by_username($username);
-        $data['posts'] = $this->Post_model->get_posts_by_user_id($data['user_profile']['id']);
+        
+        // Assuming $data['user_profile'] contains the profile you're viewing
+        $follower_id = $this->session->userdata('user_id'); // The current logged-in user
+        $following_id = $data['user_profile']['id']; // The user being viewed
+        
+        // Check if the current user is following the viewed profile
+        $data['is_following'] = $this->User_model->is_following($follower_id, $following_id);
+        
+        // Get posts for the user
+        $user_id = $data['user_profile']['id']; // You'll get this after you've set up $data['user_profile']
+        $data['posts'] = $this->Post_model->get_posts_by_user_id($user_id);
+
+        // Check if the posts are returned; if not, set it as an empty array
+        if (!$data['posts']) {
+            $data['posts'] = []; // This ensures $posts is always an array
+        }
+    
+        // Now load the view and pass the $data array
         $this->load->view('user_profile', $data);
     }
 }

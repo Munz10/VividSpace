@@ -124,7 +124,11 @@
         </div>
         <div class="profile-header">
             <h1><?= htmlspecialchars($user_profile['username']); ?></h1>
-            <button class="btn btn-primary">Follow</button>
+            <button class="btn btn-primary follow-btn" data-following-id="<?= $user_profile['id']; ?>"
+                    onclick="toggleFollow(this);">
+                <?= $is_following ? 'Unfollow' : 'Follow'; ?>
+            </button>
+
         </div>
         <div class="profile-info">
             <div class="profile-image"></div>
@@ -148,6 +152,42 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= base_url('assets/js/bootstrap.min.js'); ?>"></script>
+
+    <script>
+        function toggleFollow(buttonElement) {
+            var button = $(buttonElement);
+            var followingId = button.data('following-id');
+            var isFollowing = button.text().trim() === 'Unfollow';
+
+            $.ajax({
+                url: '<?= site_url('follow/'); ?>' + (isFollowing ? 'do_unfollow' : 'do_follow'),
+                type: 'POST',
+                data: { following_id: followingId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Toggle the button text based on the action taken
+                        button.text(isFollowing ? 'Follow' : 'Unfollow');
+                    } 
+                    // else {
+                    //     alert('Could not update the follow status.');
+                    // }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // If there is an error with the request
+                    console.error("Error: " + textStatus + ", " + errorThrown);
+                }
+            });
+        }
+
+        // Since you're using jQuery, make sure to wrap your function calls inside a document ready block
+        $(document).ready(function() {
+            $('.follow-btn').on('click', function() {
+                toggleFollow(this);
+            });
+        });
+    </script>
 </body>
 </html>
