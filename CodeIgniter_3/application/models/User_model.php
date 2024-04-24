@@ -49,5 +49,29 @@ class User_model extends CI_Model {
         $query = $this->db->get('users');
         return $query->row_array();
     }
+    
+    public function follow($follower_id, $following_id) {
+        if (!$this->is_following($follower_id, $following_id)) {
+            $data = array(
+                'follower_id' => $follower_id,
+                'following_id' => $following_id
+            );
+            return $this->db->insert('user_follows', $data);
+        }
+        return false;
+    }
 
+    public function unfollow($follower_id, $following_id) {
+        $this->db->where('follower_id', $follower_id);
+        $this->db->where('following_id', $following_id);
+        return $this->db->delete('user_follows');
+    }
+
+    public function is_following($follower_id, $following_id) {
+        $this->db->where('follower_id', $follower_id);
+        $this->db->where('following_id', $following_id);
+        $query = $this->db->get('user_follows');
+
+        return $query->num_rows() > 0;
+    }  
 }
