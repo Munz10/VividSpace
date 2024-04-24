@@ -40,7 +40,9 @@
         <?php foreach ($posts as $post): ?>
         <div class="col-md-4 mb-3">
             <div class="card">
-                <img src="path_to_post_image" class="card-img-top" alt="Post Image">
+                <a href="<?= site_url('post/detail/' . $post['id']); ?>">
+                    <img src="path_to_post_image" class="card-img-top" alt="Post Image">
+                </a>
                 <div class="card-body">
                     <h5 class="card-title">Post <?= $post['id']; ?></h5>
                     <p class="card-text"><?= htmlspecialchars($post['content']); ?></p>
