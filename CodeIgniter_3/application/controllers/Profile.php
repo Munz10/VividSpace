@@ -19,8 +19,11 @@ class Profile extends CI_Controller {
         $user_id = $this->session->userdata('user_id');
         $data['profile'] = $this->User_model->get_user_by_id($user_id);
         $data['posts'] = $this->Post_model->get_posts_by_user_id($user_id);
+        $data['followers_count'] = $this->User_model->count_followers($user_id);
+        $data['following_count'] = $this->User_model->count_following($user_id);
+        
         $this->load->view('profile', $data);
-    }
+    }    
 
     public function get_user_by_id($user_id) {
         $this->db->where('id', $user_id);
@@ -95,8 +98,12 @@ class Profile extends CI_Controller {
         $data['is_following'] = $this->User_model->is_following($follower_id, $following_id);
         
         // Get posts for the user
-        $user_id = $data['user_profile']['id']; // You'll get this after you've set up $data['user_profile']
-        $data['posts'] = $this->Post_model->get_posts_by_user_id($user_id);
+        // $user_id = $data['user_profile']['id']; // You'll get this after you've set up $data['user_profile']
+
+        $viewed_user_id = $data['user_profile']['id'];
+        $data['followers_count'] = $this->User_model->count_followers($viewed_user_id);
+        $data['following_count'] = $this->User_model->count_following($viewed_user_id);
+        $data['posts'] = $this->Post_model->get_posts_by_user_id($viewed_user_id);
 
         // Check if the posts are returned; if not, set it as an empty array
         if (!$data['posts']) {

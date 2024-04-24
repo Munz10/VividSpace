@@ -136,8 +136,8 @@
             <p>I am interested in: <?= isset($user_profile['bio']) ? htmlspecialchars($user_profile['bio']) : 'Not specified'; ?></p>
         </div>
         <div class="follow-info">
-            <p><strong>123</strong> Followers</p> <!-- Hardcoded for now -->
-            <p><strong>456</strong> Following</p> <!-- Hardcoded for now -->
+            <p><strong><?= $followers_count ?></strong> Followers</p>
+            <p><strong><?= $following_count ?></strong> Following</p>
         </div>
         <div class="post-grid">
             <?php foreach ($posts as $post): ?>
