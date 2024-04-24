@@ -26,9 +26,8 @@
         .profile-image {
             width: 150px;
             height: 150px;
+            background: #ccc;
             border-radius: 50%;
-            background: url('path_to_profile_image'); /* Replace with path to user's profile image */
-            background-size: cover;
             display: inline-block;
         }
         .follow-info {
@@ -49,10 +48,80 @@
             width: 100%;
             height: auto;
         }
+        .header {
+            display: flex;
+            justify-content: space-between; /* Aligns logo/home to the left and profile to the right */
+            align-items: center;
+            padding: 1rem;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo-and-home {
+            display: flex;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5rem; /* Unchanged font size */
+            font-weight: bold; /* Unchanged font weight */
+            margin-right: 10px; /* Space between the logo and home button */
+        }
+        .home-button {
+            padding: 0.375rem 0.75rem; /* Bootstrap's .btn padding, adjust if needed */
+            text-decoration: none;
+            color: #007bff; /* Bootstrap primary color */
+            background-color: transparent;
+            border: 1px solid transparent;
+            border-color: #007bff;
+            border-radius: 0.25rem;
+        }
+        .profile-icon-container {
+            /* No changes here, but you could add styles if needed */
+        }
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ddd; /* Placeholder style */
+        }
+
+        /* Update to profile info */
+        .profile-header {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .profile-header h1 {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .follow-info {
+            display: flex;
+            justify-content: space-evenly;
+            padding: 1rem;
+        }
+
+        /* Update to post grid */
+        .post-grid {
+            grid-template-columns: repeat(3, 1fr); /* Adjust this to match the wireframe */
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <div class="logo-and-home">
+                <!-- Logo and home button are now inline -->
+                <h1><span>VividSpace</span></h1>
+                <a href="<?= site_url('profile/feed'); ?>" class="home-button">Home</a>
+            </div>
+            <div class="profile-icon-container">
+                <a href="<?= site_url('profile'); ?>">
+                    <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
+                </a>
+            </div>
+        </div>
         <div class="profile-header">
             <h1><?= htmlspecialchars($user_profile['username']); ?></h1>
             <button class="btn btn-primary">Follow</button>
