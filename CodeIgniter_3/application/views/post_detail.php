@@ -16,6 +16,7 @@
         .card {
             border: none;
             border-radius: 0;
+            align-items : center;
         }
         .card-img-top {
             border-radius: 0;
@@ -41,13 +42,13 @@
             border-radius: 50%;
             background: #333; /* Replace with actual image */
         }
-        /*
+        
         .card-img-top {
-            width: 100%;
-            height: 400px;
+            width: 50%;
+            height: 500px;
             object-fit: cover;
         }
-        */
+       
         /* You will need to adjust the styles to exactly match your wireframe */
     </style>
 </head>

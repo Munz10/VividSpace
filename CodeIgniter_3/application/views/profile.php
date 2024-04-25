@@ -9,14 +9,15 @@
         .header-section {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start; /* This will align items to the start of the container */
+            padding-top: 20px; /* Adjust this value as needed to create more space from the top */
             margin-bottom: 20px;
         }
         .profile-section {
             display: flex;
         }
         .profile-info {
-            flex: 1;
+            margin-right: 2rem; 
             text-align: center;
         }
         .profile-pic {
@@ -27,8 +28,12 @@
             display: inline-block;
         }
         .followers-info {
+            display: flex;
+            flex-direction: column; /* Stack followers/following vertically */
+            justify-content: center; /* Center vertically */
             flex: 1;
             text-align: center;
+            margin-top:30px;
         }
         .content-section {
             background: #f8f9fa;
@@ -47,49 +52,64 @@
         .post-body {
             padding: 15px;
         }
+        .logo-and-home {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-and-home h1 {
+            margin-right: 10px; /* Adjust space between logo and button as needed */
+        }
+        .post img {
+            width: 100%; /* Ensures the image takes up the full width of the card */
+            height: 400px; /* Match height from feed.php, or use 'auto' if the aspect ratio needs to be maintained */
+            object-fit: cover; /* Cover ensures that the aspect ratios are maintained without stretching */
+            border-bottom: 1px solid #ddd; /* Adds a separator between the image and the caption */
+        }
+
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header-section">
-        <h1>VividSpace</h1>
-        <div>
+        <div class="logo-and-home">
+            <h1>VividSpace</h1>
             <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
+        </div>
+        <div>
             <a href="#" class="btn btn-secondary">Edit profile</a>
             <a href="#" class="btn btn-dark">Log out</a>
         </div>
     </div>
     
     <div class="profile-section">
-        <div class="profile-info">
+            <div class="profile-info">
             <div class="profile-pic"></div>
-            <h3><?= htmlspecialchars($profile['username']); ?></h3>
-            <p>First Name - Last Name: <!-- Add dynamic data when available --></p>
-            <p>I am interested in: <!-- Add dynamic bio data when available --></p>
+            <p>First Name - Last Name: <?= isset($user_profile['first_name']) && isset($user_profile['last_name']) ? htmlspecialchars($user_profile['first_name'] . ' ' . $user_profile['last_name']) : 'N/A'; ?></p>
+            <p>I am interested in: <?= isset($user_profile['bio']) ? htmlspecialchars($user_profile['bio']) : 'Not specified'; ?></p>
         </div>
         <div class="followers-info">
             <p><strong><?= $followers_count ?></strong> Followers</p>
             <p><strong><?= $following_count ?></strong> Following</p>
-        </div>>
+        </div>
     </div>
 
-    <div class="content-section">
-        <!-- Additional content goes here -->
-    </div>
+    <div class="content-section">  
     <div class="row">
         <?php foreach ($posts as $post): ?>
-        <div class="col-md-4"> <!-- This ensures that each post takes up 4 columns in the grid -->
-            <div class="post">
-                <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                    <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
-                </a>
-                <div class="post-body">
-                    <p><?= htmlspecialchars($post['caption']); ?></p>
-                    <!-- Display other post details -->
+            <div class="col-md-4 mb-3">
+                <div class="post">
+                    <a href="<?= site_url('post/detail/' . $post['id']); ?>">
+                        <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                    </a>
+                    <div class="post-body">
+                        <p><?= htmlspecialchars($post['caption']); ?></p>
+                        <!-- Display other post details -->
+                    </div>
                 </div>
             </div>
-        </div>
         <?php endforeach; ?>
+    </div>
     </div>
 </div>
 
