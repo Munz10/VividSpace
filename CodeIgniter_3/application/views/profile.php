@@ -78,7 +78,7 @@
         </div>
         <div>
             <a href="<?= site_url('profile/edit'); ?>" class="btn btn-secondary">Edit profile</a>
-            <a href="#" class="btn btn-dark">Log out</a>
+            <a href="<?= site_url('profile/logout'); ?>" class="btn btn-dark">Log out</a>
         </div>
     </div>
     

@@ -170,5 +170,13 @@ class Profile extends CI_Controller {
         // Load the edit profile view
         $this->load->view('edit_profile', $data);
     }
+
+    public function logout() {
+        $this->session->unset_userdata('logged_in');
+        $this->session->unset_userdata('user_id');
+        // You can add more session data to unset if needed
+        $this->session->sess_destroy(); // This destroys the session completely
+        redirect('login'); // Redirect to the login page or your application's entry point
+    }  
        
 }
