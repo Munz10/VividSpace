@@ -77,16 +77,20 @@
             <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
         </div>
         <div>
-            <a href="#" class="btn btn-secondary">Edit profile</a>
+            <a href="<?= site_url('profile/edit'); ?>" class="btn btn-secondary">Edit profile</a>
             <a href="#" class="btn btn-dark">Log out</a>
         </div>
     </div>
     
     <div class="profile-section">
-            <div class="profile-info">
-            <div class="profile-pic"></div>
-            <p>First Name - Last Name: <?= isset($user_profile['first_name']) && isset($user_profile['last_name']) ? htmlspecialchars($user_profile['first_name'] . ' ' . $user_profile['last_name']) : 'N/A'; ?></p>
-            <p>I am interested in: <?= isset($user_profile['bio']) ? htmlspecialchars($user_profile['bio']) : 'Not specified'; ?></p>
+        <div class="profile-info">
+            <?php if (!empty($profile['profile_image'])): ?>
+                <img src="<?= base_url(htmlspecialchars($profile['profile_image'])); ?>" alt="Profile Picture" class="profile-pic">
+            <?php else: ?>
+                <div class="profile-pic"></div>
+            <?php endif; ?>
+            <p>First Name - Last Name: <?= isset($profile['first_name']) && isset($profile['last_name']) ? htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) : 'N/A'; ?></p>
+            <p>I am interested in: <?= $profile['bio'] ? htmlspecialchars($profile['bio']) : 'Not specified'; ?></p>
         </div>
         <div class="followers-info">
             <p><strong><?= $followers_count ?></strong> Followers</p>

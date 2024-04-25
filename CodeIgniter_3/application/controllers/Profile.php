@@ -10,6 +10,7 @@ class Profile extends CI_Controller {
         $this->load->model('User_model');
         // Ensure user is logged in
         $this->load->library('session');
+        $this->load->library('upload');
         if (!$this->session->userdata('logged_in')) {
             redirect('login');
         }
@@ -26,6 +27,7 @@ class Profile extends CI_Controller {
     }    
 
     public function get_user_by_id($user_id) {
+        $this->db->select('id, username, first_name, last_name, bio, email, profile_image'); // Include profile_image here
         $this->db->where('id', $user_id);
         $query = $this->db->get('users');
         return $query->row_array();
@@ -62,7 +64,6 @@ class Profile extends CI_Controller {
             if (!$this->upload->do_upload('post_image')) {
                 // If the upload fails, display error to user.
                 $error = array('error' => $this->upload->display_errors());
-                echo 'hi';
                 $this->load->view('create_post', $error);
             } else {
                 // File is uploaded successfully. Now save post information to the database.
@@ -93,6 +94,10 @@ class Profile extends CI_Controller {
         // Assuming $data['user_profile'] contains the profile you're viewing
         $follower_id = $this->session->userdata('user_id'); // The current logged-in user
         $following_id = $data['user_profile']['id']; // The user being viewed
+
+        $data['first_name'] = $data['user_profile']['first_name'];
+        $data['last_name'] = $data['user_profile']['last_name'];
+        $data['bio'] = $data['user_profile']['bio'];
         
         // Check if the current user is following the viewed profile
         $data['is_following'] = $this->User_model->is_following($follower_id, $following_id);
@@ -113,4 +118,57 @@ class Profile extends CI_Controller {
         // Now load the view and pass the $data array
         $this->load->view('user_profile', $data);
     }
+
+    public function update() {
+        $user_id = $this->session->userdata('user_id');
+        $userData = array(
+            'first_name' => $this->input->post('first_name'),
+            'last_name' => $this->input->post('last_name'),
+            'bio' => $this->input->post('bio'),
+            'email' => $this->input->post('email'),
+        );
+    
+        if (isset($_FILES['profile_image']['name']) && $_FILES['profile_image']['name'] != '') {
+            // Set configuration for file upload
+            $config['upload_path'] = './profile_pics/'; // New directory for profile pictures
+            $config['allowed_types'] = 'gif|jpg|png';
+            $config['max_size'] = '2048'; // 2MB
+
+            $this->upload->initialize($config); 
+        
+            // Configuration and file upload handling logic goes here
+            if (!$this->upload->do_upload('profile_image')) {
+                // Handle error
+                $error = $this->upload->display_errors();
+                $this->session->set_flashdata('error', $error);
+                redirect('profile/edit');
+                return; // Stop execution if there is an error
+            } 
+            else {
+                $upload_data = $this->upload->data();
+                $userData['profile_image'] = "/profile_pics/" . $upload_data['file_name']; // Adjust the path accordingly
+            }
+        }
+    
+        $updateStatus = $this->User_model->update_user($user_id, $userData);
+    
+        // Check if the update was successful
+        if ($updateStatus) {
+            $this->session->set_flashdata('success', 'Profile updated successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to update profile.');
+        }
+
+        // After updating, redirect the user to the profile page.
+        redirect('profile');
+    }
+
+    public function edit() {
+        $user_id = $this->session->userdata('user_id');
+        $data['profile'] = $this->User_model->get_user_by_id($user_id);
+        
+        // Load the edit profile view
+        $this->load->view('edit_profile', $data);
+    }
+       
 }
