@@ -33,6 +33,7 @@ class User_model extends CI_Model {
     }
 
     public function get_user_by_id($user_id) {
+        $this->db->select('id, username, first_name, last_name, bio, email, profile_image'); 
         $this->db->where('id', $user_id);
         $query = $this->db->get('users');
         return $query->row_array(); // Return user data as an associative array
@@ -93,6 +94,12 @@ class User_model extends CI_Model {
         $this->db->where('follower_id', $user_id);
         $query = $this->db->get();
         return array_column($query->result_array(), 'following_id');
-    }  
+    } 
+    
+    public function update_user($user_id, $userData) {
+        $this->db->where('id', $user_id);
+        return $this->db->update('users', $userData);
+    }
+    
     
 }
