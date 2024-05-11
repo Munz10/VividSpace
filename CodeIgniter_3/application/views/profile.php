@@ -89,8 +89,13 @@
             <?php else: ?>
                 <div class="profile-pic"></div>
             <?php endif; ?>
-            <p>First Name - Last Name: <?= isset($profile['first_name']) && isset($profile['last_name']) ? htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']) : 'N/A'; ?></p>
-            <p>I am interested in: <?= $profile['bio'] ? htmlspecialchars($profile['bio']) : 'Not specified'; ?></p>
+            <p>@<?= htmlspecialchars($profile['username']); ?></p>
+            <?php if (!empty($profile['first_name']) || !empty($profile['last_name'])): ?>
+                <p><?= htmlspecialchars($profile['first_name'] . ' ' . $profile['last_name']); ?></p>
+            <?php endif; ?>
+            <?php if (!empty($profile['bio'])): ?>
+                <p><?= htmlspecialchars($profile['bio']); ?></p>
+            <?php endif; ?>
         </div>
         <div class="followers-info">
             <p><strong><?= $followers_count ?></strong> Followers</p>

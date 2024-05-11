@@ -46,7 +46,7 @@
         .card-img-top {
             width: 50%;
             height: 500px;
-            object-fit: cover;
+            object-fit: contain;
         }
        
         /* You will need to adjust the styles to exactly match your wireframe */
@@ -84,6 +84,10 @@
                     <span class="card-text" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?> likes</span>
                     <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Like</button>
                     <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Comment</button>
+                    <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
+                        <!-- Show delete button only if logged-in user is the owner of the post -->
+                        <a href="<?= site_url('profile/delete_post/' . $post['id']); ?>" class="btn btn-danger">Delete</a>
+                    <?php endif; ?>
                 </div>
                 <!-- Comments Section -->
                 <div id="comments-container-<?= $post['id']; ?>" style="display:none;">
@@ -143,18 +147,27 @@
             $('#comment-section-' + postId).toggle();
         }
 
-        function showComments(postId) {
-            // Assuming you have a function in your backend to fetch comments,
-            // which returns HTML elements to insert into the comments container
-            $.ajax({
-                url: '<?= site_url('post/get_comments/'); ?>' + postId, 
-                type: 'GET',
-                data: { post_id: postId },
-                dataType: 'html', // Expect HTML response from the server
-                success: function(response) {
-                    $('#comments-container-' + postId).html(response).toggle();
-                }
-            });
+        public function delete_post($post_id) {
+            // First, delete associated likes
+            $this->db->where('post_id', $post_id);
+            $this->db->delete('likes');
+
+            // First, delete associated likes
+            $this->db->where('post_id', $post_id);
+            $this->db->delete('comments');
+
+            // Then delete the post
+            $this->db->where('id', $post_id);
+            $this->db->delete('posts');
+
+            // Check if any rows were affected
+            if ($this->db->affected_rows() > 0) {
+                // Post deleted successfully
+                return true;
+            } else {
+                // Post not found or not deleted
+                return false;
+            }
         }
     </script>
 </body>

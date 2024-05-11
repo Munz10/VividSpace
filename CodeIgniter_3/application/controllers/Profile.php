@@ -59,7 +59,7 @@ class Profile extends CI_Controller {
             $config['max_size'] = '2048'; // 2MB
     
             // Load upload library and initialize configuration.
-            $this->load->library('upload', $config);
+            $this->upload->initialize($config); 
     
             if (!$this->upload->do_upload('post_image')) {
                 // If the upload fails, display error to user.
@@ -177,6 +177,24 @@ class Profile extends CI_Controller {
         // You can add more session data to unset if needed
         $this->session->sess_destroy(); // This destroys the session completely
         redirect('login'); // Redirect to the login page or your application's entry point
+    }
+    
+    public function delete_post($post_id) {
+        // Assuming $post_id is passed from the view or URL parameters
+        $deleted = $this->Post_model->delete_post($post_id);
+    
+        if ($deleted) {
+            // Post deleted successfully
+            $response['success'] = true;
+            redirect('profile');
+        } else {
+            // Post not found or not deleted
+            $response['success'] = false;
+        }
+    
+        // Return JSON response
+        header('Content-Type: application/json');
+        echo json_encode($response);
     }  
-       
+           
 }

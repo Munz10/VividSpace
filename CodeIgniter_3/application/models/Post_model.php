@@ -78,4 +78,26 @@ class Post_model extends CI_Model {
         return $query->result_array();
     }   
     
+    public function delete_post($post_id) {
+        // First, delete associated likes
+        $this->db->where('post_id', $post_id);
+        $this->db->delete('likes');
+
+        // Delete associated comments first
+        $this->db->where('post_id', $post_id);
+        $this->db->delete('comments');
+    
+        // Then delete the post
+        $this->db->where('id', $post_id);
+        $this->db->delete('posts');
+    
+        // Check if any rows were affected
+        if ($this->db->affected_rows() > 0) {
+            // Post deleted successfully
+            return true;
+        } else {
+            // Post not found or not deleted
+            return false;
+        }
+    }
 }
