@@ -47,8 +47,10 @@
         }
         #image-preview {
             display: none; /* Hide the image preview initially */
-            width: 100%;   /* Set the width to 100% of the parent */
+            width: 50%;   /* Set the width to 100% of the parent */
+            height: 500px;
             margin-top: 1rem; /* Add some spacing */
+            object-fit: contain;
         }
         .btn-primary {
             padding: 0.375rem 0.75rem; /* Default Bootstrap padding */
@@ -78,6 +80,7 @@
             </div>
         </div>
         <div class="form-container">
+            <h3> Upload an Image </h3>
             <!-- Create Post Form -->
             <form action="<?= site_url('profile/save_post'); ?>" method="post" enctype="multipart/form-data">
                 <div class="form-group">

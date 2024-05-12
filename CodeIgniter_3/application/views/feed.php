@@ -37,6 +37,14 @@
             height: 400px; /* or any other height */
             object-fit: cover;
         }
+        /* Additional styles for feed items */
+.card {
+    background-color: #f8f9fa; /* Light gray background color */
+    padding: 15px; /* Add padding to create space */
+    border-radius: 10px; /* Optional: Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Box shadow for lifted appearance */
+}
+
 
         /* You may need to adjust the sizes and padding to match your wireframe */
     </style>
