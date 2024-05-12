@@ -5,11 +5,32 @@
     <title>Signup - VividSpace</title>
     <!-- Include Bootstrap CSS from CDN -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS to center the form */
+        .container {
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        /* Adjusting form width */
+        form {
+            width: 500px;
+            margin: 40px auto 0;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Added box-shadow for elevation */
+            background-color: #fff; /* Added background color */
+        }
+        .btn-dark {
+            border-radius: 8px;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
+        <h1 class="text-center">VividSpace</h1>
         <form method="post">
-            <h2>Signup</h2>
+            <h3>Signup</h3>
             <div class="form-group">
                 <input type="text" class="form-control" name="username" placeholder="Username" required>
                 <?= form_error('username'); ?> 
@@ -31,6 +52,7 @@
                 <?= form_error('password'); ?> 
             </div>
             <button type="submit" class="btn btn-dark">Signup</button>
+            <p class="mt-3"> Have an account? <a href="<?= site_url('login'); ?>" > Login</a></p>
         </form>
     </div>
 
