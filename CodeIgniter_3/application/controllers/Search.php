@@ -14,4 +14,11 @@ class Search extends CI_Controller {
         $data['results'] = $this->User_model->search_users($query);
         $this->load->view('search_result', $data);
     }
+
+    public function dynamicResult() {
+        $query = $this->input->get('query');
+        $data['results'] = $this->User_model->search_users($query);
+        header('Content-Type: application/json'); // Ensure proper JSON header
+        echo json_encode($data);
+    }
 }
