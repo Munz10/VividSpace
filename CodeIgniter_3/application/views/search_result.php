@@ -18,14 +18,18 @@
 </head>
 <body>
 <div class="container">
-    <div class="my-4">
-        <h1>VividSpace</h1>
-        <div class="d-flex justify-content-between">
-            <form class="form-inline" action="<?= site_url('search/result'); ?>" method="get">
-                <input type="search" class="form-control mr-sm-2" name="query" placeholder="Search users...">
-                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
-            </form>
-            <a href="<?= site_url('profile'); ?>"><img src="<?= base_url('images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile"></a>
+    <div class="row align-items-center my-4">
+        <div class="col-6 col-md-3 d-flex align-items-center">
+            <!-- Logo -->
+            <h1>VividSpace</h1>
+            <!-- Home button -->
+            <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
+        </div>
+        <div class="col-6 col-md-8 d-flex justify-content-end">
+            <!-- User Icon -->
+            <a href="<?= site_url('profile'); ?>">
+                <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
+            </a>
         </div>
     </div>
 
