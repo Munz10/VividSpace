@@ -16,6 +16,21 @@
             border-radius: 50%;
             background: #333; /* Replace with actual image */
         }
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 9999;
+            display: none;
+            padding: 10px;
+        }
+        .search-result {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
         /* remove for original image view */
         .card-img-top {
             width: 100%;
@@ -37,10 +52,14 @@
         <!-- Search Form, allocated 4 units -->
         <div class="col-12 col-md-4 my-3 my-md-0">
             <form action="<?= site_url('search/result'); ?>" method="get" class="d-flex">
-                <input type="search" class="form-control flex-grow-1" name="query" placeholder="Search users..." required>
+                <input type="search" id="search-input" class="form-control flex-grow-1" name="query" placeholder="Search users..." required>
                 <button type="submit" class="btn btn-outline-secondary ml-2">Search</button>
             </form>
+            <!-- Search Results Container -->
+            <div id="search-results" class="dropdown-results"></div> <!-- Added dropdown-results class -->
         </div>
+        <!-- Search Results Container -->
+        <div id="search-results"></div>
         <!-- User Icon, allocated 4 units -->
         <div class="col-6 col-md-4 d-flex justify-content-end">
             <a href="<?= site_url('profile'); ?>">
@@ -67,6 +86,65 @@
     </div>
 </div>
 
-<script src="<?= base_url('assets/js/bootstrap.min.js'); ?>"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        // Listen for input changes in the search bar
+        $('#search-input').on('input', function() {
+            // Get the search query
+            var query = $(this).val();
+
+            if (query.trim() === '') {
+                // If the search query is empty, hide the search results
+                $('#search-results').empty().hide();
+                return;
+            }
+
+            // Send AJAX request to the server
+            $.ajax({
+                url: '<?= site_url('search/dynamicResult'); ?>',
+                type: 'get',
+                data:{query: query},
+                success: function(response) {
+                    console.log('Response:', response); 
+
+                    // Clear previous results and show the search results container
+                    $('#search-results').empty().show();
+
+                    // Check if there are any results
+                    if (response.results.length > 0) {
+                        // Iterate over the search results and create search result items
+                        $.each(response.results, function(index, result) {
+                            var searchResult = $('<div class="search-result">' + result.username + '</div>');
+                            searchResult.click(function() {
+                                // Handle click event for each search result item
+                                // You can perform any action here, such as redirecting to the user's profile page
+                                console.log('Clicked on:', result.username);
+                            });
+                            $('#search-results').append(searchResult);
+                        });
+                    } else {
+                        // If no results found, display a message
+                        $('#search-results').text('No results found');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        // Hide search results when clicking outside of the search bar
+        $(document).on('click', function(event) {
+            if (!$(event.target).closest('#search-input').length) {
+                $('#search-results').empty().hide();
+            }
+        });
+    });
+</script>
+
+
 </body>
 </html>

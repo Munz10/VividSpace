@@ -43,7 +43,12 @@ class User_model extends CI_Model {
         $this->db->like('username', $query);
         $query = $this->db->get('users');
         return $query->result_array();
-    } 
+    }
+    
+    public function dynamic_user_search($username) {
+        $query = $this->db->query("SELECT * FROM users WHERE Username LIKE '".$username."%'");
+        return $query->result();
+    }  
 
     public function get_user_by_username($username) {
         $this->db->where('username', $username);
@@ -100,6 +105,4 @@ class User_model extends CI_Model {
         $this->db->where('id', $user_id);
         return $this->db->update('users', $userData);
     }
-    
-    
 }
