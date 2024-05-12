@@ -46,10 +46,15 @@
         .card-img-top {
             width: 50%;
             height: 500px;
+            margin: 40px auto 0;
             object-fit: contain;
         }
-       
-        /* You will need to adjust the styles to exactly match your wireframe */
+        .card {
+            
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Added box-shadow for elevation */
+            background-color: #fff; /* Added background color */
+        }     
     </style>
 </head>
 <body>
