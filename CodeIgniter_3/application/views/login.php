@@ -33,7 +33,7 @@
             <?php if(isset($error)): ?>
                 <div class="alert alert-danger"><?= $error; ?></div>
             <?php endif; ?>
-            <?= form_open('login/process'); ?>
+            <form action="login/process" method="post">
                 <h3>Login</h3>
                 <div class="form-group">
                     <input type="text" class="form-control" name="username" placeholder="Username" required>
@@ -43,7 +43,7 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
                 <p>Don’t have an account? <a href="<?= site_url('signup'); ?>">Sign Up</a> here</p>
-            <?= form_close(); ?>
+            </form>
         </div>
     </div>
 </div>
