@@ -74,13 +74,11 @@
                     console.log('Login successful');
                     if (response.result === 'success') {
                         window.location.href = 'profile';
-                    } else {
-                        $('#error-msg').text('Invalid username or password').show();
-                    }
+                    } 
                 },
                 error: function (model, response) {
                     console.error('Error occurred during login');
-                    $('#error-msg').text('Error occurred during login').show();
+                    $('#error-msg').text('Invalid username or password').show();
                 }
             });
         }
