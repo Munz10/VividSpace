@@ -61,10 +61,10 @@
             margin-right: 10px; /* Adjust space between logo and button as needed */
         }
         .post img {
-            width: 100%; /* Ensures the image takes up the full width of the card */
-            height: 400px; /* Match height from feed.php, or use 'auto' if the aspect ratio needs to be maintained */
-            object-fit: cover; /* Cover ensures that the aspect ratios are maintained without stretching */
-            border-bottom: 1px solid #ddd; /* Adds a separator between the image and the caption */
+            width: 100%; 
+            height: 400px; 
+            object-fit: cover; 
+            border-bottom: 1px solid #ddd; 
         }
 
     </style>
@@ -121,6 +121,5 @@
     </div>
     </div>
 </div>
-
 </body>
 </html>
