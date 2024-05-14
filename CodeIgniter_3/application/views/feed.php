@@ -78,6 +78,7 @@
 
     <!-- Feed items -->
     <div class="row">
+    <?php if (!empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
             <div class="col-md-4 mb-3">
                 <div class="card">
@@ -91,6 +92,27 @@
                 </div>
             </div>
         <?php endforeach; ?>
+    <?php else: ?>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <h3>Suggested Users to Follow</h3>
+                <div class="list-group">
+                    <?php foreach ($suggested_users as $user): ?>
+                        <a href="<?= site_url('profile/view/' . $user['id']); ?>" class="list-group-item list-group-item-action">
+                            <div class="d-flex align-items-center">
+                                <?php if (!empty($user['profile_image'])): ?>
+                                    <img src="<?= base_url(htmlspecialchars($user['profile_image'])); ?>" alt="Profile Picture" class="profile-icon mr-3">
+                                <?php else: ?>
+                                    <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="profile-icon mr-3">
+                                <?php endif; ?>
+                                <span><?= htmlspecialchars($user['username']); ?></span>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
     </div>
 </div>
 

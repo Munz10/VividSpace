@@ -87,7 +87,7 @@
             <?php if (!empty($profile['profile_image'])): ?>
                 <img src="<?= base_url(htmlspecialchars($profile['profile_image'])); ?>" alt="Profile Picture" class="profile-pic">
             <?php else: ?>
-                <div class="profile-pic"></div>
+                <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="profile-pic">
             <?php endif; ?>
             <p>@<?= htmlspecialchars($profile['username']); ?></p>
             <?php if (!empty($profile['first_name']) || !empty($profile['last_name'])): ?>
