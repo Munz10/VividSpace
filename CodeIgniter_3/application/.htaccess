@@ -1,6 +1,9 @@
 <IfModule authz_core_module>
-    Require all denied
+	Require all denied
+	Header add Access-Control-Allow-Origin "*"
+	Header add Access-Control-Allow-Headers "*"
+	Header add Access-Control-Allow-Methods "GET,PUT,POST,DELETE,OPTIONS"
 </IfModule>
 <IfModule !authz_core_module>
-    Deny from all
+	Deny from all
 </IfModule>
