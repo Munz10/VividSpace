@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style> 
         .list-group-item {
-            border: solid; /* Remove the default border */
+            border: solid; 
             border-radius: 10px; /* Optional: Add some border radius */
             background-color: #f8f9fa; /* Light gray background color */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Add shadow for a lifted appearance */
@@ -159,9 +159,8 @@
                         $.each(response.results, function(index, result) {
                             var searchResult = $('<div class="search-result">' + result.username + '</div>');
                             searchResult.click(function() {
-                                // Handle click event for each search result item
-                                // You can perform any action here, such as redirecting to the user's profile page
-                                console.log('Clicked on:', result.username);
+                                // Redirect to the user's profile page when clicked
+                                window.location.href = '<?= site_url('profile/view/'); ?>' + result.username;
                             });
                             $('#search-results').append(searchResult);
                         });
