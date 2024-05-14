@@ -5,8 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>User's Feed - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Additional styles can go here */
+    <style> 
+        .list-group-item {
+            border: solid; /* Remove the default border */
+            border-radius: 10px; /* Optional: Add some border radius */
+            background-color: #f8f9fa; /* Light gray background color */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Add shadow for a lifted appearance */
+            width: 50%
+        }
+        .suggested-profile-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background-color: #e9ecef; /* Light gray background color */
+            object-fit: cover; /* Ensure the image fits into the circle */
+        } 
         .search-bar {
             width: 100%; /* Or any other width */
         }
@@ -38,15 +51,12 @@
             object-fit: cover;
         }
         /* Additional styles for feed items */
-.card {
-    background-color: #f8f9fa; /* Light gray background color */
-    padding: 15px; /* Add padding to create space */
-    border-radius: 10px; /* Optional: Rounded corners */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Box shadow for lifted appearance */
-}
-
-
-        /* You may need to adjust the sizes and padding to match your wireframe */
+        .card {
+            background-color: #f8f9fa; /* Light gray background color */
+            padding: 15px; /* Add padding to create space */
+            border-radius: 10px; /* Optional: Rounded corners */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Optional: Box shadow for lifted appearance */
+        }
     </style>
 </head>
 <body>
@@ -92,20 +102,20 @@
                 </div>
             </div>
         <?php endforeach; ?>
-    <?php else: ?>
-        <div class="row mt-4">
+        <?php else: ?>
+        <div class="col-md-12 mb-3"> <!-- Center the suggested users list -->
             <div class="col-md-12">
-                <h3>Suggested Users to Follow</h3>
-                <div class="list-group">
+                <h3 class="text-center mb-4">Suggested Users to Follow</h3> <!-- Center the heading -->
+                <div class="d-flex flex-wrap justify-content-center"> <!-- Center the content -->
                     <?php foreach ($suggested_users as $user): ?>
-                        <a href="<?= site_url('profile/view/' . $user['id']); ?>" class="list-group-item list-group-item-action">
-                            <div class="d-flex align-items-center">
+                        <a href="<?= site_url('profile/view/'.$user['username']); ?>" class="list-group-item list-group-item-action m-2">
+                            <div class="text-center">
                                 <?php if (!empty($user['profile_image'])): ?>
-                                    <img src="<?= base_url(htmlspecialchars($user['profile_image'])); ?>" alt="Profile Picture" class="profile-icon mr-3">
+                                    <img src="<?= base_url(htmlspecialchars($user['profile_image'])); ?>" alt="Profile Picture" class="suggested-profile-icon mb-2">
                                 <?php else: ?>
-                                    <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="profile-icon mr-3">
+                                    <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="suggested-profile-icon mb-2">
                                 <?php endif; ?>
-                                <span><?= htmlspecialchars($user['username']); ?></span>
+                                <div><?= htmlspecialchars($user['username']); ?></div>
                             </div>
                         </a>
                     <?php endforeach; ?>
