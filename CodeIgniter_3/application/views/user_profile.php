@@ -23,7 +23,7 @@
         .profile-info {
             text-align: center;
         }
-        .profile-image {
+        .profile-pic {
             width: 150px;
             height: 150px;
             background: #ccc;
@@ -45,8 +45,10 @@
             overflow: hidden;
         }
         .post img {
-            width: 100%;
-            height: auto;
+            width: 100%; 
+            height: 400px; 
+            object-fit: cover; 
+            border-bottom: 1px solid #ddd; 
         }
         .header {
             display: flex;
@@ -66,7 +68,7 @@
             margin-right: 10px; /* Space between the logo and home button */
         }
         .home-button {
-            padding: 0.375rem 0.75rem; /* Bootstrap's .btn padding, adjust if needed */
+            padding: 0.375rem 0.75rem; /* Bootstrap's .btn padding
             text-decoration: none;
             color: #007bff; /* Bootstrap primary color */
             background-color: transparent;
@@ -74,17 +76,12 @@
             border-color: #007bff;
             border-radius: 0.25rem;
         }
-        .profile-icon-container {
-            /* No changes here, but you could add styles if needed */
-        }
         .profile-icon {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: #ddd; /* Placeholder style */
+            background: #ddd;
         }
-
-        /* Update to profile info */
         .profile-header {
             margin-top: 1rem;
             text-align: center;
@@ -101,10 +98,20 @@
             justify-content: space-evenly;
             padding: 1rem;
         }
-
-        /* Update to post grid */
         .post-grid {
-            grid-template-columns: repeat(3, 1fr); /* Adjust this to match the wireframe */
+            grid-template-columns: repeat(3, 1fr); 
+        }
+        .follow-btn-wrapper {
+            text-align: right;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .follow-btn {
+            margin-right: 1rem;
+        }
+        .spacer {
+            flex-grow: 1; /* Allow the spacer to grow and push the follow button to the right */
         }
     </style>
 </head>
@@ -123,7 +130,7 @@
             </div>
         </div>
         <div class="profile-header">
-            <h1><?= htmlspecialchars($user_profile['username']); ?></h1>
+            <div class="spacer"></div>
             <button class="btn btn-primary follow-btn" data-following-id="<?= $user_profile['id']; ?>"
                     onclick="toggleFollow(this);">
                 <?= $is_following ? 'Unfollow' : 'Follow'; ?>
@@ -131,22 +138,35 @@
 
         </div>
         <div class="profile-info">
-            <div class="profile-image"></div>
-            <p>First Name - Last Name: <?= isset($user_profile['first_name']) && isset($user_profile['last_name']) ? htmlspecialchars($user_profile['first_name'] . ' ' . $user_profile['last_name']) : 'N/A'; ?></p>
-            <p>I am interested in: <?= isset($user_profile['bio']) ? htmlspecialchars($user_profile['bio']) : 'Not specified'; ?></p>
+            <?php if (!empty($user_profile['profile_image'])): ?>
+                <img src="<?= base_url(htmlspecialchars($user_profile['profile_image'])); ?>" alt="Profile Picture" class="profile-pic">
+            <?php else: ?>
+                <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="profile-pic">
+            <?php endif; ?>
+            <p>@<?= htmlspecialchars($user_profile['username']); ?></p>
+            <?php if (!empty($user_profile['first_name']) || !empty($user_profile['last_name'])): ?>
+                <p><?= htmlspecialchars($user_profile['first_name'] . ' ' . $user_profile['last_name']); ?></p>
+            <?php endif; ?>
+            <?php if (!empty($user_profile['bio'])): ?>
+                <p><?= htmlspecialchars($user_profile['bio']); ?></p>
+            <?php endif; ?>
         </div>
         <div class="follow-info">
             <p><strong><?= $followers_count ?></strong> Followers</p>
             <p><strong><?= $following_count ?></strong> Following</p>
         </div>
-        <div class="post-grid">
+        <div class="row">
             <?php foreach ($posts as $post): ?>
-                <div class="post">
-                    <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                        <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
-                    </a>
-                    <p><?= htmlspecialchars($post['caption']); ?></p>
-                    <!-- Add other post details if needed -->
+                <div class="col-md-4 mb-3">
+                    <div class="post">
+                        <a href="<?= site_url('post/detail/' . $post['id']); ?>">
+                            <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                        </a>
+                        <div class="post-body">
+                            <p><?= htmlspecialchars($post['caption']); ?></p>
+                            <!-- Display other post details -->
+                        </div>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
