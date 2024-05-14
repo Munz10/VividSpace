@@ -40,6 +40,9 @@ class Profile extends CI_Controller {
         
         // Get the posts from these users
         $data['posts'] = $this->Post_model->get_posts_by_user_ids($following_ids);
+
+        // Fetch suggested users to follow
+        $data['suggested_users'] = $this->User_model->get_suggested_users($user_id);
         
         // Load the feed view with the posts data
         $this->load->view('feed', $data);

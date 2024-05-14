@@ -100,6 +100,28 @@ class User_model extends CI_Model {
         $query = $this->db->get();
         return array_column($query->result_array(), 'following_id');
     } 
+
+    public function get_suggested_users($user_id) {
+        // Get the user IDs of users who the current user is already following
+        $following_ids = $this->get_following_user_ids($user_id);
+        
+         // Check if there are any users being followed
+        if (empty($following_ids)) {
+            // For new users who haven't followed anyone yet, suggest random users
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id !=', $user_id); // Exclude the current user
+        $this->db->order_by('RAND()'); // Order randomly
+        $this->db->limit(3); // Limit the number of suggested users
+
+        $query = $this->db->get();
+        return $query->result_array();
+        } else {
+            // If the user is already following someone, return an empty array
+            return array();
+        }
+    }
+    
     
     public function update_user($user_id, $userData) {
         $this->db->where('id', $user_id);
