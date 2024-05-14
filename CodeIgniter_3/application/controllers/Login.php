@@ -1,13 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Login extends CI_Controller {
+require APPPATH . '/libraries/REST_Controller.php';
+
+class Login extends \Restserver\Libraries\REST_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->helper(['url', 'form']);
         $this->load->library('session');
         $this->load->model('User_model');
+        Header('Access-Control-Allow-Origin: *');
+        Header('Access-Control-Allow-Headers: *');
+        Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
     }
 
     public function index() {
@@ -18,34 +23,41 @@ class Login extends CI_Controller {
         $this->load->view('login');
     }
 
-    public function process() {
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('username', 'Username', 'required');
-        $this->form_validation->set_rules('password', 'Password', 'required');
+    public function index_options() {
+        // Respond with CORS headers for OPTIONS request
+        $this->output
+             ->set_header('Access-Control-Allow-Origin: *')
+             ->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS')
+             ->set_header('Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding');
+    }
 
-        if ($this->form_validation->run() == FALSE) {
-            // If validation fails, load the login view again
-            $this->load->view('login');
-        } 
-        else {
-            // Validation passed, check user credentials
-            $username = $this->input->post('username');
-            $password = $this->input->post('password');
+    public function index_get() {
+        // If the user is already logged in, redirect to the dashboard
+        if ($this->session->userdata('logged_in')) {
+            redirect('profile');
+        }
+        $this->load->view('login');
+    }
 
-            // The login method should now also return the user's data if login is successful
-            $user_info = $this->User_model->login($username, $password);
+    public function index_post() {
+        $username = $this->post('username');
+        $password = $this->post('password');
+    
+        // Call your model method to authenticate user
+        $result = $this->User_model->login($username, $password);
 
-            if ($user_info) {
-                // Credentials are correct
-                $this->session->set_userdata('logged_in', TRUE);
-                $this->session->set_userdata('user_id', $user_info->id); // Store the user's ID
-                $this->session->set_userdata('username', $user_info->username); // Store the username
-                redirect('profile'); // Redirect to profile page, not dashboard
-            } else {
-                // Incorrect credentials, load login view with error message
-                $data['error'] = 'Invalid username or password';
-                $this->load->view('login', $data);
-            }
+        if (!empty($result)) {
+            // Credentials are correct
+            $this->session->set_userdata('logged_in', TRUE);
+            $this->session->set_userdata('username', $username);
+            $this->response([
+                'result' => 'success'
+            ], \Restserver\Libraries\REST_Controller::HTTP_OK);
+        } else {
+            // Incorrect credentials
+            $this->response([
+                'result' => 'failed'
+            ], \Restserver\Libraries\REST_Controller::HTTP_UNAUTHORIZED);
         }
     }
 }
