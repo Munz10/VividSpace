@@ -49,6 +49,7 @@ class Login extends \Restserver\Libraries\REST_Controller {
         if (!empty($result)) {
             // Credentials are correct
             $this->session->set_userdata('logged_in', TRUE);
+            $this->session->set_userdata('user_id', $result->id); // Store the user's ID
             $this->session->set_userdata('username', $username);
             $this->response([
                 'result' => 'success'
