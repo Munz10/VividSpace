@@ -120,7 +120,8 @@
                 data: { post_id: postId },
                 dataType: 'json',
                 success: function(response) {
-                    $('#like-count-' + postId).text(response.likes_count);
+                    var likeCount = response.likes_count;
+                    $('#like-count-' + postId).text(likeCount + ' likes');
                 }
             });
         }
@@ -148,27 +149,27 @@
             $('#comment-section-' + postId).toggle();
         }
 
-        public function delete_post($post_id) {
-            // First, delete associated likes
-            $this->db->where('post_id', $post_id);
-            $this->db->delete('likes');
-
-            // First, delete associated likes
-            $this->db->where('post_id', $post_id);
-            $this->db->delete('comments');
-
-            // Then delete the post
-            $this->db->where('id', $post_id);
-            $this->db->delete('posts');
-
-            // Check if any rows were affected
-            if ($this->db->affected_rows() > 0) {
-                // Post deleted successfully
-                return true;
-            } else {
-                // Post not found or not deleted
-                return false;
-            }
+        // Function to delete post
+        function deletePost(postId) {
+            $.ajax({
+                url: '<?= site_url('profile/delete_post'); ?>/' + postId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    // Check if post was deleted successfully
+                    if (response.success) {
+                        // Remove the post from the DOM
+                        $('#post-' + postId).remove();
+                        // Optionally, display a success message
+                    } else {
+                        // Handle error or display a message
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error or display a message
+                    console.error('Error:', error);
+                }
+            });
         }
     </script>
 </body>
