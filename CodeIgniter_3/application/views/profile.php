@@ -5,16 +5,26 @@
     <title><?= htmlspecialchars($profile['username']); ?>'s Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Inline styles are used here for brevity */
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
         .header-section {
             display: flex;
             justify-content: space-between;
             align-items: flex-start; /* This will align items to the start of the container */
             padding-top: 20px; /* Adjust this value as needed to create more space from the top */
             margin-bottom: 20px;
+            padding: 1rem;
         }
         .profile-section {
             display: flex;
+            padding-left: 5rem;
+            margin-bottom: 1rem;
         }
         .profile-info {
             margin-right: 2rem; 
@@ -33,30 +43,21 @@
             justify-content: center; /* Center vertically */
             flex: 1;
             text-align: center;
-            margin-top:30px;
-        }
-        .content-section {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-top: 20px;
+            font-size: 18px;
         }
         .post {
             border: 1px solid #ddd; /* Adds a border around each post */
+            border-radius: 0.5rem;
             margin-bottom: 15px; /* Adds space between rows */
-        }
-        .post img {
-            width: 100%; /* Ensures the image takes up the full width of the card */
-            height: auto; /* Ensures the image height is automatically adjusted */
-            border-bottom: 1px solid #ddd; /* Adds a separator between the image and the caption */
+            overflow: hidden;
         }
         .post-body {
-            padding: 15px;
+            padding: 10px;
         }
         .logo-and-home {
             display: flex;
             align-items: center;
         }
-
         .logo-and-home h1 {
             margin-right: 10px; /* Adjust space between logo and button as needed */
         }
@@ -103,7 +104,6 @@
         </div>
     </div>
 
-    <div class="content-section">  
     <div class="row">
         <?php foreach ($posts as $post): ?>
             <div class="col-md-4 mb-3">
@@ -118,7 +118,6 @@
                 </div>
             </div>
         <?php endforeach; ?>
-    </div>
     </div>
 </div>
 </body>
