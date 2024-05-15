@@ -59,7 +59,6 @@ class Post_model extends CI_Model {
         return $this->db->insert_id();
     }
     
-    // In your Post_model
     public function get_comments_by_post_id($post_id) {
         $this->db->select('comments.*, users.username');
         $this->db->from('comments');

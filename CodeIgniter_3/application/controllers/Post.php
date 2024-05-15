@@ -52,14 +52,12 @@ class Post extends CI_Controller {
         }
     }
 
-    public function get_comments($post_id) {
+    public function get_comments() {
+        $post_id = $this->input->post('post_id');
         // Get comments from the model
         $comments = $this->Post_model->get_comments_by_post_id($post_id);
     
-        // Load a view that formats the comments as HTML
-        $data['comments'] = $comments;
-        $this->load->view('partials/comments', $data);
-    }
-    
-    // ... Other methods related to posts ...
+        // Return comments as JSON
+        echo json_encode(['comments' => $comments]);
+    }    
 }

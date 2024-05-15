@@ -21,6 +21,7 @@
         }
         .card-title {
             margin-bottom: 0.5rem;
+            color: #4B9CD3
         }
         .card-text {
             font-size: 0.9rem;
@@ -50,6 +51,10 @@
             border-radius: 10px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Added box-shadow for elevation */
             background-color: #fff; /* Added background color */
+        }
+        .comment-section {
+            border-left: 1px solid #ddd;
+            padding-left: 20px;
         }     
     </style>
 </head>
@@ -80,7 +85,7 @@
                 <div class="interaction-bar">
                     <!-- Make comments count clickable -->
                     <span class="comments-toggle" onclick="showComments(<?= $post['id']; ?>);">
-                        <span id="comment-count-<?= $post['id']; ?>"><?= $post['comments_count']; ?></span> comments
+                        <span id="comment-count-<?= $post['id']; ?>" class="comment-count" style="cursor: pointer;"><?= $post['comments_count']; ?></span> comments
                     </span>
                     <span class="card-text" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?> likes</span>
                     <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Like</button>
@@ -93,6 +98,7 @@
                 <!-- Comments Section -->
                 <div id="comments-container-<?= $post['id']; ?>" style="display:none;">
                     <!-- Dynamic comments will be loaded here -->
+                    <div id="comments-content-<?= $post['id']; ?>"></div>
                 </div>
                 <!-- Comment Form (hidden by default) -->
                 <div id="comment-section-<?= $post['id']; ?>" style="display:none;">
@@ -147,6 +153,29 @@
 
         function toggleCommentSection(postId) {
             $('#comment-section-' + postId).toggle();
+        }
+
+        // Define the showComments function
+        function showComments(postId) {
+            $.ajax({
+                url: '<?= site_url('post/get_comments'); ?>', // Update URL to match your backend endpoint
+                type: 'POST',
+                data: { post_id: postId },
+                dataType: 'json',
+                success: function(response) {
+                    var comments = response.comments;
+                    var commentsContent = $('#comments-content-' + postId);
+                    commentsContent.empty(); // Clear previous comments
+                    comments.forEach(function(comment) {
+                        // Append comment with username in blue color
+                        commentsContent.append('<p><span style="color: #008E97;">@' + comment.username + '</span>  ' + comment.content + '</p>');
+                    });
+                    $('#comments-container-' + postId).show(); // Show the comments container
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching comments:', error);
+                }
+            });
         }
 
         // Function to delete post
