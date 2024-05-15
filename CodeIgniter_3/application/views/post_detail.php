@@ -8,9 +8,6 @@
         body {
             background-color: #f8f9fa;
         }
-        .container {
-            padding-top: 2rem;
-        }
         .card {
             border: none;
             border-radius: 0;
@@ -20,7 +17,6 @@
             border-radius: 0;
         }
         .card-title {
-            margin-bottom: 0.5rem;
             color: #4B9CD3
         }
         .card-text {
@@ -42,9 +38,9 @@
             background: #333; /* Replace with actual image */
         }
         .card-img-top {
-            width: 50%;
+            width: 60%;
             height: 500px;
-            margin: 40px auto 0;
+            margin-top: 20px;
             object-fit: contain;
         }
         .card {
@@ -60,6 +56,7 @@
 </head>
 <body>
     <div class="container">
+        
         <div class="row align-items-center my-4">
             <div class="col-6 col-md-8 d-flex align-items-center">
                 <!-- Logo -->
@@ -73,14 +70,16 @@
                     <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
                 </a>
             </div>
-        </div>
-        <!-- Post Content -->
-        <div class="card">
-            <img class="card-img-top" src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
-            <div class="card-body">
-                <h5 class="card-title">@<?= $post['username']; ?></h5>
-                <p class="card-text"><?= $post['caption']; ?></p>
-                <p class="card-text"><small><?= $post['created_at']; ?></small></p>
+            <div class="col-md-6">
+                <!-- Post Content -->
+                <div class="card">
+                    <img class="card-img-top" src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                        <h5 class="card-title">@<?= $post['username']; ?></h5>
+                        <p class="card-text"><?= $post['caption']; ?></p>
+                        <p class="card-text"><?= $post['hashtags']; ?></p>
+                </div>
+            </div>
+            <div class="col-md-6">
                 <!-- Interaction bar -->
                 <div class="interaction-bar">
                     <!-- Make comments count clickable -->
@@ -88,13 +87,22 @@
                         <span id="comment-count-<?= $post['id']; ?>" class="comment-count" style="cursor: pointer;"><?= $post['comments_count']; ?></span> comments
                     </span>
                     <span class="card-text" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?> likes</span>
-                    <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Like</button>
-                    <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Comment</button>
+                    <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary" style="padding: 0; border: none; background: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
+                            <path id="heart-icon-<?= $post['id']; ?>" fill="#888" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                    </button>
+                    <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary" style="padding: 0; border: none; background: none;" >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
+                            <path fill="none" stroke="#000000" stroke-width="2" d="M16.293,2H7.707C6.57,2,5.707,2.866,5.707,4v12c0,1.137,0.863,2,2,2h7.586l3.707,3.707V4 C18.707,2.866,17.844,2,16.293,2z"/>
+                        </svg>
+                    </button>
                     <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
                         <!-- Show delete button only if logged-in user is the owner of the post -->
                         <a href="<?= site_url('profile/delete_post/' . $post['id']); ?>" class="btn btn-danger">Delete</a>
                     <?php endif; ?>
                 </div>
+
                 <!-- Comments Section -->
                 <div id="comments-container-<?= $post['id']; ?>" style="display:none;">
                     <!-- Dynamic comments will be loaded here -->
@@ -119,18 +127,44 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        function toggleLike(postId) {
-            $.ajax({
-                url: '<?= site_url('post/toggle_like'); ?>',
-                type: 'POST',
-                data: { post_id: postId },
-                dataType: 'json',
-                success: function(response) {
-                    var likeCount = response.likes_count;
-                    $('#like-count-' + postId).text(likeCount + ' likes');
+    $(document).ready(function() {
+        // Check the like status of the post when the page loads
+        var postId = <?= $post['id']; ?>;
+        $.ajax({
+            url: '<?= site_url('post/check_like_status'); ?>',
+            type: 'POST',
+            data: { post_id: postId },
+            dataType: 'json',
+            success: function(response) {
+                if (response.liked) {
+                    $('#heart-icon-' + postId).css('fill', 'red');
                 }
-            });
-        }
+            }
+        });
+    });
+
+    function toggleLike(postId) {
+        var heartIcon = $('#heart-icon-' + postId);
+        var isLiked = heartIcon.css('fill') === 'rgb(255, 0, 0)'; // Check if heart is red (liked)
+        
+        $.ajax({
+            url: '<?= site_url('post/toggle_like'); ?>',
+            type: 'POST',
+            data: { post_id: postId },
+            dataType: 'json',
+            success: function(response) {
+                var likeCount = response.likes_count;
+                $('#like-count-' + postId).text(likeCount + ' likes');
+
+                // Toggle heart color based on like status
+                if (isLiked) {
+                    heartIcon.css('fill', '#888'); // Change to grey if already liked
+                } else {
+                    heartIcon.css('fill', 'red'); // Change to red if not liked
+                }
+            }
+        });
+    }
 
         function addComment(postId) {
             var content = $('#comment-content-' + postId).val();

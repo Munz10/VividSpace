@@ -105,4 +105,16 @@ class Post_model extends CI_Model {
             return false;
         }
     }
+
+    // Method to check if the post has been liked by the current user
+    public function is_post_liked($post_id) {
+        // Assuming you have a table to store likes with columns like 'post_id' and 'user_id'
+        $user_id = $this->session->userdata('user_id'); // Assuming you're using sessions for authentication
+        
+        // Query the database to check if the post has been liked by the current user
+        $query = $this->db->get_where('likes', array('post_id' => $post_id, 'user_id' => $user_id));
+
+        // Return true if the query result is not empty (post has been liked by the user), otherwise return false
+        return $query->num_rows() > 0;
+    }
 }
