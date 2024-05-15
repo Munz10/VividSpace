@@ -29,12 +29,12 @@
             border-radius: 50%;
             background: #333; /* Replace with actual image */
         }
-        .search-results {
+        #search-results {
             position: absolute;
             top: 100%;
             left: 0;
             width: 100%;
-            background: #fff;
+            background-color: #707070;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             z-index: 9999;
             display: none;
@@ -42,7 +42,8 @@
         }
         .search-result {
             padding: 5px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 3px solid #eee;
+            cursor: pointer; /* Add cursor pointer to indicate clickable */
         }
         /* remove for original image view */
         .card-img-top {

@@ -10,8 +10,6 @@
         }
         .container {
             background: #fff;
-            padding: 2rem;
-            margin-top: 2rem;
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
         }
@@ -33,15 +31,10 @@
         .follow-info {
             text-align: center;
         }
-        .post-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 1rem;
-            margin-top: 2rem;
-        }
         .post {
             border: 1px solid #ddd;
             border-radius: 0.5rem;
+            margin-bottom: 15px; 
             overflow: hidden;
         }
         .post img {
@@ -50,31 +43,21 @@
             object-fit: cover; 
             border-bottom: 1px solid #ddd; 
         }
+        .post-body {
+            padding: 10px;
+        }
         .header {
             display: flex;
             justify-content: space-between; /* Aligns logo/home to the left and profile to the right */
             align-items: center;
             padding: 1rem;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .logo-and-home {
             display: flex;
             align-items: center;
         }
-        .logo {
-            font-size: 1.5rem; /* Unchanged font size */
-            font-weight: bold; /* Unchanged font weight */
-            margin-right: 10px; /* Space between the logo and home button */
-        }
-        .home-button {
-            padding: 0.375rem 0.75rem; /* Bootstrap's .btn padding
-            text-decoration: none;
-            color: #007bff; /* Bootstrap primary color */
-            background-color: transparent;
-            border: 1px solid transparent;
-            border-color: #007bff;
-            border-radius: 0.25rem;
+        .logo-and-home h1 {
+            margin-right: 10px; /* Adjusted margin between logo and home button */
         }
         .profile-icon {
             width: 30px;
@@ -86,29 +69,25 @@
             margin-top: 1rem;
             text-align: center;
         }
-
         .profile-header h1 {
             display: inline-block;
             vertical-align: middle;
             margin-right: 10px;
         }
-
         .follow-info {
             display: flex;
             justify-content: space-evenly;
             padding: 1rem;
-        }
-        .post-grid {
-            grid-template-columns: repeat(3, 1fr); 
+            margin-bottom: 1rem;
         }
         .follow-btn-wrapper {
             text-align: right;
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
-
         .follow-btn {
             margin-right: 1rem;
+            margin-top: 1rem;
         }
         .spacer {
             flex-grow: 1; /* Allow the spacer to grow and push the follow button to the right */
@@ -121,7 +100,7 @@
             <div class="logo-and-home">
                 <!-- Logo and home button are now inline -->
                 <h1><span>VividSpace</span></h1>
-                <a href="<?= site_url('profile/feed'); ?>" class="home-button">Home</a>
+                <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
             </div>
             <div class="profile-icon-container">
                 <a href="<?= site_url('profile'); ?>">
@@ -135,7 +114,6 @@
                     onclick="toggleFollow(this);">
                 <?= $is_following ? 'Unfollow' : 'Follow'; ?>
             </button>
-
         </div>
         <div class="profile-info">
             <?php if (!empty($user_profile['profile_image'])): ?>
