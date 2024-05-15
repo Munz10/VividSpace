@@ -5,6 +5,9 @@
     <title><?= htmlspecialchars($user_profile['username']); ?>'s Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        html, body {
+            height: 100%; /* Make the container take the whole page height */
+        }
         body {
             background-color: #f8f9fa;
         }
@@ -12,6 +15,10 @@
             background: #fff;
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            padding: 1rem;
+            min-height: 100vh; /* Set minimum height to viewport height */
+            display: flex; /* Use flexbox */
+            flex-direction: column; /* Stack children vertically */
         }
         .profile-header {
             display: flex;
@@ -48,7 +55,7 @@
         }
         .header {
             display: flex;
-            justify-content: space-between; /* Aligns logo/home to the left and profile to the right */
+            justify-content: space-between;
             align-items: center;
             padding: 1rem;
         }
@@ -57,7 +64,7 @@
             align-items: center;
         }
         .logo-and-home h1 {
-            margin-right: 10px; /* Adjusted margin between logo and home button */
+            margin-right: 10px;
         }
         .profile-icon {
             width: 30px;
@@ -92,13 +99,18 @@
         .spacer {
             flex-grow: 1; /* Allow the spacer to grow and push the follow button to the right */
         }
+        hr {
+            margin: 2rem; /* Adjusted margin for better visibility */
+            border: none; /* Remove the default border */
+            border-top: 1px solid #ddd; /* Add a new border style */
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo-and-home">
-                <!-- Logo and home button are now inline -->
                 <h1><span>VividSpace</span></h1>
                 <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
             </div>
@@ -133,21 +145,28 @@
             <p><strong><?= $followers_count ?></strong> Followers</p>
             <p><strong><?= $following_count ?></strong> Following</p>
         </div>
-        <div class="row">
-            <?php foreach ($posts as $post): ?>
-                <div class="col-md-4 mb-3">
-                    <div class="post">
-                        <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                            <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
-                        </a>
-                        <div class="post-body">
-                            <p><?= htmlspecialchars($post['caption']); ?></p>
-                            <!-- Display other post details -->
+        <hr> <!-- Separator between user details and posts -->
+        <?php if (empty($posts)): ?>
+            <div class="text-center">
+                <h1>No posts yet.</h1>
+            </div>
+        <?php else: ?>
+            <div class="row">
+                <?php foreach ($posts as $post): ?>
+                    <div class="col-md-4 mb-3">
+                        <div class="post">
+                            <a href="<?= site_url('post/detail/' . $post['id']); ?>">
+                                <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                            </a>
+                            <div class="post-body">
+                                <p><?= htmlspecialchars($post['caption']); ?></p>
+                                <!-- Display other post details -->
+                            </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

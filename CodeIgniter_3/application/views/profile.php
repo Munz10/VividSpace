@@ -5,19 +5,23 @@
     <title><?= htmlspecialchars($profile['username']); ?>'s Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        body {
-            background-color: #f8f9fa;
+        html, body {
+            height: 100%; /* Make the container take the whole page height */
         }
         .container {
             background: #fff;
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            padding: 1rem;
+            min-height: 100vh; /* Set minimum height to viewport height */
+            display: flex; /* Use flexbox */
+            flex-direction: column; /* Stack children vertically */
         }
         .header-section {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start; /* This will align items to the start of the container */
-            padding-top: 20px; /* Adjust this value as needed to create more space from the top */
+            align-items: flex-start;
+            padding-top: 20px;
             margin-bottom: 20px;
             padding: 1rem;
         }
@@ -39,16 +43,16 @@
         }
         .followers-info {
             display: flex;
-            flex-direction: column; /* Stack followers/following vertically */
-            justify-content: center; /* Center vertically */
+            flex-direction: column;
+            justify-content: center;
             flex: 1;
             text-align: center;
             font-size: 18px;
         }
         .post {
-            border: 1px solid #ddd; /* Adds a border around each post */
+            border: 1px solid #ddd;
             border-radius: 0.5rem;
-            margin-bottom: 15px; /* Adds space between rows */
+            margin-bottom: 15px;
             overflow: hidden;
         }
         .post-body {
@@ -59,7 +63,7 @@
             align-items: center;
         }
         .logo-and-home h1 {
-            margin-right: 10px; /* Adjust space between logo and button as needed */
+            margin-right: 10px;
         }
         .post img {
             width: 100%; 
@@ -67,7 +71,11 @@
             object-fit: cover; 
             border-bottom: 1px solid #ddd; 
         }
-
+        hr {
+            margin: 2rem; /* Adjusted margin for better visibility */
+            border: none; /* Remove the default border */
+            border-top: 1px solid #ddd; /* Add a new border style */
+        }
     </style>
 </head>
 <body>
@@ -104,21 +112,29 @@
         </div>
     </div>
 
-    <div class="row">
-        <?php foreach ($posts as $post): ?>
-            <div class="col-md-4 mb-3">
-                <div class="post">
-                    <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                        <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
-                    </a>
-                    <div class="post-body">
-                        <p><?= htmlspecialchars($post['caption']); ?></p>
-                        <!-- Display other post details -->
+    <hr> <!-- Separator between user details and posts -->
+
+    <?php if (empty($posts)): ?>
+        <div class="text-center">
+            <h1> No posts yet.</h1>
+        </div>
+    <?php else: ?>
+        <div class="row">
+            <?php foreach ($posts as $post): ?>
+                <div class="col-md-4 mb-3">
+                    <div class="post">
+                        <a href="<?= site_url('post/detail/' . $post['id']); ?>">
+                            <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                        </a>
+                        <div class="post-body">
+                            <p><?= htmlspecialchars($post['caption']); ?></p>
+                            <!-- Display other post details -->
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 </body>
 </html>
