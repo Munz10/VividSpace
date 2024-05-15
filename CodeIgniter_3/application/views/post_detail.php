@@ -51,6 +51,9 @@
         .comment-section {
             border-left: 1px solid #ddd;
             padding-left: 20px;
+        }
+        .interaction-line {
+            margin-bottom: 1rem; /* Adjust the margin as needed */
         }     
     </style>
 </head>
@@ -79,24 +82,35 @@
                         <p class="card-text"><?= $post['hashtags']; ?></p>
                 </div>
             </div>
+            <!-- Right Side -->
             <div class="col-md-6">
                 <!-- Interaction bar -->
                 <div class="interaction-bar">
-                    <!-- Make comments count clickable -->
-                    <span class="comments-toggle" onclick="showComments(<?= $post['id']; ?>);">
-                        <span id="comment-count-<?= $post['id']; ?>" class="comment-count" style="cursor: pointer;"><?= $post['comments_count']; ?></span> comments
-                    </span>
-                    <span class="card-text" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?> likes</span>
-                    <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary" style="padding: 0; border: none; background: none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
-                            <path id="heart-icon-<?= $post['id']; ?>" fill="#888" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                        </svg>
-                    </button>
-                    <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary" style="padding: 0; border: none; background: none;" >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
-                            <path fill="none" stroke="#000000" stroke-width="2" d="M16.293,2H7.707C6.57,2,5.707,2.866,5.707,4v12c0,1.137,0.863,2,2,2h7.586l3.707,3.707V4 C18.707,2.866,17.844,2,16.293,2z"/>
-                        </svg>
-                    </button>
+                    <!-- Line 1: Like and Comment Buttons -->
+                    <div class="interaction-line">
+                        <!-- Like button -->
+                        <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary" style="padding: 0; border: none; background: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
+                                <path id="heart-icon-<?= $post['id']; ?>" fill="#888" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                            </svg>
+                        </button>
+                        <!-- Comment button -->
+                        <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary" style="padding: 0; border: none; background: none;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28">
+                                <path fill="none" stroke="#000000" stroke-width="2" d="M16.293,2H7.707C6.57,2,5.707,2.866,5.707,4v12c0,1.137,0.863,2,2,2h7.586l3.707,3.707V4 C18.707,2.866,17.844,2,16.293,2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Line 2: Number of Likes -->
+                    <div class="interaction-line">
+                        <span class="card-text" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?> likes</span>
+                    </div>
+                    <!-- Line 3: Number of Comments -->
+                    <div class="interaction-line">
+                        <span class="comments-toggle" onclick="showComments(<?= $post['id']; ?>);">
+                            <span id="comment-count-<?= $post['id']; ?>" class="comment-count" style="cursor: pointer;"><?= $post['comments_count']; ?></span> comments
+                        </span>
+                    </div>
                     <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
                         <!-- Show delete button only if logged-in user is the owner of the post -->
                         <a href="<?= site_url('profile/delete_post/' . $post['id']); ?>" class="btn btn-danger">Delete</a>
