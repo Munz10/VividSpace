@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <title>Post Details - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Other styles -->
     <style>
-        /* Add your custom styles here to match the wireframe layout */
         body {
             background-color: #f8f9fa;
         }
@@ -42,7 +40,6 @@
             border-radius: 50%;
             background: #333; /* Replace with actual image */
         }
-        
         .card-img-top {
             width: 50%;
             height: 500px;
@@ -50,7 +47,6 @@
             object-fit: contain;
         }
         .card {
-            
             border-radius: 10px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Added box-shadow for elevation */
             background-color: #fff; /* Added background color */
