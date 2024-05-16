@@ -32,6 +32,12 @@ class User_model extends CI_Model {
         return false; // The user does not exist or password is wrong
     }
 
+    public function checkUser($username)
+    {
+        $result = $this->db->get_where('users', array('Username' => $username));
+        return $res->num_rows();
+    }
+
     public function get_user_by_id($user_id) {
         $this->db->select('id, username, first_name, last_name, bio, email, profile_image'); 
         $this->db->where('id', $user_id);
