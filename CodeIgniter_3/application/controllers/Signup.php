@@ -31,7 +31,7 @@ class Signup extends \Restserver\Libraries\REST_Controller {
 
         if ($this->form_validation->run() == FALSE) {
             // Return validation errors
-            $this->response(['error' => validation_errors()], REST_Controller::HTTP_BAD_REQUEST);
+            $this->response(['error' => validation_errors()],  \Restserver\Libraries\REST_Controller::HTTP_BAD_REQUEST);
         } else {
             // Prepare user data for insertion
             $userData = [
