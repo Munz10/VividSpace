@@ -149,7 +149,7 @@ class Profile extends CI_Controller {
             } 
             else {
                 $upload_data = $this->upload->data();
-                $userData['profile_image'] = "/profile_pics/" . $upload_data['file_name']; // Adjust the path accordingly
+                $userData['profile_image'] = "/profile_pics/" . $upload_data['file_name'];
             }
         }
     
@@ -169,8 +169,6 @@ class Profile extends CI_Controller {
     public function edit() {
         $user_id = $this->session->userdata('user_id');
         $data['profile'] = $this->User_model->get_user_by_id($user_id);
-        
-        // Load the edit profile view
         $this->load->view('edit_profile', $data);
     }
 

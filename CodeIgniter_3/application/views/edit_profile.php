@@ -5,29 +5,34 @@
     <title>Edit Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Inline styles are used here for brevity */
         body {
-            padding-top: 50px;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
         }
-        .logo {
-            display: block;
-            margin: 0 auto 30px;
-            text-align: center;
+        .container {
+            padding: 1rem;
         }
-        .logo h1 {
-            color: #333;
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
         }
-        .form-group {
-            margin-bottom: 15px;
+        .logo-and-home {
+            display: flex;
+            align-items: center;
         }
-        .btn-primary {
-            width: 48%;
-            display: inline-block;
+        .logo-and-home h1 {
+            margin-right: 10px;
+            margin-bottom: 0;
         }
-        .btn-secondary {
-            width: 48%;
-            display: inline-block;
-            float: right;
+        .form-container {
+            max-width: 600px;
+            margin: auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
         }
         .profile-icon {
             width: 32px;
@@ -35,21 +40,27 @@
             border-radius: 50%;
             background: #333; /* Replace with actual image */
         }
-        .form-container {
-            max-width: 700px; /* Adjust the width of container */
-            margin: auto; /* Center the container */
-            padding: 2rem;
-            background-color: #fff;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        .form-group {
+            margin-bottom: 15px;
         }
-        
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        h1 {
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: bold; 
+            color: #333333; 
+            text-align: center;
+            margin-bottom: 30px; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="row align-items-center my-4">
-            <div class="col-6 col-md-3 d-flex align-items-center">
+        <div class="header-section">
+            <div class="logo-and-home">
                 <!-- Logo -->
                 <h1>VividSpace</h1>
                 <!-- Home button -->
@@ -63,29 +74,29 @@
             </div>
         </div>
         <div class="form-container">    
-            <h4>Edit Profile</h4>
-            <?php echo form_open_multipart('profile/update'); ?>
+            <form action="<?= site_url('profile/update'); ?>" method="post" enctype="multipart/form-data" novalidate>
                 <div class="form-group">
-                    <label for="first_name">First Name:</label>
-                    <input type="text" class="form-control" name="first_name" value="<?= isset($profile['first_name']) ? $profile['first_name'] : ''; ?>">
+                    <label for="first_name">First Name</label>
+                    <input type="text" class="form-control" name="first_name" value="<?= $profile['first_name'] ?? ''; ?>">
                 </div>
                 <div class="form-group">
-                    <label for="last_name">Last Name:</label>
-                    <input type="text" class="form-control" name="last_name" value="<?= isset($profile['last_name']) ? $profile['last_name'] : ''; ?>">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" value="<?= $profile['last_name'] ?? ''; ?>">
                 </div>
                 <div class="form-group">
-                    <label for="bio">Bio:</label>
-                    <textarea class="form-control" name="bio"><?= isset($profile['bio']) ? $profile['bio'] : ''; ?></textarea>
+                    <label for="bio">Bio</label>
+                    <textarea class="form-control" name="bio"><?= $profile['bio'] ?? ''; ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" class="form-control" name="email" value="<?= isset($profile['email']) ? $profile['email'] : ''; ?>" required>
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" name="email" id="email" value="<?= $profile['email'] ?? ''; ?>" required>
+                    <div id="email-error" class="text-danger"></div>
                 </div>
                 <div class="form-group">
                     <label for="profile_image">Profile Picture:</label>
                     <input type="file" name="profile_image">
                 </div>
-                <div class="form-group">
+                <div class="button-container">
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                     <a href="<?= site_url('profile'); ?>" class="btn btn-secondary">Cancel</a>
                 </div>
@@ -100,10 +111,33 @@
                         <?= $this->session->flashdata('error'); ?>
                     </div>
                 <?php endif; ?>
-            <?php echo form_close(); ?>
+            </form>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#email').on('keyup', function() {
+                validateEmail($(this).val());
+            });
+        });
+
+        function validateEmail(email) {
+            var emailError = $('#email-error');
+            var updateProfileBtn = $('button[type="submit"]'); // Select the "Update Profile" button
+            
+            // Regular expression for email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (!emailRegex.test(email)) {
+                emailError.text('Please enter a valid email address.');
+                updateProfileBtn.prop('disabled', true); // Disable "Update Profile" button
+            } else {
+                emailError.text('');
+                updateProfileBtn.prop('disabled', false); // Enable "Update Profile" button
+            }
+        }
+    </script>
 </body>
 </html>
