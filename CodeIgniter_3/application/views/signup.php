@@ -106,29 +106,41 @@
                 document.getElementById('createUser').disabled = true;
             }
         }
-        function validateemail() {//valid email before sending through api
+        function validateemail() {
             var x = document.forms["signupform"]["email"].value;
             var atposition = x.indexOf("@");
             var dotposition = x.lastIndexOf(".");
             if (atposition < 1 || dotposition < atposition + 2 || dotposition + 2 >= x.length) {
                 document.getElementById("errormsg").innerHTML = "Please enter a valid e-mail address";
-            }
-            else {
+                document.getElementById('createUser').disabled = true;
+            } else {
                 document.getElementById("errormsg").innerHTML = "";
                 checkinputs();
             }
         }
-        function checkusername() {//check if the username is taken or not
+        function checkusername() {
+            var username = $('#username').val().toLowerCase();
+            // Regular expression to match only letters, numbers, and underscores
+            var regex = /^[a-zA-Z0-9_]+$/;
+            
+            if (!regex.test(username)) {
+                document.getElementById("errormsg").innerHTML = "Username can only contain letters, numbers, and underscores";
+                document.getElementById('createUser').disabled = true;
+                return;
+            }
+            else{
+                document.getElementById("errormsg").innerHTML = "";
+            }
+
             $.ajax({
                 url: "<?php echo base_url() ?>index.php/signup/check_user",
-                data: { 'username': "@" + $('#username').val().toLowerCase() },
+                data: { 'username': "@" + username },
                 method: "POST"
             }).done(function (data) {
                 if (data == 0) {
                     document.getElementById("errormsg").innerHTML = "";
                     checkinputs();
-                }
-                else {
+                } else {
                     document.getElementById("errormsg").innerHTML = "Username Already Exists!"
                 }
             });
