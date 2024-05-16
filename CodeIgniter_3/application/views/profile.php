@@ -6,32 +6,39 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         html, body {
-            height: 100%; /* Make the container take the whole page height */
+            height: 100%;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: bold; 
+            color: #333333; 
+            text-align: center;
+            margin-bottom: 30px; 
         }
         .container {
             background: #fff;
             border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
             padding: 1rem;
-            min-height: 100vh; /* Set minimum height to viewport height */
-            display: flex; /* Use flexbox */
-            flex-direction: column; /* Stack children vertically */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .header-section {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            padding-top: 20px;
-            margin-bottom: 20px;
+            align-items: center;
             padding: 1rem;
         }
         .profile-section {
             display: flex;
             padding-left: 5rem;
             margin-bottom: 1rem;
+            margin-top: 1rem;
         }
         .profile-info {
-            margin-right: 2rem; 
+            margin-right: 2rem;
             text-align: center;
         }
         .profile-pic {
@@ -64,17 +71,18 @@
         }
         .logo-and-home h1 {
             margin-right: 10px;
+            margin-bottom: 0; 
         }
         .post img {
-            width: 100%; 
-            height: 400px; 
-            object-fit: cover; 
-            border-bottom: 1px solid #ddd; 
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
         }
         hr {
-            margin: 2rem; /* Adjusted margin for better visibility */
-            border: none; /* Remove the default border */
-            border-top: 1px solid #ddd; /* Add a new border style */
+            margin: 2rem;
+            border: none;
+            border-top: 1px solid #ddd;
         }
     </style>
 </head>
@@ -90,7 +98,7 @@
             <a href="<?= site_url('profile/logout'); ?>" class="btn btn-dark">Log out</a>
         </div>
     </div>
-    
+
     <div class="profile-section">
         <div class="profile-info">
             <?php if (!empty($profile['profile_image'])): ?>
@@ -112,7 +120,7 @@
         </div>
     </div>
 
-    <hr> <!-- Separator between user details and posts -->
+    <hr>
 
     <?php if (empty($posts)): ?>
         <div class="text-center">
@@ -128,7 +136,6 @@
                         </a>
                         <div class="post-body">
                             <p><?= htmlspecialchars($post['caption']); ?></p>
-                            <!-- Display other post details -->
                         </div>
                     </div>
                 </div>
