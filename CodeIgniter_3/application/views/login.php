@@ -63,11 +63,11 @@
             <form id="login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter your username" required>
+                    <input type="text" class="form-control" id="username" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                    <input type="password" class="form-control" id="password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
                 <p class="mt-3">Don’t have an account? <a href="<?= site_url('signup'); ?>">Sign Up</a> here</p>
@@ -76,11 +76,9 @@
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-
 <script>
     var Login = Backbone.Model.extend({
-        urlRoot: '<?php echo base_url()?>index.php/login',
+        urlRoot: '<?= base_url('index.php/login') ?>',
         defaults: {
             username: '',
             password: ''
@@ -104,7 +102,9 @@
                     console.log('Login successful');
                     if (response.result === 'success') {
                         window.location.href = 'profile';
-                    } 
+                    } else {
+                        $('#error-msg').text('Invalid username or password').show();
+                    }
                 },
                 error: function (model, response) {
                     console.error('Error occurred during login');
