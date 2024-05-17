@@ -35,7 +35,7 @@ class User_model extends CI_Model {
     public function checkUser($username)
     {
         $result = $this->db->get_where('users', array('Username' => $username));
-        return $res->num_rows();
+        return $result->num_rows();
     }
 
     public function get_user_by_id($user_id) {

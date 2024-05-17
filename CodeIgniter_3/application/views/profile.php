@@ -82,7 +82,7 @@
         hr {
             margin: 2rem;
             border: none;
-            border-top: 1px solid #ddd;
+            border-top: 2px solid #ddd;
         }
     </style>
 </head>

@@ -75,7 +75,7 @@ class Signup extends \Restserver\Libraries\REST_Controller {
     } 
 
     public function check_user(){
-        $username = $this->post('username');
+        $username = $this->input->post('username');
             $result = $this->User_model->checkUser($username);
             $this->response($result); 
     }

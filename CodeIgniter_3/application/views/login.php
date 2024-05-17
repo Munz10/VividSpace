@@ -12,11 +12,6 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa;
         }
-        .container {
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
         form {
             width: 500px;
             margin: 40px auto 0;
@@ -32,7 +27,7 @@
             text-align: center;
             margin-bottom: 30px; 
         }
-        .form-group label {
+        label {
             font-weight: bold;
             color: #555555;
         }
@@ -42,15 +37,13 @@
             display: block; 
             margin: 20px auto 0; 
         }
-        .mt-3 {
+        .alert-danger {
+            border-radius: 5px;
+            display: none;
+        }
+        .chnage-link{
             text-align: center;
-        }
-        .mt-3 a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .mt-3 a:hover {
-            text-decoration: underline;
+            padding: 15px;
         }
     </style>
 </head>
@@ -70,7 +63,7 @@
                     <input type="password" class="form-control" id="password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
-                <p class="mt-3">Don’t have an account? <a href="<?= site_url('signup'); ?>">Sign Up</a> here</p>
+                <p class="chnage-link">Don’t have an account? <a href="signup">Sign Up</a> here</p>
             </form>
         </div>
     </div>
@@ -78,7 +71,7 @@
 
 <script>
     var Login = Backbone.Model.extend({
-        urlRoot: '<?= base_url('index.php/login') ?>',
+        urlRoot: 'login',
         defaults: {
             username: '',
             password: ''

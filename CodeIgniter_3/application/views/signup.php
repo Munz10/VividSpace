@@ -12,11 +12,6 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f8f9fa;
         }
-        .container {
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
         form {
             width: 500px;
             margin: 40px auto 0;
@@ -196,7 +191,7 @@
                     }
                 },
                 error: function (model, xhr, options) {
-                    document.getElementById("errormsg").innerHTML = 'AJAX error: ' + xhr.statusText;
+                    document.getElementById("errormsg").innerHTML = "Username Already Exists!";
                 }
             });
         }
