@@ -11,11 +11,11 @@
             background-color: #f8f9fa;
         }
         h1 {
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: bold; 
-            color: #333333; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: #333333;
             text-align: center;
-            margin-bottom: 30px; 
+            margin-bottom: 30px;
         }
         h2 {
             margin-top: 1rem;
@@ -43,7 +43,6 @@
             height: 32px;
             border-radius: 50%;
             background: #333;
-            display: inline-block;
         }
         form {
             max-width: 600px;
