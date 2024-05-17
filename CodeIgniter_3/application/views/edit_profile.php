@@ -38,7 +38,7 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background: #333; /* Replace with actual image */
+            background: #333;
         }
         .form-group {
             margin-bottom: 15px;
@@ -99,6 +99,7 @@
                 <div class="button-container">
                     <button type="submit" class="btn btn-primary">Update Profile</button>
                     <a href="<?= site_url('profile'); ?>" class="btn btn-secondary">Cancel</a>
+                    <a href="<?= site_url('profile/reset_password'); ?>" class="btn btn-link">Reset Password</a>
                 </div>
                 <?php if($this->session->flashdata('success')): ?>
                     <div class="alert alert-success">

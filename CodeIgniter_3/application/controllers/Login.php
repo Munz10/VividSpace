@@ -43,7 +43,6 @@ class Login extends \Restserver\Libraries\REST_Controller {
         $username = $this->post('username');
         $password = $this->post('password');
     
-        // Call your model method to authenticate user
         $result = $this->User_model->login($username, $password);
 
         if (!empty($result)) {
