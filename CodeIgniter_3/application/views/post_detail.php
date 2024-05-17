@@ -88,6 +88,9 @@
             border-radius: 10px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
         }
+        .dlt-btn{
+            margin: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -158,7 +161,7 @@
                 </div>
                 <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
                     <!-- Show delete button only if logged-in user is the owner of the post -->
-                    <a href="<?= site_url('profile/delete_post/' . $post['id']); ?>" class="btn btn-danger">Delete</a>
+                    <a href="<?= site_url('profile/delete_post/' . $post['id']); ?>" class="btn btn-danger dlt-btn">Delete</a>
                 <?php endif; ?>
               </div>
         </div>

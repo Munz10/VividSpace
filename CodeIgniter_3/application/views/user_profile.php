@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         html, body {
-            height: 100%; /* Make the container take the whole page height */
+            height: 100%;
         }
         body {
             background-color: #f8f9fa;
@@ -16,14 +16,15 @@
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             padding: 1rem;
-            min-height: 100vh; /* Set minimum height to viewport height */
-            display: flex; /* Use flexbox */
-            flex-direction: column; /* Stack children vertically */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         .profile-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: 1rem;
         }
         .profile-info {
             text-align: center;
@@ -41,14 +42,14 @@
         .post {
             border: 1px solid #ddd;
             border-radius: 0.5rem;
-            margin-bottom: 15px; 
+            margin-bottom: 15px;
             overflow: hidden;
         }
         .post img {
-            width: 100%; 
-            height: 400px; 
-            object-fit: cover; 
-            border-bottom: 1px solid #ddd; 
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-bottom: 1px solid #ddd;
         }
         .post-body {
             padding: 10px;
@@ -72,21 +73,6 @@
             border-radius: 50%;
             background: #ddd;
         }
-        .profile-header {
-            margin-top: 1rem;
-            text-align: center;
-        }
-        .profile-header h1 {
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
-        .follow-info {
-            display: flex;
-            justify-content: space-evenly;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
         .follow-btn-wrapper {
             text-align: right;
             margin-top: 1rem;
@@ -96,22 +82,43 @@
             margin-right: 1rem;
             margin-top: 1rem;
         }
+        .follow-btn.follow {
+            background-color: #5bc0de; /* Light blue */
+            color: white;
+        }
+        .follow-btn.unfollow {
+            background-color: #c82333; /* Dark red */
+            color: white;
+        }
         .spacer {
-            flex-grow: 1; /* Allow the spacer to grow and push the follow button to the right */
+            flex-grow: 1;
         }
         hr {
-            margin: 2rem; /* Adjusted margin for better visibility */
-            border: none; /* Remove the default border */
-            border-top: 1px solid #ddd; /* Add a new border style */
+            margin: 2rem;
+            border: none;
+            border-top: 1px solid #ddd;
         }
-
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: #333333;
+            text-align: center;
+        }
+        .logo-and-home {
+            display: flex;
+            align-items: center;
+        }
+        .logo-and-home h1 {
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <div class="logo-and-home">
-                <h1><span>VividSpace</span></h1>
+                <h1>VividSpace</h1>
                 <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
             </div>
             <div class="profile-icon-container">
@@ -122,7 +129,7 @@
         </div>
         <div class="profile-header">
             <div class="spacer"></div>
-            <button class="btn btn-primary follow-btn" data-following-id="<?= $user_profile['id']; ?>"
+            <button class="btn follow-btn <?= $is_following ? 'unfollow' : 'follow'; ?>" data-following-id="<?= $user_profile['id']; ?>"
                     onclick="toggleFollow(this);">
                 <?= $is_following ? 'Unfollow' : 'Follow'; ?>
             </button>
@@ -145,7 +152,7 @@
             <p><strong><?= $followers_count ?></strong> Followers</p>
             <p><strong><?= $following_count ?></strong> Following</p>
         </div>
-        <hr> <!-- Separator between user details and posts -->
+        <hr>
         <?php if (empty($posts)): ?>
             <div class="text-center">
                 <h1>No posts yet.</h1>
@@ -160,7 +167,6 @@
                             </a>
                             <div class="post-body">
                                 <p><?= htmlspecialchars($post['caption']); ?></p>
-                                <!-- Display other post details -->
                             </div>
                         </div>
                     </div>
@@ -176,7 +182,7 @@
         function toggleFollow(buttonElement) {
             var button = $(buttonElement);
             var followingId = button.data('following-id');
-            var isFollowing = button.text().trim() === 'Unfollow';
+            var isFollowing = button.hasClass('unfollow');
 
             $.ajax({
                 url: '<?= site_url('follow/'); ?>' + (isFollowing ? 'do_unfollow' : 'do_follow'),
@@ -185,21 +191,19 @@
                 dataType: 'json',
                 success: function(response) {
                     if (response.status === 'success') {
-                        // Toggle the button text based on the action taken
-                        button.text(isFollowing ? 'Follow' : 'Unfollow');
-                    } 
-                    // else {
-                    //     alert('Could not update the follow status.');
-                    // }
+                        if (isFollowing) {
+                            button.removeClass('unfollow').addClass('follow').text('Follow');
+                        } else {
+                            button.removeClass('follow').addClass('unfollow').text('Unfollow');
+                        }
+                    }
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
-                    // If there is an error with the request
                     console.error("Error: " + textStatus + ", " + errorThrown);
                 }
             });
         }
 
-        // Since you're using jQuery, make sure to wrap your function calls inside a document ready block
         $(document).ready(function() {
             $('.follow-btn').on('click', function() {
                 toggleFollow(this);

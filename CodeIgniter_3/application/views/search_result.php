@@ -34,7 +34,7 @@
     </div>
 
     <div class="search-results">
-        <h2>Search Results</h2>
+        <h3>Search Results</h3>
         <?php if (empty($results)): ?>
             <p>No users found.</p>
         <?php else: ?>
