@@ -49,11 +49,15 @@
             margin-top: 20px;
         }
         h1 {
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: bold; 
-            color: #333333; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: #333333;
             text-align: center;
-            margin-bottom: 30px; 
+            margin-bottom: 30px;
+        }
+        .updatebtn{
+            background-color: #003789;
+            color: #fff;
         }
     </style>
 </head>
@@ -94,12 +98,12 @@
                     <input type="file" name="profile_image">
                 </div>
                 <div class="button-container">
-                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                    <button type="submit" class="btn updatebtn">Update Profile</button>
                     <a href="<?= site_url('profile'); ?>" class="btn btn-secondary">Cancel</a>
                     <a href="<?= site_url('profile/reset_password'); ?>" class="btn btn-link">Reset Password</a>
                 </div>
                 <?php if($this->session->flashdata('success')): ?>
-                    <div class="alert alert-success">
+                    <div class="alert alert-success mt-3">
                         <?= $this->session->flashdata('success'); ?>
                     </div>
                 <?php endif; ?>
