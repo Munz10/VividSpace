@@ -16,11 +16,11 @@
             padding: 1rem;
         }
         h1 {
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: bold; 
-            color: #333333; 
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            color: #333333;
             text-align: center;
-            margin-bottom: 30px; 
+            margin-bottom: 30px;
         }
         .form-container {
             max-width: 600px;
@@ -49,7 +49,6 @@
             height: 32px;
             border-radius: 50%;
             background: #333;
-            display: inline-block;
         }
         .custom-file-upload {
             border: 1px solid #ccc;
@@ -69,10 +68,6 @@
             font-size: 1rem;
             line-height: 1.5;
             border-radius: 0.25rem;
-            margin-left: 0.5rem;
-        }
-        .search-bar input {
-            margin-left: 1rem;
         }
     </style>
 </head>
@@ -83,11 +78,9 @@
             <h1>VividSpace</h1>
             <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
         </div>
-        <div class="col-6 col-md-8 d-flex justify-content-end">
-            <a href="<?= site_url('profile'); ?>">
-                <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
-            </a>
-        </div>
+        <a href="<?= site_url('profile'); ?>">
+            <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
+        </a>
     </div>
     <div class="form-container my-4">
         <h4> Create new post </h4>
@@ -110,7 +103,6 @@
         </form>
     </div>
 </div>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     function updateFilename(value) {
         if (value) {
@@ -124,7 +116,7 @@
             document.getElementById("image-preview").style.display = "block";
             document.getElementById("image-preview").src = oFREvent.target.result;
         };
-    };
+    }
 </script>
 </body>
 </html>

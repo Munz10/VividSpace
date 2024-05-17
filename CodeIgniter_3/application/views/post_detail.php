@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Post Details - VividSpace</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -54,7 +55,7 @@
             padding-left: 20px;
         }
         .interaction-line {
-            margin-bottom: 1rem; /* Adjust the margin as needed */
+            margin-bottom: 1rem; 
         }
         .btn-danger{
             margin-left: 3rem;
@@ -75,11 +76,11 @@
             margin-left: 3rem;
         }
         .comments-container {
-            max-height: 380px; /* Adjust the max height as needed */
-            overflow-y: auto; /* Add a vertical scrollbar when content exceeds max height */
+            max-height: 380px;
+            overflow-y: auto; /* Vertical scrollbar when content exceeds max height */
         }
         .comments-content {
-            padding-right: 15px; /* Add right padding to prevent the scrollbar from covering content */
+            padding-right: 15px; /* Right padding to prevent the scrollbar from covering content */
         }
         .right-side{
             margin-top :1rem;
@@ -167,13 +168,6 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins and AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
     $(document).ready(function() {
         // Check the like status of the post when the page loads
@@ -240,7 +234,6 @@
             $('#comment-section-' + postId).toggle();
         }
 
-        // Define the showComments function
         function showComments(postId) {
             $.ajax({
                 url: '<?= site_url('post/get_comments'); ?>', 
@@ -263,7 +256,6 @@
             });
         }
 
-        // Function to delete post
         function deletePost(postId) {
             $.ajax({
                 url: '<?= site_url('profile/delete_post'); ?>/' + postId,
@@ -274,10 +266,7 @@
                     if (response.success) {
                         // Remove the post from the DOM
                         $('#post-' + postId).remove();
-                        // Optionally, display a success message
-                    } else {
-                        // Handle error or display a message
-                    }
+                    } 
                 },
                 error: function(xhr, status, error) {
                     // Handle error or display a message
