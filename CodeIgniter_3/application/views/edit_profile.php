@@ -61,13 +61,10 @@
     <div class="container">
         <div class="header-section">
             <div class="logo-and-home">
-                <!-- Logo -->
                 <h1>VividSpace</h1>
-                <!-- Home button -->
                 <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
             </div>
             <div class="col-6 col-md-8 d-flex justify-content-end">
-                <!-- User Icon -->
                 <a href="<?= site_url('profile'); ?>">
                     <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
                 </a>
@@ -106,9 +103,8 @@
                         <?= $this->session->flashdata('success'); ?>
                     </div>
                 <?php endif; ?>
-
                 <?php if($this->session->flashdata('error')): ?>
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger mt-3">
                         <?= $this->session->flashdata('error'); ?>
                     </div>
                 <?php endif; ?>
@@ -126,17 +122,16 @@
 
         function validateEmail(email) {
             var emailError = $('#email-error');
-            var updateProfileBtn = $('button[type="submit"]'); // Select the "Update Profile" button
+            var updateProfileBtn = $('button[type="submit"]');
             
-            // Regular expression for email validation
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             
             if (!emailRegex.test(email)) {
                 emailError.text('Please enter a valid email address.');
-                updateProfileBtn.prop('disabled', true); // Disable "Update Profile" button
+                updateProfileBtn.prop('disabled', true);
             } else {
                 emailError.text('');
-                updateProfileBtn.prop('disabled', false); // Enable "Update Profile" button
+                updateProfileBtn.prop('disabled', false);
             }
         }
     </script>
