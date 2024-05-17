@@ -5,11 +5,15 @@
     <title>Post Details - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Set default font */
+            background-color: #f8f9fa; /* Light background color */
+        }
         .card {
             border: none;
             align-items : center;
             margin-top :1rem;
-            padding: 15px; 
+            padding: 10px; 
             border-radius: 10px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1); /* Added box-shadow for elevation */
             background-color: #fff; /* Added background color */
@@ -30,7 +34,7 @@
         }
         .interaction-bar {
             font-size: 0.9rem;
-            margin-bottom: 7rem;
+            margin-bottom: 2rem;
             margin-left: 3rem;
             align-items: start;
         }
@@ -61,6 +65,29 @@
         .like-comment-count {
             font-size: 1rem;
         }
+        h1 {
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: bold; 
+            color: #333333; 
+            text-align: center;
+        }
+        .comments{
+            margin-left: 3rem;
+        }
+        .comments-container {
+            max-height: 380px; /* Adjust the max height as needed */
+            overflow-y: auto; /* Add a vertical scrollbar when content exceeds max height */
+        }
+        .comments-content {
+            padding-right: 15px; /* Add right padding to prevent the scrollbar from covering content */
+        }
+        .right-side{
+            margin-top :1rem;
+            background-color: #fff;
+            padding: 10px 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body>
@@ -88,7 +115,7 @@
                 </div>
             </div>
             <!-- Right Side -->
-            <div class="col-md-6">
+            <div class="col-md-4 right-side">
                 <!-- Interaction bar -->
                 <div class="interaction-bar">
                     <!-- Line 1: Like and Comment Buttons -->
@@ -118,12 +145,12 @@
                     </div>
                 </div>
                 <!-- Comments Section -->
-                <div id="comments-container-<?= $post['id']; ?>" style="display:none;">
+                <div id="comments-container-<?= $post['id']; ?>" class="comments comments-container" style="display:none;">
                     <!-- Dynamic comments will be loaded here -->
-                    <div id="comments-content-<?= $post['id']; ?>"></div>
+                    <div id="comments-content-<?= $post['id']; ?>" class="comments-content"></div>
                 </div>
                 <!-- Comment Form (hidden by default) -->
-                <div id="comment-section-<?= $post['id']; ?>" style="display:none;">
+                <div id="comment-section-<?= $post['id']; ?>" class = "comments" style="display:none;">
                     <form onsubmit="event.preventDefault(); addComment(<?= $post['id']; ?>);">
                         <input type="text" id="comment-content-<?= $post['id']; ?>" class="form-control" placeholder="Write a comment...">
                         <button type="submit" class="btn btn-primary">Post Comment</button>

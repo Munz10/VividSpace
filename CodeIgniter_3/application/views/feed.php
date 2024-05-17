@@ -5,7 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>User's Feed - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style> 
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* Set default font */
+            background-color: #f8f9fa; /* Light background color */
+        }
+        .container {
+            background: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            font-family: 'Montserrat', sans-serif; 
+            font-weight: bold; 
+            color: #333333; 
+            text-align: center;
+            margin-bottom: 30px; 
+        }
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+        .logo-and-home {
+            display: flex;
+            align-items: center;
+        }
+        .logo-and-home h1 {
+            margin-right: 10px;
+            margin-bottom: 0; 
+        }
         .list-group-item {
             border: solid; 
             border-radius: 10px; /* Optional: Add some border radius */
@@ -51,7 +85,6 @@
             height: 400px; /* or any other height */
             object-fit: cover;
         }
-        /* Additional styles for feed items */
         .card {
             background-color: #f8f9fa; /* Light gray background color */
             padding: 15px; /* Add padding to create space */
@@ -62,14 +95,14 @@
 </head>
 <body>
 <div class="container">
-    <div class="row align-items-center my-4">
+    <div class="header-section">
         <!-- Logo and Create button, allocated 4 units -->
-        <div class="col-6 col-md-4 d-flex align-items-center">
+        <div class="logo-and-home">
             <h1>VividSpace</h1>
             <a href="<?= site_url('profile/create_post'); ?>" class="btn btn-primary ml-3">Create</a>
         </div>
         <!-- Search Form, allocated 4 units -->
-        <div class="col-12 col-md-4 my-3 my-md-0">
+        <div class="col-12 col-md-6 my-3 my-md-0">
             <form action="<?= site_url('search/result'); ?>" method="get" class="d-flex">
                 <input type="search" id="search-input" class="form-control flex-grow-1" name="query" placeholder="Search users..." required>
                 <button type="submit" class="btn btn-outline-secondary ml-2">Search</button>
@@ -80,7 +113,7 @@
         <!-- Search Results Container -->
         <div id="search-results"></div>
         <!-- User Icon, allocated 4 units -->
-        <div class="col-6 col-md-4 d-flex justify-content-end">
+        <div class="col-6 col-md-2 d-flex justify-content-end">
             <a href="<?= site_url('profile'); ?>">
                 <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
             </a>
@@ -88,7 +121,7 @@
     </div>
 
     <!-- Feed items -->
-    <div class="row">
+    <div class="row mt-4">
     <?php if (!empty($posts)): ?>
         <?php foreach ($posts as $post): ?>
             <div class="col-md-4 mb-3">

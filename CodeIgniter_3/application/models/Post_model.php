@@ -56,7 +56,29 @@ class Post_model extends CI_Model {
             'user_id' => $user_id,
             'content' => $content
         ]);
-        return $this->db->insert_id();
+    
+        // Get the inserted comment ID
+        $comment_id = $this->db->insert_id();
+    
+        // Fetch the username associated with the user ID
+        $this->db->select('username');
+        $this->db->where('id', $user_id);
+        $query = $this->db->get('users');
+
+        // Check if the query was successful
+        if ($query->num_rows() === 1) {
+            // Fetch the username from the query result
+            $username = $query->row()->username;
+        } else {
+            // Set a default username if user not found
+            $username = 'Unknown';
+        }    
+        // Return an array containing the comment ID, content, and username
+        return array(
+            'id' => $comment_id,
+            'content' => $content,
+            'username' => $username
+        );
     }
     
     public function get_comments_by_post_id($post_id) {

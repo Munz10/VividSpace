@@ -42,10 +42,15 @@ class Post extends CI_Controller {
         $post_id = $this->input->post('post_id');
         $user_id = $this->session->userdata('user_id');
         $content = $this->input->post('content');
-        $comment_id = $this->Post_model->add_comment($post_id, $user_id, $content);
+        $comment_data = $this->Post_model->add_comment($post_id, $user_id, $content);
 
-        if ($comment_id) {
-            $comment = ['id' => $comment_id, 'content' => $content];
+        if ($comment_data) {
+            // Combine comment data with the username
+            $comment = [
+                'id' => $comment_data['id'],
+                'content' => $comment_data['content'],
+                'username' => $comment_data['username']
+            ];
             echo json_encode(['comment' => $comment]);
         } else {
             echo json_encode(['error' => 'Unable to add comment']);
