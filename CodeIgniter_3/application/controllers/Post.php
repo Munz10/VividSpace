@@ -68,13 +68,11 @@ class Post extends CI_Controller {
     
     // Method to check the like status of a post
     public function check_like_status() {
-        // Assuming you have a model to handle post-related database operations
         $this->load->model('post_model');
         
         // Retrieve post ID from the AJAX request
         $post_id = $this->input->post('post_id');
 
-        // Assuming you have a method in your model to check if the post has been liked by the current user
         $liked = $this->post_model->is_post_liked($post_id);
 
         // Send response back to the client

@@ -243,7 +243,7 @@
         // Define the showComments function
         function showComments(postId) {
             $.ajax({
-                url: '<?= site_url('post/get_comments'); ?>', // Update URL to match your backend endpoint
+                url: '<?= site_url('post/get_comments'); ?>', 
                 type: 'POST',
                 data: { post_id: postId },
                 dataType: 'json',
