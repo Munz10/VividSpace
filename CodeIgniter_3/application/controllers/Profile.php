@@ -40,9 +40,6 @@ class Profile extends CI_Controller {
         
         // Get the posts from these users
         $data['posts'] = $this->Post_model->get_posts_by_user_ids($following_ids);
-
-        // Fetch suggested users to follow
-        $data['suggested_users'] = $this->User_model->get_suggested_users($user_id);
         
         // Load the feed view with the posts data
         $this->load->view('feed', $data);
@@ -57,7 +54,7 @@ class Profile extends CI_Controller {
         // Check if there's a file being uploaded
         if (isset($_FILES['post_image']['name']) && $_FILES['post_image']['name'] != '') {
             // Configure upload.
-            $config['upload_path'] = './uploads/'; 
+            $config['upload_path'] = './uploads/'; // Ensure you have this directory.
             $config['allowed_types'] = 'gif|jpg|png';
             $config['max_size'] = '2048'; // 2MB
     
@@ -94,6 +91,7 @@ class Profile extends CI_Controller {
     public function view($username) {
         $data['user_profile'] = $this->User_model->get_user_by_username($username);
         
+        // Assuming $data['user_profile'] contains the profile you're viewing
         $follower_id = $this->session->userdata('user_id'); // The current logged-in user
         $following_id = $data['user_profile']['id']; // The user being viewed
 
@@ -103,6 +101,9 @@ class Profile extends CI_Controller {
         
         // Check if the current user is following the viewed profile
         $data['is_following'] = $this->User_model->is_following($follower_id, $following_id);
+        
+        // Get posts for the user
+        // $user_id = $data['user_profile']['id']; // You'll get this after you've set up $data['user_profile']
 
         $viewed_user_id = $data['user_profile']['id'];
         $data['followers_count'] = $this->User_model->count_followers($viewed_user_id);
@@ -145,7 +146,7 @@ class Profile extends CI_Controller {
             } 
             else {
                 $upload_data = $this->upload->data();
-                $userData['profile_image'] = "/profile_pics/" . $upload_data['file_name'];
+                $userData['profile_image'] = "/profile_pics/" . $upload_data['file_name']; // Adjust the path accordingly
             }
         }
     
@@ -165,14 +166,17 @@ class Profile extends CI_Controller {
     public function edit() {
         $user_id = $this->session->userdata('user_id');
         $data['profile'] = $this->User_model->get_user_by_id($user_id);
+        
+        // Load the edit profile view
         $this->load->view('edit_profile', $data);
     }
 
     public function logout() {
         $this->session->unset_userdata('logged_in');
         $this->session->unset_userdata('user_id');
+        // You can add more session data to unset if needed
         $this->session->sess_destroy(); // This destroys the session completely
-        redirect('login'); 
+        redirect('login'); // Redirect to the login page or your application's entry point
     }
     
     public function delete_post($post_id) {
@@ -192,52 +196,5 @@ class Profile extends CI_Controller {
         header('Content-Type: application/json');
         echo json_encode($response);
     }  
-
-    public function reset_password() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $old_password = $this->input->post('old_password');
-            $new_password = $this->input->post('new_password');
-            $confirm_new_password = $this->input->post('confirm_new_password');
-            
-            // Validate form data
-            if (!$this->validate_reset_password($old_password, $new_password, $confirm_new_password)) {
-                redirect('profile/reset_password', 'refresh');
-                return;
-            }
-            
-            $user_id = $this->session->userdata('user_id'); // Get user ID from session or any other way
-            $updated = $this->User_model->update_password($user_id, $new_password);
-            
-            if ($updated) {
-                // Password updated successfully, redirect to profile page with success message
-                $this->session->set_flashdata('success', 'Password updated successfully.');
-                redirect('profile', 'refresh');
-            } else {
-                // Failed to update password, redirect to reset password page with error message
-                $this->session->set_flashdata('error', 'Failed to update password. Please try again.');
-                redirect('profile/reset_password', 'refresh');
-            }
-        } else {
-            // Display reset password form
-            $this->load->view('reset_password');
-        }
-    }
-    
-    private function validate_reset_password($old_password, $new_password, $confirm_new_password) {
-        
-        if (empty($old_password) || empty($new_password) || empty($confirm_new_password)) {
-            // Display error message
-            $this->session->set_flashdata('error', 'All fields are required.');
-            return false;
-        }
-        
-        if ($new_password !== $confirm_new_password) {
-            // Display error message
-            $this->session->set_flashdata('error', 'New password and confirm password do not match.');
-            return false;
-        }
-                
-        return true;
-    }
            
 }
