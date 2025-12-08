@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <title>Login - VividSpace</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.4.0/backbone-min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
@@ -56,60 +54,74 @@
             <form id="login-form">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" class="form-control" id="username" required>
+                    <input type="text" name="username" class="form-control" id="username" placeholder="Enter your username" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" required>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
-                <p class="chnage-link">Don’t have an account? <a href="signup">Sign Up</a> here</p>
+                <p class="chnage-link">Don't have an account? <a href="signup">Sign Up</a> here</p>
+                <p class="chnage-link text-muted"><small>Having login issues? <a href="fix_accounts">Fix Account</a> | <a href="test_account">Test Login</a></small></p>
             </form>
         </div>
     </div>
 </div>
 
+<!-- Include CSRF AJAX Helper -->
+<script src="<?= base_url('assets/js/csrf-ajax.js'); ?>"></script>
+
 <script>
-    var Login = Backbone.Model.extend({
-        urlRoot: 'login',
-        defaults: {
-            username: '',
-            password: ''
-        }
-    });
-
-    var LoginForm = Backbone.View.extend({
-        el: '#login-form',
-        events: {
-            'submit': 'submitForm'
-        },
-        submitForm: function (e) {
-            e.preventDefault();
-            var formData = {
-                username: this.$('#username').val(),
-                password: this.$('#password').val()
-            };
-            var user = new Login(formData);
-            user.save(null, {
-                success: function (model, response) {
-                    console.log('Login successful');
-                    if (response.result === 'success') {
-                        window.location.href = 'profile';
-                    } else {
-                        $('#error-msg').text('Invalid username or password').show();
-                    }
-                },
-                error: function (model, response) {
-                    console.error('Error occurred during login');
-                    $('#error-msg').text('Invalid username or password').show();
+$(document).ready(function() {
+    $('#login-form').on('submit', function(e) {
+        e.preventDefault();
+        
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var submitBtn = $(this).find('button[type="submit"]');
+        var errorMsg = $('#error-msg');
+        
+        // Show loading state
+        submitBtn.prop('disabled', true).text('Logging in...');
+        errorMsg.hide();
+        
+        // Use CSRF-protected POST
+        csrfPost(
+            '<?= site_url("login/process"); ?>',
+            {
+                username: username,
+                password: password
+            },
+            function(response) {
+                if (response.status === 'success') {
+                    errorMsg.removeClass('alert-danger').addClass('alert-success')
+                            .text(response.message + ' Redirecting...').show();
+                    
+                    // Redirect to profile
+                    setTimeout(function() {
+                        window.location.href = response.redirect;
+                    }, 500);
+                } else {
+                    // Show error
+                    errorMsg.removeClass('alert-success').addClass('alert-danger')
+                            .text(response.message).show();
+                    
+                    // Re-enable button
+                    submitBtn.prop('disabled', false).text('Login');
+                    
+                    // Clear password
+                    $('#password').val('').focus();
                 }
-            });
-        }
+            },
+            function(error) {
+                errorMsg.removeClass('alert-success').addClass('alert-danger')
+                        .text('An error occurred. Please try again.').show();
+                
+                submitBtn.prop('disabled', false).text('Login');
+            }
+        );
     });
-
-    $(document).ready(function () {
-        new LoginForm();
-    });
+});
 </script>
 </body>
 </html>

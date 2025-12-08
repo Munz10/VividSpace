@@ -174,9 +174,12 @@
 
                     if (response.results.length > 0) {
                         $.each(response.results, function(index, result) {
-                            var searchResult = $('<div class="search-result">' + result.username + '</div>');
+                            // Use text() instead of HTML concatenation to prevent XSS
+                            var searchResult = $('<div class="search-result"></div>').text(result.username);
                             searchResult.click(function() {
-                                window.location.href = '<?= site_url('profile/view/'); ?>' + result.username;
+                                // Sanitize username before using in URL
+                                var safeUsername = encodeURIComponent(result.username);
+                                window.location.href = '<?= site_url('profile/view/'); ?>' + safeUsername;
                             });
                             $('#search-results').append(searchResult);
                         });
