@@ -51,36 +51,18 @@ class Post_model extends CI_Model {
 
     // Add a new comment to a post
     public function add_comment($post_id, $user_id, $content) {
+        // Sanitize content - remove HTML tags but keep text
+        $content = sanitize_input($content, false);
+        
         $this->db->insert('comments', [
             'post_id' => $post_id,
             'user_id' => $user_id,
             'content' => $content
         ]);
-    
-        // Get the inserted comment ID
-        $comment_id = $this->db->insert_id();
-    
-        // Fetch the username associated with the user ID
-        $this->db->select('username');
-        $this->db->where('id', $user_id);
-        $query = $this->db->get('users');
-
-        // Check if the query was successful
-        if ($query->num_rows() === 1) {
-            // Fetch the username from the query result
-            $username = $query->row()->username;
-        } else {
-            // Set a default username if user not found
-            $username = 'Unknown';
-        }    
-        // Return an array containing the comment ID, content, and username
-        return array(
-            'id' => $comment_id,
-            'content' => $content,
-            'username' => $username
-        );
+        return $this->db->insert_id();
     }
     
+    // In your Post_model
     public function get_comments_by_post_id($post_id) {
         $this->db->select('comments.*, users.username');
         $this->db->from('comments');
@@ -91,19 +73,13 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_by_user_ids($user_ids) {
-        if (empty($user_ids)) {
-            // If the array of user IDs is empty, return an empty array of posts
-            return array();
-        }
-    
         $this->db->select('posts.*, users.username as author_username');
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.user_id');
         $this->db->where_in('posts.user_id', $user_ids);
         $query = $this->db->get();
         return $query->result_array();
-    }
-    
+    }   
     
     public function delete_post($post_id) {
         // First, delete associated likes
@@ -126,16 +102,5 @@ class Post_model extends CI_Model {
             // Post not found or not deleted
             return false;
         }
-    }
-
-    // Method to check if the post has been liked by the current user
-    public function is_post_liked($post_id) {
-        $user_id = $this->session->userdata('user_id'); 
-        
-        // Query the database to check if the post has been liked by the current user
-        $query = $this->db->get_where('likes', array('post_id' => $post_id, 'user_id' => $user_id));
-
-        // Return true if the query result is not empty (post has been liked by the user), otherwise return false
-        return $query->num_rows() > 0;
     }
 }
