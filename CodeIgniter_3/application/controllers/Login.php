@@ -1,63 +1,67 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-require APPPATH . '/libraries/REST_Controller.php';
-
-class Login extends \Restserver\Libraries\REST_Controller {
+class Login extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->helper(['url', 'form']);
         $this->load->library('session');
         $this->load->model('User_model');
-        Header('Access-Control-Allow-Origin: *');
-        Header('Access-Control-Allow-Headers: *');
-        Header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
     }
 
     public function index() {
-        // If the user is already logged in, redirect to the dashboard
+        // If already logged in, redirect
         if ($this->session->userdata('logged_in')) {
             redirect('profile');
         }
         $this->load->view('login');
     }
 
-    public function index_options() {
-        // Respond with CORS headers for OPTIONS request
-        $this->output
-             ->set_header('Access-Control-Allow-Origin: *')
-             ->set_header('Access-Control-Allow-Methods: GET, POST, OPTIONS')
-             ->set_header('Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding');
-    }
+    public function process() {
+        // CSRF is automatically validated by CodeIgniter
+        header('Content-Type: application/json');
+        
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
 
-    public function index_get() {
-        // If the user is already logged in, redirect to the dashboard
-        if ($this->session->userdata('logged_in')) {
-            redirect('profile');
+        if (empty($username) || empty($password)) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Username and password are required',
+                'csrf_token' => $this->security->get_csrf_hash()
+            ]);
+            return;
         }
-        $this->load->view('login');
-    }
 
-    public function index_post() {
-        $username = $this->post('username');
-        $password = $this->post('password');
-    
-        $result = $this->User_model->login($username, $password);
+        $user_info = $this->User_model->login($username, $password);
 
-        if (!empty($result)) {
-            // Credentials are correct
+        if ($user_info) {
+            // Set session
             $this->session->set_userdata('logged_in', TRUE);
-            $this->session->set_userdata('user_id', $result->id); // Store the user's ID
-            $this->session->set_userdata('username', $username);
-            $this->response([
-                'result' => 'success'
-            ], \Restserver\Libraries\REST_Controller::HTTP_OK);
+            $this->session->set_userdata('user_id', $user_info->id);
+            $this->session->set_userdata('username', $user_info->username);
+            
+            echo json_encode([
+                'status' => 'success',
+                'message' => 'Login successful!',
+                'redirect' => site_url('profile'),
+                'csrf_token' => $this->security->get_csrf_hash()
+            ]);
         } else {
-            // Incorrect credentials
-            $this->response([
-                'result' => 'failed'
-            ], \Restserver\Libraries\REST_Controller::HTTP_UNAUTHORIZED);
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Invalid username or password',
+                'csrf_token' => $this->security->get_csrf_hash()
+            ]);
         }
+    }
+
+    public function logout() {
+        $this->session->unset_userdata('logged_in');
+        $this->session->unset_userdata('user_id');
+        $this->session->unset_userdata('username');
+        $this->session->sess_destroy();
+        redirect('login');
     }
 }
