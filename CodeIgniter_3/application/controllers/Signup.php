@@ -1,82 +1,72 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-
-require APPPATH . '/libraries/REST_Controller.php';
-
-class Signup extends \Restserver\Libraries\REST_Controller {
+class Signup extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
         $this->load->helper(['url', 'form']);
-        $this->load->library(['form_validation' , 'session']);
+        $this->load->library(['form_validation', 'session']);
         $this->load->model('User_model');
     }
 
     public function index() {
-        $this->load->view('signup');
-    }
-
-    public function index_get() {
-        $this->load->view('signup');
-    }
-
-    public function index_post() {
-        // Get the JSON request body
-        $json_str = file_get_contents('php://input');
-        $data = json_decode($json_str);
-    
-        // Extract values from the JSON data
-        $username = isset($data->username) ? $data->username : null;
-        $email = isset($data->email) ? $data->email : null;
-        $password = isset($data->password) ? $data->password : null;
-        $first_name = isset($data->first_name) ? $data->first_name : null;
-        $last_name = isset($data->last_name) ? $data->last_name : null;
-    
-        // Set validation rules
-        $this->form_validation->set_rules('username', 'Username', 'required');
-        $this->form_validation->set_rules('email', 'Email', 'required|valid_email');
-        $this->form_validation->set_rules('password', 'Password', 'required');
-        $this->form_validation->set_rules('first_name', 'First Name');
-        $this->form_validation->set_rules('last_name', 'Last Name');
-    
-        // Set POST data for validation
-        $_POST['username'] = $username;
-        $_POST['email'] = $email;
-        $_POST['password'] = $password;
-        $_POST['first_name'] = $first_name;
-        $_POST['last_name'] = $last_name;
-    
-        if ($this->form_validation->run() == FALSE) {
-            // Return validation errors
-            $this->response(['error' => validation_errors()],  \Restserver\Libraries\REST_Controller::HTTP_BAD_REQUEST);
-        } else {
-            // Prepare user data for insertion
-            $userData = [
-                'username' => $username,
-                'email' => $email,
-                'password_hash' => password_hash($password, PASSWORD_DEFAULT),
-                'first_name' => $first_name,
-                'last_name' => $last_name
-            ];
-    
-            // Insert user data
-            $user_id = $this->User_model->insert_user($userData);
-    
-            if ($user_id) {
-                // Return success response with the URL to redirect to
-                $this->response(['success' => true, 'redirect_url' => site_url('login')]);
-            } else {
-                // Return error response
-                $this->response(['error' => 'Failed to create user'], \Restserver\Libraries\REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-            }
-            
+        if ($this->session->userdata('logged_in')) {
+            redirect('profile/feed');
         }
-    } 
+        $this->load->view('signup');
+    }
 
-    public function check_user(){
+    public function create() {
+        header('Content-Type: application/json');
+
+        $this->form_validation->set_rules('username', 'Username', 'trim|required|alpha_numeric|min_length[3]|max_length[50]');
+        $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[100]');
+        $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
+        $this->form_validation->set_rules('first_name', 'First Name', 'trim|max_length[50]');
+        $this->form_validation->set_rules('last_name', 'Last Name', 'trim|max_length[50]');
+
+        if ($this->form_validation->run() === FALSE) {
+            echo json_encode([
+                'success' => false,
+                'error'   => strip_tags(validation_errors()),
+                'csrf_token' => $this->security->get_csrf_hash()
+            ]);
+            return;
+        }
+
+        $userData = [
+            'username'    => $this->input->post('username'),
+            'email'       => $this->input->post('email'),
+            'password'    => $this->input->post('password'),
+            'first_name'  => $this->input->post('first_name'),
+            'last_name'   => $this->input->post('last_name'),
+        ];
+
+        $user_id = $this->User_model->insert_user($userData);
+
+        if (!$user_id) {
+            echo json_encode([
+                'success' => false,
+                'error'   => 'Username or email already in use',
+                'csrf_token' => $this->security->get_csrf_hash()
+            ]);
+            return;
+        }
+
+        echo json_encode([
+            'success'      => true,
+            'redirect_url' => site_url('login'),
+            'csrf_token'   => $this->security->get_csrf_hash()
+        ]);
+    }
+
+    public function check_user() {
+        header('Content-Type: application/json');
         $username = $this->input->post('username');
-            $result = $this->User_model->checkUser($username);
-            $this->response($result); 
+        echo json_encode([
+            'exists'     => $this->User_model->checkUser($username) > 0,
+            'csrf_token' => $this->security->get_csrf_hash()
+        ]);
     }
 }

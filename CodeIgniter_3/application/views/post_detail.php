@@ -85,8 +85,10 @@
                     <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Like</button>
                     <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Comment</button>
                     <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
-                        <!-- Show delete button only if logged-in user is the owner of the post -->
-                        <a href="<?= site_url('profile/delete_post/' . $post['id']); ?>" class="btn btn-danger">Delete</a>
+                        <form method="post" action="<?= site_url('profile/delete_post/' . $post['id']); ?>" style="display:inline;" onsubmit="return confirm('Delete this post?');">
+                            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
                     <?php endif; ?>
                 </div>
                 <!-- Comments Section -->
@@ -106,43 +108,48 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="<?= base_url('assets/js/csrf-ajax.js'); ?>"></script>
 
     <script>
         function toggleLike(postId) {
-            $.ajax({
-                url: '<?= site_url('post/toggle_like'); ?>',
-                type: 'POST',
-                data: { post_id: postId },
-                dataType: 'json',
-                success: function(response) {
-                    $('#like-count-' + postId).text(response.likes_count);
+            csrfPost(
+                '<?= site_url('post/toggle_like'); ?>',
+                { post_id: postId },
+                function(response) {
+                    if (response.status === 'success') {
+                        $('#like-count-' + postId).text(response.likes_count + ' likes');
+                    }
                 }
-            });
+            );
         }
 
         function addComment(postId) {
             var content = $('#comment-content-' + postId).val();
-            $.ajax({
-                url: '<?= site_url('post/add_comment'); ?>',
-                type: 'POST',
-                data: { post_id: postId, content: content },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.comment) {
-                        $('#comment-section-' + postId).append('<p>' + response.comment.content + '</p>');
-                        $('#comment-content-' + postId).val('');
-                        $('#comment-count-' + postId).text(parseInt($('#comment-count-' + postId).text(), 10) + 1);
+            if (!content || content.trim() === '') {
+                return;
+            }
+            csrfPost(
+                '<?= site_url('post/add_comment'); ?>',
+                { post_id: postId, content: content },
+                function(response) {
+                    if (response.status !== 'success') {
+                        return;
                     }
+                    var commentNode = $('<p></p>').text(content);
+                    $('#comments-container-' + postId).append(commentNode).show();
+                    $('#comment-content-' + postId).val('');
+                    var current = parseInt($('#comment-count-' + postId).text(), 10) || 0;
+                    $('#comment-count-' + postId).text(current + 1);
                 }
-            });
-        }
-
-        function toggleCommentSection(postId) {
-            $('#comment-section-' + postId).toggle();
+            );
         }
 
         function showComments(postId) {
             $('#comments-container-' + postId).toggle();
+        }
+
+        function toggleCommentSection(postId) {
+            $('#comment-section-' + postId).toggle();
         }
     </script>
 </body>

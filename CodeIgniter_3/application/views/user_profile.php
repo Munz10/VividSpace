@@ -176,38 +176,30 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= base_url('assets/js/csrf-ajax.js'); ?>"></script>
 
     <script>
         function toggleFollow(buttonElement) {
             var button = $(buttonElement);
             var followingId = button.data('following-id');
             var isFollowing = button.hasClass('unfollow');
+            var endpoint = isFollowing ? 'follow/do_unfollow' : 'follow/do_follow';
 
-            $.ajax({
-                url: '<?= site_url('follow/'); ?>' + (isFollowing ? 'do_unfollow' : 'do_follow'),
-                type: 'POST',
-                data: { following_id: followingId },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.status === 'success') {
-                        if (isFollowing) {
-                            button.removeClass('unfollow').addClass('follow').text('Follow');
-                        } else {
-                            button.removeClass('follow').addClass('unfollow').text('Unfollow');
-                        }
+            csrfPost(
+                '<?= site_url(); ?>' + endpoint,
+                { following_id: followingId },
+                function(response) {
+                    if (response.status !== 'success') {
+                        return;
                     }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.error("Error: " + textStatus + ", " + errorThrown);
+                    if (isFollowing) {
+                        button.removeClass('unfollow').addClass('follow').text('Follow');
+                    } else {
+                        button.removeClass('follow').addClass('unfollow').text('Unfollow');
+                    }
                 }
-            });
+            );
         }
-
-        $(document).ready(function() {
-            $('.follow-btn').on('click', function() {
-                toggleFollow(this);
-            });
-        });
     </script>
 </body>
 </html>

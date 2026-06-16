@@ -61,8 +61,7 @@
                     <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Login</button>
-                <p class="chnage-link">Don't have an account? <a href="signup">Sign Up</a> here</p>
-                <p class="chnage-link text-muted"><small>Having login issues? <a href="fix_accounts">Fix Account</a> | <a href="test_account">Test Login</a></small></p>
+                <p class="chnage-link">Don't have an account? <a href="<?= site_url('signup'); ?>">Sign Up</a> here</p>
             </form>
         </div>
     </div>

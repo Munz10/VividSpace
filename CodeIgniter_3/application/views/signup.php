@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <title>Signup - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.3/backbone-min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -89,24 +87,28 @@
         </form>
     </div>
 
+    <script src="<?= base_url('assets/js/csrf-ajax.js'); ?>"></script>
     <script>
+        function setError(msg) {
+            document.getElementById("errormsg").textContent = msg;
+            document.getElementById('createUser').disabled = !!msg;
+        }
+
         function checkinputs() {
-            if (document.forms["signupform"]["username"].value != "" && document.forms["signupform"]["email"].value != "" && document.forms["signupform"]["password"].value != "" && document.getElementById("errormsg").innerHTML == "") {
-                document.getElementById('createUser').disabled = false;
-            } else {
-                document.getElementById('createUser').disabled = true;
-            }
+            var u = document.forms["signupform"]["username"].value;
+            var e = document.forms["signupform"]["email"].value;
+            var p = document.forms["signupform"]["password"].value;
+            var hasError = document.getElementById("errormsg").textContent !== "";
+            document.getElementById('createUser').disabled = !(u && e && p && !hasError);
         }
 
         function validateemail() {
             var x = document.forms["signupform"]["email"].value;
-            var atposition = x.indexOf("@");
-            var dotposition = x.lastIndexOf(".");
-            if (atposition < 1 || dotposition < atposition + 2 || dotposition + 2 >= x.length) {
-                document.getElementById("errormsg").innerHTML = "Please enter a valid e-mail address";
-                document.getElementById('createUser').disabled = true;
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(x)) {
+                setError("Please enter a valid e-mail address");
             } else {
-                document.getElementById("errormsg").innerHTML = "";
+                setError("");
                 checkinputs();
             }
         }
@@ -116,25 +118,23 @@
             var regex = /^[a-zA-Z0-9_]+$/;
 
             if (!regex.test(username)) {
-                document.getElementById("errormsg").innerHTML = "Username can only contain letters, numbers, and underscores";
-                document.getElementById('createUser').disabled = true;
+                setError("Username can only contain letters, numbers, and underscores");
                 return;
-            } else {
-                document.getElementById("errormsg").innerHTML = "";
             }
+            setError("");
 
-            $.ajax({
-                url: "<?= base_url() ?>index.php/signup/check_user",
-                data: { 'username': username },
-                method: "POST"
-            }).done(function (data) {
-                if (data == 0) {
-                    document.getElementById("errormsg").innerHTML = "";
-                    checkinputs();
-                } else {
-                    document.getElementById("errormsg").innerHTML = "Username Already Exists!";
+            csrfPost(
+                '<?= site_url('signup/check_user'); ?>',
+                { username: username },
+                function (data) {
+                    if (data.exists) {
+                        setError("Username Already Exists!");
+                    } else {
+                        setError("");
+                        checkinputs();
+                    }
                 }
-            });
+            );
         }
 
         $(document).ready(function () {
@@ -144,56 +144,27 @@
             });
         });
 
-        var User = Backbone.Model.extend({
-            urlRoot: '<?= site_url('signup/index_post'); ?>',
-            defaults: {
-                username: '',
-                email: '',
-                first_name: '',
-                last_name: '',
-                password: ''
-            },
-            validate: function (attrs) {
-                if (!attrs.username) {
-                    return "Username is required.";
-                }
-                if (!attrs.email) {
-                    return "Email is required.";
-                }
-                if (!attrs.password) {
-                    return "Password is required.";
-                }
-            }
-        });
-
-        var UserCollection = Backbone.Collection.extend({
-            model: User
-        });
-
-        var usersCollection = new UserCollection();
-
         function userSignup() {
-            var newUser = new User({
-                username: $("#username").val().toLowerCase(),
-                email: $("#email").val(),
-                first_name: $("#first_name").val(),
-                last_name: $("#last_name").val(),
-                password: $("#password").val()
-            });
-
-            usersCollection.create(newUser, {
-                wait: true,
-                success: function (model, response) {
+            csrfPost(
+                '<?= site_url('signup/create'); ?>',
+                {
+                    username:   $("#username").val().toLowerCase(),
+                    email:      $("#email").val(),
+                    first_name: $("#first_name").val(),
+                    last_name:  $("#last_name").val(),
+                    password:   $("#password").val()
+                },
+                function (response) {
                     if (response.success) {
                         window.location.href = response.redirect_url;
                     } else {
-                        document.getElementById("errormsg").innerHTML = 'Failed to create user: ' + response.error;
+                        setError(response.error || 'Failed to create user');
                     }
                 },
-                error: function (model, xhr, options) {
-                    document.getElementById("errormsg").innerHTML = "Username Already Exists!";
+                function () {
+                    setError('Network error. Please try again.');
                 }
-            });
+            );
         }
     </script>
 </body>
