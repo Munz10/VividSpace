@@ -38,6 +38,7 @@ class Login extends MY_Controller {
 
         if ($user_info) {
             // Set session
+            $this->session->sess_regenerate(TRUE);
             $this->session->set_userdata('logged_in', TRUE);
             $this->session->set_userdata('user_id', $user_info->id);
             $this->session->set_userdata('username', $user_info->username);

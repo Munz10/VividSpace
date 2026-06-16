@@ -71,6 +71,7 @@
                     onclick="toggleFollow(this);">
                 <?= $is_following ? 'Unfollow' : 'Follow'; ?>
             </button>
+            <small id="follow-error" class="text-danger ml-2"></small>
         </div>
         <div class="profile-info">
             <?php if (!empty($user_profile['profile_image'])): ?>
@@ -135,6 +136,10 @@
 
         function toggleFollow(buttonElement) {
             var button = $(buttonElement);
+            if (button.prop('disabled')) return;
+            button.prop('disabled', true);
+            $('#follow-error').text('');
+
             var followingId = button.data('following-id');
             var isFollowing = button.hasClass('unfollow');
 
@@ -142,7 +147,9 @@
                 isFollowing ? unfollowUrl : followUrl,
                 { following_id: followingId },
                 function(response) {
+                    button.prop('disabled', false);
                     if (response.status !== 'success') {
+                        $('#follow-error').text('Action failed. Please try again.');
                         return;
                     }
                     if (isFollowing) {
@@ -156,6 +163,10 @@
                     if (typeof response.following_count !== 'undefined') {
                         $('#following-count').text(response.following_count);
                     }
+                },
+                function() {
+                    button.prop('disabled', false);
+                    $('#follow-error').text('Request failed. Please try again.');
                 }
             );
         }

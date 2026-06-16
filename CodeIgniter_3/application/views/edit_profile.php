@@ -51,8 +51,17 @@
                     <div id="email-error" class="text-danger"></div>
                 </div>
                 <div class="form-group">
-                    <label for="profile_image">Profile Picture:</label>
-                    <input type="file" name="profile_image">
+                    <label>Profile Picture</label>
+                    <?php if (!empty($profile['profile_image'])): ?>
+                        <img id="profile-preview" src="<?= base_url(ltrim(htmlspecialchars($profile['profile_image']), '/')); ?>"
+                             alt="Profile picture" class="profile-pic d-block mb-2">
+                    <?php else: ?>
+                        <img id="profile-preview" src="<?= base_url('Images/default_profile_pic.png'); ?>"
+                             alt="Profile picture" class="profile-pic d-block mb-2">
+                    <?php endif; ?>
+                    <input type="file" name="profile_image" id="profile_image"
+                           accept="image/jpeg,image/png,image/gif"
+                           onchange="previewProfile(this);">
                 </div>
                 <div class="button-container">
                     <button type="submit" class="btn updatebtn">Update Profile</button>
@@ -74,6 +83,16 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function previewProfile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profile-preview').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         $(document).ready(function() {
             $('#email').on('keyup', function() {
                 validateEmail($(this).val());
