@@ -20,7 +20,7 @@ class Signup extends CI_Controller {
     public function create() {
         header('Content-Type: application/json');
 
-        $this->form_validation->set_rules('username', 'Username', 'trim|required|regex_match[/^[a-zA-Z0-9_]+$/]|min_length[3]|max_length[50]');
+        $this->form_validation->set_rules('username', 'Username', 'trim|required|regex_match[/^[a-zA-Z0-9_]+$/]|min_length[4]|max_length[50]');
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email|max_length[100]');
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
         $this->form_validation->set_rules('first_name', 'First Name', 'trim|max_length[50]');

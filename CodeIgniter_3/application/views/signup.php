@@ -70,7 +70,7 @@
             <div class="form-group">
                 <label for="username">Username<span class="required"></span></label>
                 <input type="text" class="form-control" name="username" id="username" placeholder="Username" onkeyup="checkusername(); checkinputs();" required />
-                <div class="field-hint">3-50 characters. Letters, numbers, and underscores only.</div>
+                <div class="field-hint">4-50 characters. Letters, numbers, and underscores only.</div>
             </div>
             <div class="form-group">
                 <label for="first_name">First Name</label>
@@ -107,7 +107,7 @@
             var e = document.forms["signupform"]["email"].value;
             var p = document.forms["signupform"]["password"].value;
             var hasError = document.getElementById("errormsg").textContent !== "";
-            var usernameOk = u.length >= 3 && u.length <= 50;
+            var usernameOk = u.length >= 4 && u.length <= 50;
             var passwordOk = p.length >= 6;
             document.getElementById('createUser').disabled = !(usernameOk && e && passwordOk && !hasError);
         }
