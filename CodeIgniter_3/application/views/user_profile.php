@@ -130,14 +130,16 @@
     <script src="<?= base_url('assets/js/csrf-ajax.js'); ?>"></script>
 
     <script>
+        var followUrl   = '<?= site_url('follow/do_follow'); ?>';
+        var unfollowUrl = '<?= site_url('follow/do_unfollow'); ?>';
+
         function toggleFollow(buttonElement) {
             var button = $(buttonElement);
             var followingId = button.data('following-id');
             var isFollowing = button.hasClass('unfollow');
-            var endpoint = isFollowing ? 'follow/do_unfollow' : 'follow/do_follow';
 
             csrfPost(
-                '<?= site_url(); ?>' + endpoint,
+                isFollowing ? unfollowUrl : followUrl,
                 { following_id: followingId },
                 function(response) {
                     if (response.status !== 'success') {
