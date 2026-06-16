@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <title>Post Details - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <!-- Other styles -->
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
-        /* Add your custom styles here to match the wireframe layout */
-        body {
-            background-color: #f8f9fa;
-        }
         .container {
             padding-top: 2rem;
         }
@@ -63,20 +59,11 @@
         .heart.liked {
             color: #e0245e;
         }
-        .profile-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #333; /* Replace with actual image */
-        }
-        
         .card-img-top {
             width: 50%;
             height: 500px;
             object-fit: cover;
         }
-       
-        /* You will need to adjust the styles to exactly match your wireframe */
     </style>
 </head>
 <body>

@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <title>User's Feed - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif; 
-            background-color: #f8f9fa; 
-        }
         .container {
             background: #fff;
             border-radius: 0.5rem;
@@ -18,49 +15,19 @@
             display: flex;
             flex-direction: column;
         }
-        h1 {
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: bold; 
-            color: #333333; 
-            text-align: center;
-            margin-bottom: 30px; 
-        }
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-        }
-        .logo-and-home {
-            display: flex;
-            align-items: center;
-        }
-        .logo-and-home h1 {
-            margin-right: 10px;
-            margin-bottom: 0; 
-        }
         .list-group-item {
-            border: solid; 
+            border: solid;
             border-radius: 10px;
-            background-color: #f8f9fa; 
+            background-color: #f8f9fa;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 50%
+            width: 50%;
         }
         .suggested-profile-icon {
             width: 64px;
             height: 64px;
             border-radius: 50%;
-            background-color: #e9ecef; 
+            background-color: #e9ecef;
             object-fit: cover;
-        } 
-        .search-bar {
-            width: 100%;
-        }
-        .profile-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #333; 
         }
         #search-results {
             position: absolute;

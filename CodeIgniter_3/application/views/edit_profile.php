@@ -4,28 +4,9 @@
     <meta charset="UTF-8">
     <title>Edit Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .container {
-            padding: 1rem;
-        }
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-        }
-        .logo-and-home {
-            display: flex;
-            align-items: center;
-        }
-        .logo-and-home h1 {
-            margin-right: 10px;
-            margin-bottom: 0;
-        }
+        .container { padding: 1rem; }
         .form-container {
             max-width: 600px;
             margin: auto;
@@ -34,28 +15,13 @@
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
         }
-        .profile-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
+        .form-group { margin-bottom: 15px; }
         .button-container {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
         }
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            color: #333333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .updatebtn{
+        .updatebtn {
             background-color: #003789;
             color: #fff;
         }

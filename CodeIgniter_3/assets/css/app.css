@@ -1,0 +1,122 @@
+/* VividSpace shared styles. View-specific rules stay in each view. */
+
+html, body {
+    background-color: #f8f9fa;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: bold;
+    color: #333333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* App container used by most logged-in pages. */
+.app-container {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Shared page header (logo + Home + search + profile icon). */
+.header-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    gap: 1rem;
+}
+.logo-and-home {
+    display: flex;
+    align-items: center;
+}
+.logo-and-home h1 {
+    margin-right: 10px;
+    margin-bottom: 0;
+}
+
+/* Profile icon in the page header. */
+.profile-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #333;
+    object-fit: cover;
+}
+
+/* Larger profile picture on profile pages. */
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    background: #ccc;
+    border-radius: 50%;
+    display: inline-block;
+    object-fit: cover;
+}
+
+/* Header search box and dropdown of live results. */
+.header-search {
+    position: relative;
+    flex: 1;
+    max-width: 420px;
+}
+.header-search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 9999;
+    display: none;
+    padding: 4px 0;
+    border-radius: 0 0 4px 4px;
+}
+.header-search-results .search-result {
+    padding: 6px 12px;
+    cursor: pointer;
+}
+.header-search-results .search-result:hover {
+    background-color: #f1f3f5;
+}
+
+/* Notification bell in the header. */
+.notif-bell {
+    position: relative;
+    color: #333;
+    text-decoration: none;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+.notif-bell:hover {
+    color: #000;
+    text-decoration: none;
+}
+.notif-bell .badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    background: #e0245e;
+    color: #fff;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    line-height: 1.2;
+}
+
+/* Generic horizontal rule used on profile pages. */
+.app-divider {
+    margin: 2rem;
+    border: none;
+    border-top: 2px solid #ddd;
+}

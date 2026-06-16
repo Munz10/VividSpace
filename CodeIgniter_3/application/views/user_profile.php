@@ -4,13 +4,9 @@
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($user_profile['username']); ?>'s Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
-        html, body {
-            height: 100%;
-        }
-        body {
-            background-color: #f8f9fa;
-        }
+        html, body { height: 100%; }
         .container {
             background: #fff;
             border-radius: 0.5rem;
@@ -26,19 +22,8 @@
             align-items: center;
             margin-top: 1rem;
         }
-        .profile-info {
-            text-align: center;
-        }
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            background: #ccc;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        .follow-info {
-            text-align: center;
-        }
+        .profile-info { text-align: center; }
+        .follow-info { text-align: center; }
         .post {
             border: 1px solid #ddd;
             border-radius: 0.5rem;
@@ -51,27 +36,12 @@
             object-fit: cover;
             border-bottom: 1px solid #ddd;
         }
-        .post-body {
-            padding: 10px;
-        }
+        .post-body { padding: 10px; }
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 1rem;
-        }
-        .logo-and-home {
-            display: flex;
-            align-items: center;
-        }
-        .logo-and-home h1 {
-            margin-right: 10px;
-        }
-        .profile-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #ddd;
         }
         .follow-btn-wrapper {
             text-align: right;
@@ -83,34 +53,18 @@
             margin-top: 1rem;
         }
         .follow-btn.follow {
-            background-color: #5bc0de; /* Light blue */
+            background-color: #5bc0de;
             color: white;
         }
         .follow-btn.unfollow {
-            background-color: #c82333; /* Dark red */
+            background-color: #c82333;
             color: white;
         }
-        .spacer {
-            flex-grow: 1;
-        }
+        .spacer { flex-grow: 1; }
         hr {
             margin: 2rem;
             border: none;
             border-top: 2px solid #ddd;
-        }
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            color: #333333;
-            text-align: center;
-        }
-        .logo-and-home {
-            display: flex;
-            align-items: center;
-        }
-        .logo-and-home h1 {
-            margin-right: 10px;
-            margin-bottom: 0;
         }
     </style>
 </head>

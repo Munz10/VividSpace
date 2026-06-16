@@ -4,23 +4,13 @@
     <meta charset="UTF-8">
     <title>Create Post - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-        }
         .container {
             justify-content: center;
             align-items: center;
             height: 100vh;
             padding: 1rem;
-        }
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: bold;
-            color: #333333;
-            text-align: center;
-            margin-bottom: 30px;
         }
         .form-container {
             max-width: 600px;
@@ -29,26 +19,6 @@
             background-color: #fff;
             border-radius: 0.5rem;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-        }
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-        }
-        .logo-and-home {
-            display: flex;
-            align-items: center;
-        }
-        .logo-and-home h1 {
-            margin-right: 10px;
-            margin-bottom: 0;
-        }
-        .profile-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #333;
         }
         .custom-file-upload {
             border: 1px solid #ccc;
@@ -62,12 +32,6 @@
             height: 500px;
             margin-top: 1rem;
             object-fit: contain;
-        }
-        .btn-primary {
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: 0.25rem;
         }
     </style>
 </head>

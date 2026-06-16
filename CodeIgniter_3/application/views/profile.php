@@ -4,18 +4,9 @@
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($profile['username']); ?>'s Profile - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
-        html, body {
-            height: 100%;
-            background-color: #f8f9fa;
-        }
-        h1 {
-            font-family: 'Montserrat', sans-serif; 
-            font-weight: bold; 
-            color: #333333; 
-            text-align: center;
-            margin-bottom: 30px; 
-        }
+        html, body { height: 100%; }
         .container {
             background: #fff;
             border-radius: 0.5rem;
@@ -24,12 +15,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
         }
         .profile-section {
             display: flex;
@@ -40,13 +25,6 @@
         .profile-info {
             margin-right: 2rem;
             text-align: center;
-        }
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            background: #ccc;
-            border-radius: 50%;
-            display: inline-block;
         }
         .followers-info {
             display: flex;
@@ -64,14 +42,6 @@
         }
         .post-body {
             padding: 10px;
-        }
-        .logo-and-home {
-            display: flex;
-            align-items: center;
-        }
-        .logo-and-home h1 {
-            margin-right: 10px;
-            margin-bottom: 0; 
         }
         .post img {
             width: 100%;
