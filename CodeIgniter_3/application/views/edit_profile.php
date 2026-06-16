@@ -32,6 +32,7 @@
         <?php $this->load->view('partials/header'); ?>
         <div class="form-container">    
             <form action="<?= site_url('profile/update'); ?>" method="post" enctype="multipart/form-data" novalidate>
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="form-group">
                     <label for="first_name">First Name</label>
                     <input type="text" class="form-control" name="first_name" value="<?= $profile['first_name'] ?? ''; ?>">
@@ -71,8 +72,7 @@
             </form>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#email').on('keyup', function() {
