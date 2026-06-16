@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Search extends MY_Controller {
@@ -14,17 +14,15 @@ class Search extends MY_Controller {
       }
 
     public function result() {
-        $query = $this->input->get('query');
+        $query = trim($this->input->get('query', TRUE));
 
-        // Validate search query if needed (e.g., minimum length)
-        $this->form_validation->set_rules('query', 'Search Query', 'trim|required|min_length[3]');
-        if ($this->form_validation->run() === FALSE) {
-        // Display error message or redirect to search form
+        if (strlen($query) < 1) {
+            redirect('profile/feed');
             return;
         }
 
         $data['results'] = $this->User_model->search_users($query);
-        $data['query'] = $query; // Pass the search query to the view for display
+        $data['query'] = $query;
 
         $this->load->view('search_result', $data);
     }
