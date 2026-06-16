@@ -64,6 +64,11 @@ class User_model extends CI_Model {
         return $result->num_rows();
     }
 
+    public function email_exists($email)
+    {
+        return $this->db->get_where('users', array('email' => $email))->num_rows() > 0;
+    }
+
     public function get_user_by_id($user_id) {
         $this->db->select('id, username, first_name, last_name, bio, email, profile_image'); 
         $this->db->where('id', $user_id);

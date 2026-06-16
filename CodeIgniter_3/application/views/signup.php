@@ -82,7 +82,7 @@
             </div>
             <div class="form-group">
                 <label for="email">Email<span class="required"></span></label>
-                <input type="email" class="form-control" name="email" id="email" placeholder="Email" onkeyup="checkinputs(); validateemail();" required />
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email" onkeyup="checkemail(); checkinputs();" required />
                 <div class="field-hint">We'll never share your email.</div>
             </div>
             <div class="form-group">
@@ -112,15 +112,28 @@
             document.getElementById('createUser').disabled = !(usernameOk && e && passwordOk && !hasError);
         }
 
-        function validateemail() {
-            var x = document.forms["signupform"]["email"].value;
+        function checkemail() {
+            var email = $('#email').val();
             var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(x)) {
+
+            if (!emailRegex.test(email)) {
                 setError("Please enter a valid e-mail address");
-            } else {
-                setError("");
-                checkinputs();
+                return;
             }
+            setError("");
+
+            csrfPost(
+                '<?= site_url('signup/check_email'); ?>',
+                { email: email },
+                function (data) {
+                    if (data.exists) {
+                        setError("Email already in use");
+                    } else {
+                        setError("");
+                        checkinputs();
+                    }
+                }
+            );
         }
 
         function checkusername() {

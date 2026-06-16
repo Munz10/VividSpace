@@ -69,4 +69,13 @@ class Signup extends CI_Controller {
             'csrf_token' => $this->security->get_csrf_hash()
         ]);
     }
+
+    public function check_email() {
+        header('Content-Type: application/json');
+        $email = trim((string) $this->input->post('email'));
+        echo json_encode([
+            'exists'     => $email !== '' && $this->User_model->email_exists($email),
+            'csrf_token' => $this->security->get_csrf_hash()
+        ]);
+    }
 }
