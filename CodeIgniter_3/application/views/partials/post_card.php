@@ -29,8 +29,9 @@ $post_id = (int) $post['id'];
         <small class="text-muted"><?= esc($post['created_at']); ?></small>
 
         <div class="interaction-bar mt-2">
-            <span id="like-btn-<?= $post_id; ?>" class="icon-btn" onclick="toggleLike(<?= $post_id; ?>);" title="Like">
-                <span id="heart-<?= $post_id; ?>" class="heart <?= !empty($is_liked) ? 'liked' : ''; ?>">&#9829;</span>
+            <span id="like-btn-<?= $post_id; ?>" class="icon-btn <?= !empty($is_liked) ? 'liked' : ''; ?>" onclick="toggleLike(<?= $post_id; ?>);" title="Like">
+                <i class="bi bi-heart heart-empty"></i>
+                <i class="bi bi-heart-fill heart-filled"></i>
                 <span class="count" id="like-count-<?= $post_id; ?>"><?= (int) $post['likes_count']; ?></span>
             </span>
             <span id="bm-btn-<?= $post_id; ?>" class="icon-btn <?= !empty($is_saved) ? 'saved' : ''; ?>"

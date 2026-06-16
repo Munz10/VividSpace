@@ -55,7 +55,7 @@
                         <h6 class="card-title mb-1"><?= htmlspecialchars($post['caption']); ?></h6>
                         <p class="card-text mb-1"><small class="text-muted">by <?= htmlspecialchars($post['author_username']); ?></small></p>
                         <div class="card-meta">
-                            <span><span class="heart">&#9829;</span> <?= (int) $post['likes_count']; ?></span>
+                            <span><i class="bi bi-heart-fill" style="color:#e0245e;font-size:.9rem;"></i> <?= (int) $post['likes_count']; ?></span>
                             <span><i class="bi bi-chat"></i> <?= (int) $post['comments_count']; ?></span>
                         </div>
                     </div>
@@ -161,7 +161,7 @@
             $btn.removeClass('loading');
             if (r.status === 'success') {
                 $('#like-count-' + postId).text(r.likes_count);
-                $('#heart-' + postId).toggleClass('liked', !!r.is_liked);
+                $('#like-btn-' + postId).toggleClass('liked', !!r.is_liked);
             } else {
                 $('#like-error-' + postId).text('Could not update like.');
             }

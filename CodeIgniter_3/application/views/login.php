@@ -5,6 +5,7 @@
     <title>Login - VividSpace</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -47,7 +48,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h1>VividSpace</h1>
+    <img src="<?= base_url('Images/vividSpace_Logo.png'); ?>" alt="VividSpace" class="auth-logo">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="alert alert-danger" id="error-msg" style="display: none;"></div>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Signup - VividSpace</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url('assets/css/app.css'); ?>">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
@@ -64,7 +65,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>VividSpace</h1>
+        <img src="<?= base_url('Images/vividSpace_Logo.png'); ?>" alt="VividSpace" class="auth-logo">
         <form method="post" id="signupForm" name="signupform">
             <div class="errormsg" id="errormsg"></div>
             <div class="form-group">

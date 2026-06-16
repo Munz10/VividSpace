@@ -65,7 +65,7 @@
                             <div class="card-body p-2">
                                 <p class="mb-1" style="font-size:0.88rem;"><?= htmlspecialchars($post['caption']); ?></p>
                                 <div class="card-meta">
-                                    <span><span class="heart">&#9829;</span> <?= (int) $post['likes_count']; ?></span>
+                                    <span><i class="bi bi-heart-fill" style="color:#e0245e;font-size:.9rem;"></i> <?= (int) $post['likes_count']; ?></span>
                                     <span><i class="bi bi-chat"></i> <?= (int) $post['comments_count']; ?></span>
                                 </div>
                             </div>

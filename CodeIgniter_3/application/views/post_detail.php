@@ -19,29 +19,12 @@
         .hashtags { font-size: 0.9rem; margin-top: 4px; }
         .hashtag-link { color: #3897f0; margin-right: 4px; }
         .interaction-bar {
-            font-size: 1rem;
             margin-bottom: 1rem;
             display: flex;
             align-items: center;
             gap: 16px;
         }
-        .icon-btn {
-            cursor: pointer;
-            font-size: 1.6rem;
-            line-height: 1;
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #555;
-            transition: transform 0.1s ease, opacity 0.15s;
-        }
-        .icon-btn:hover { transform: scale(1.1); }
-        .icon-btn.loading { pointer-events: none; opacity: 0.5; }
-        .icon-btn .count { font-size: 0.95rem; color: #555; }
-        .heart { color: #ccc; }
-        .heart.liked { color: #e0245e; }
-        /* bookmark dual-icon handled by app.css */
+        /* icon-btn, heart, bookmark styles come from app.css */
         .comment-item {
             padding: 6px 0;
             border-bottom: 1px solid #f0f0f0;
@@ -80,8 +63,9 @@
 
                 <!-- Interaction bar -->
                 <div class="interaction-bar mt-2">
-                    <span id="like-btn-<?= $post['id']; ?>" class="icon-btn" title="Like" onclick="toggleLike(<?= $post['id']; ?>);">
-                        <span id="heart-<?= $post['id']; ?>" class="heart <?= !empty($is_liked) ? 'liked' : '' ?>">&#9829;</span>
+                    <span id="like-btn-<?= $post['id']; ?>" class="icon-btn <?= !empty($is_liked) ? 'liked' : ''; ?>" title="Like" onclick="toggleLike(<?= $post['id']; ?>);">
+                        <i class="bi bi-heart heart-empty"></i>
+                        <i class="bi bi-heart-fill heart-filled"></i>
                         <span class="count" id="like-count-<?= $post['id']; ?>"><?= (int) $post['likes_count']; ?></span>
                     </span>
                     <span id="comment-toggle-<?= $post['id']; ?>" class="icon-btn" title="Comment" onclick="toggleCommentForm(<?= $post['id']; ?>);">
@@ -148,7 +132,7 @@
                         return;
                     }
                     $('#like-count-' + postId).text(response.likes_count);
-                    $('#heart-' + postId).toggleClass('liked', !!response.is_liked);
+                    $('#like-btn-' + postId).toggleClass('liked', !!response.is_liked);
                 },
                 function() {
                     $btn.removeClass('loading');

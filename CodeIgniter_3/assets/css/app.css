@@ -42,9 +42,19 @@ h1 {
     gap: 8px;
 }
 .logo-img {
-    height: 42px;
+    height: 46px;
     width: auto;
     display: block;
+    border-radius: 10px;
+}
+/* Full logo (with text) used on auth pages */
+.auth-logo {
+    max-width: 220px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+    margin: 0 auto 24px;
 }
 /* Icon-only header buttons */
 .btn-icon {
@@ -58,11 +68,34 @@ h1 {
     line-height: 1;
     border-radius: 50%;
 }
-/* Dual-state bookmark icon (CSS-driven, no JS icon swap needed) */
-.bm-empty  { display: inline-block; }
-.bm-filled { display: none; }
+/* Shared interaction button (like / bookmark / comment) */
+.icon-btn {
+    cursor: pointer;
+    font-size: 1.05rem;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #555;
+    transition: transform .1s ease, opacity .15s;
+    line-height: 1;
+}
+.icon-btn i { font-size: 1.05rem; line-height: 1; }
+.icon-btn:hover { transform: scale(1.1); }
+.icon-btn.loading { pointer-events: none; opacity: 0.5; }
+.icon-btn .count { font-size: 0.88rem; color: #555; }
+
+/* Dual-state heart (like) icon */
+.heart-empty  { display: inline-block; color: #bbb; }
+.heart-filled { display: none;         color: #e0245e; }
+.icon-btn.liked .heart-empty  { display: none; }
+.icon-btn.liked .heart-filled { display: inline-block; }
+
+/* Dual-state bookmark icon */
+.bm-empty  { display: inline-block; color: #bbb; }
+.bm-filled { display: none;         color: #f5a623; }
 .icon-btn.saved .bm-empty  { display: none; }
-.icon-btn.saved .bm-filled { display: inline-block; color: #f5a623; }
+.icon-btn.saved .bm-filled { display: inline-block; }
 
 /* Profile icon in the page header. */
 .profile-icon {
