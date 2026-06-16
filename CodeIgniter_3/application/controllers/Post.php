@@ -6,6 +6,7 @@ class Post extends CI_Controller {
   public function __construct() {
     parent::__construct();
     $this->load->model('Post_model');
+    $this->load->model('Notification_model');
     $this->load->helper('url');
     $this->load->library('session');
 
@@ -44,6 +45,13 @@ class Post extends CI_Controller {
     
     $result = $this->Post_model->toggle_like($post_id, $user_id);
 
+    if ($result['is_liked']) {
+      $post = $this->Post_model->get_post_by_id($post_id);
+      if ($post) {
+        $this->Notification_model->create($post['user_id'], $user_id, 'like', $post_id);
+      }
+    }
+
     echo json_encode([
       'status'      => 'success',
       'is_liked'    => $result['is_liked'],
@@ -74,10 +82,14 @@ class Post extends CI_Controller {
     $comment_id = $this->Post_model->add_comment($post_id, $user_id, $content);
 
     if ($comment_id) {
+      $post = $this->Post_model->get_post_by_id($post_id);
+      if ($post) {
+        $this->Notification_model->create($post['user_id'], $user_id, 'comment', $post_id);
+      }
       echo json_encode([
         'status' => 'success',
         'comment_id' => $comment_id,
-        'csrf_token' => $this->security->get_csrf_hash() // Return new token
+        'csrf_token' => $this->security->get_csrf_hash()
       ]);
     } else {
       echo json_encode([

@@ -6,6 +6,7 @@ class Follow extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('User_model');
+        $this->load->model('Notification_model');
         $this->load->library('session');
         $this->load->library('form_validation');
 
@@ -44,6 +45,7 @@ class Follow extends CI_Controller {
 
         if ($result) {
             log_message('info', "User {$follower_id} followed user {$following_id}");
+            $this->Notification_model->create($following_id, $follower_id, 'follow');
         }
 
         echo json_encode([
