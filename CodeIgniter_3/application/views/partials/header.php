@@ -37,6 +37,13 @@ $actions     = isset($actions) ? $actions : '';
 
     <div class="d-flex align-items-center" style="gap:14px;">
         <?= $actions ?>
+        <a href="<?= site_url('notifications'); ?>" class="notif-bell" title="Notifications">
+            &#128276;
+            <?php $notif_unread_count = isset($notif_unread_count) ? (int) $notif_unread_count : 0; ?>
+            <?php if ($notif_unread_count > 0): ?>
+                <span class="badge"><?= $notif_unread_count > 99 ? '99+' : $notif_unread_count; ?></span>
+            <?php endif; ?>
+        </a>
         <a href="<?= site_url('profile'); ?>" title="My profile">
             <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
         </a>
