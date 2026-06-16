@@ -1,71 +1,53 @@
-###################
-What is CodeIgniter
-###################
+###########
+VividSpace
+###########
 
-CodeIgniter is an Application Development Framework - a toolkit - for people
-who build web sites using PHP. Its goal is to enable you to develop projects
-much faster than you could if you were writing code from scratch, by providing
-a rich set of libraries for commonly needed tasks, as well as a simple
-interface and logical structure to access these libraries. CodeIgniter lets
-you creatively focus on your project by minimizing the amount of code needed
-for a given task.
+A photography-focused social media platform built on CodeIgniter 3.
+Share photos, follow creators, discover moments.
 
-*******************
-Release Information
-*******************
+Full documentation: see ``../README.md`` in the project root.
 
-This repo contains in-development code for future releases. To download the
-latest stable release please visit the `CodeIgniter Downloads
-<https://codeigniter.com/download>`_ page.
+***************
+Quick Start
+***************
 
-**************************
-Changelog and New Features
-**************************
+1. Create database ``vivid_space_db`` in phpMyAdmin and import the schema
+   (full SQL in ``README.md``).
+2. Confirm base URL in ``application/config/config.php``.
+3. Open ``http://localhost/VividSpace/VividSpace/CodeIgniter_3/``.
 
-You can find a list of all changes for each release in the `user
-guide change log <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/changelog.rst>`_.
+***************
+Features
+***************
 
-*******************
-Server Requirements
-*******************
+- Photo upload with caption and hashtags
+- Personalized feed with infinite scroll
+- Like, comment, bookmark posts
+- Follow / unfollow users
+- Real-time user search
+- Notifications (likes, comments, follows)
+- Hashtag discovery pages
+- Saved posts collection
+- Edit / delete account
 
-PHP version 5.6 or newer is recommended.
+***************
+Tech Stack
+***************
 
-It should work on 5.3.7 as well, but we strongly advise you NOT to run
-such old versions of PHP, because of potential security and performance
-issues, as well as missing features.
+- **Backend**: CodeIgniter 3, PHP 5.6+
+- **Database**: MySQL
+- **Frontend**: Bootstrap 4.5.2, Bootstrap Icons 1.11.3, jQuery 3.6.0
+- **Security**: CSRF tokens, XSS helper, BCrypt, session fixation fix
 
-************
-Installation
-************
-
-Please see the `installation section <https://codeigniter.com/userguide3/installation/index.html>`_
-of the CodeIgniter User Guide.
-
-*******
+***************
 License
-*******
-
-Please see the `license
-agreement <https://github.com/bcit-ci/CodeIgniter/blob/develop/user_guide_src/source/license.rst>`_.
-
-*********
-Resources
-*********
-
--  `User Guide <https://codeigniter.com/docs>`_
--  `Contributing Guide <https://github.com/bcit-ci/CodeIgniter/blob/develop/contributing.md>`_
--  `Language File Translations <https://github.com/bcit-ci/codeigniter3-translations>`_
--  `Community Forums <http://forum.codeigniter.com/>`_
--  `Community Wiki <https://github.com/bcit-ci/CodeIgniter/wiki>`_
--  `Community Slack Channel <https://codeigniterchat.slack.com>`_
-
-Report security issues to our `Security Panel <mailto:security@codeigniter.com>`_
-or via our `page on HackerOne <https://hackerone.com/codeigniter>`_, thank you.
-
-***************
-Acknowledgement
 ***************
 
-The CodeIgniter team would like to thank EllisLab, all the
-contributors to the CodeIgniter project and you, the CodeIgniter user.
+See ``license.txt``.
+
+***************
+Acknowledgements
+***************
+
+Built on the `CodeIgniter 3 <https://codeigniter.com>`_ framework.
+Security implementations follow OWASP guidelines.

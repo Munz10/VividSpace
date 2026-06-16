@@ -30,3 +30,9 @@ user_guide_src/cilexer/pycilexer.egg-info/*
 *.sublime-project
 /tests/tests/
 /tests/results/
+
+# User-generated content — never commit uploads or profile pictures
+uploads/*
+!uploads/index.html
+profile_pics/*
+!profile_pics/index.html
