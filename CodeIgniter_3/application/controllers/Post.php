@@ -16,14 +16,15 @@ class Post extends CI_Controller {
   }
 
   public function detail($post_id) {
-    // Fetch post details and check existence (same as before)
     $data['post'] = $this->Post_model->get_post_by_id($post_id);
     if (!$data['post']) {
       show_404();
-    } else {
-      $data['comments'] = $this->Post_model->get_comments_by_post_id($post_id);
-      $this->load->view('post_detail', $data);
+      return;
     }
+    $user_id = $this->session->userdata('user_id');
+    $data['is_liked'] = $this->Post_model->has_liked($post_id, $user_id);
+    $data['comments'] = $this->Post_model->get_comments_by_post_id($post_id);
+    $this->load->view('post_detail', $data);
   }
 
   // Method to toggle a like
@@ -41,12 +42,13 @@ class Post extends CI_Controller {
       return;
     }
     
-    $likes_count = $this->Post_model->toggle_like($post_id, $user_id);
+    $result = $this->Post_model->toggle_like($post_id, $user_id);
 
     echo json_encode([
-      'status' => 'success',
-      'likes_count' => $likes_count,
-      'csrf_token' => $this->security->get_csrf_hash() // Return new token
+      'status'      => 'success',
+      'is_liked'    => $result['is_liked'],
+      'likes_count' => $result['likes_count'],
+      'csrf_token'  => $this->security->get_csrf_hash()
     ]);
   }
 

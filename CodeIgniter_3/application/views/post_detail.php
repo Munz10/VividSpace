@@ -33,8 +33,35 @@
             font-size: 0.9rem;
         }
         .interaction-bar {
-            font-size: 0.9rem;
+            font-size: 1rem;
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .icon-btn {
+            cursor: pointer;
+            font-size: 1.6rem;
+            line-height: 1;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #555;
+            transition: transform 0.1s ease;
+        }
+        .icon-btn:hover {
+            transform: scale(1.1);
+        }
+        .icon-btn .count {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .heart {
+            color: #ccc;
+        }
+        .heart.liked {
+            color: #e0245e;
         }
         .profile-icon {
             width: 32px;
@@ -77,17 +104,18 @@
                 <p class="card-text"><small><?= esc($post['created_at']); ?></small></p>
                 <!-- Interaction bar -->
                 <div class="interaction-bar">
-                    <!-- Make comments count clickable -->
-                    <span class="comments-toggle" onclick="showComments(<?= $post['id']; ?>);">
-                        <span id="comment-count-<?= $post['id']; ?>"><?= $post['comments_count']; ?></span> comments
+                    <span class="icon-btn" title="Like" onclick="toggleLike(<?= $post['id']; ?>);">
+                        <span id="heart-<?= $post['id']; ?>" class="heart <?= !empty($is_liked) ? 'liked' : '' ?>">&#9829;</span>
+                        <span class="count" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?></span>
                     </span>
-                    <span class="card-text" id="like-count-<?= $post['id']; ?>"><?= $post['likes_count']; ?> likes</span>
-                    <button onclick="toggleLike(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Like</button>
-                    <button onclick="toggleCommentSection(<?= $post['id']; ?>);" class="btn btn-outline-secondary">Comment</button>
+                    <span class="icon-btn" title="Comment" onclick="toggleCommentSection(<?= $post['id']; ?>);">
+                        &#128172;
+                        <span class="count" id="comment-count-<?= $post['id']; ?>"><?= $post['comments_count']; ?></span>
+                    </span>
                     <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
-                        <form method="post" action="<?= site_url('profile/delete_post/' . $post['id']); ?>" style="display:inline;" onsubmit="return confirm('Delete this post?');">
+                        <form method="post" action="<?= site_url('profile/delete_post/' . $post['id']); ?>" style="margin:0;" onsubmit="return confirm('Delete this post?');">
                             <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
                     <?php endif; ?>
                 </div>
@@ -116,9 +144,11 @@
                 '<?= site_url('post/toggle_like'); ?>',
                 { post_id: postId },
                 function(response) {
-                    if (response.status === 'success') {
-                        $('#like-count-' + postId).text(response.likes_count + ' likes');
+                    if (response.status !== 'success') {
+                        return;
                     }
+                    $('#like-count-' + postId).text(response.likes_count);
+                    $('#heart-' + postId).toggleClass('liked', !!response.is_liked);
                 }
             );
         }

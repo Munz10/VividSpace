@@ -33,20 +33,33 @@ class Post_model extends CI_Model {
         }
     }
 
-    // Add a like or remove it if it already exists
+    // Add a like or remove it if it already exists.
+    // Returns ['is_liked' => bool, 'likes_count' => int].
     public function toggle_like($post_id, $user_id) {
         $this->db->where(['post_id' => $post_id, 'user_id' => $user_id]);
         $exists = $this->db->get('likes');
 
         if ($exists->num_rows() > 0) {
             $this->db->delete('likes', ['post_id' => $post_id, 'user_id' => $user_id]);
+            $is_liked = false;
         } else {
             $this->db->insert('likes', ['post_id' => $post_id, 'user_id' => $user_id]);
+            $is_liked = true;
         }
 
-        // Return the current count of likes for this post
         $this->db->where('post_id', $post_id);
-        return $this->db->count_all_results('likes');
+        return [
+            'is_liked'    => $is_liked,
+            'likes_count' => $this->db->count_all_results('likes'),
+        ];
+    }
+
+    public function has_liked($post_id, $user_id) {
+        if (!$user_id) {
+            return false;
+        }
+        return $this->db->where(['post_id' => $post_id, 'user_id' => $user_id])
+                        ->count_all_results('likes') > 0;
     }
 
     // Add a new comment to a post
