@@ -49,6 +49,8 @@ class Follow extends CI_Controller {
         echo json_encode([
             'status'  => $result ? 'success' : 'error',
             'action'  => $result ? 'unfollow' : 'follow',
+            'followers_count' => $this->User_model->count_followers($following_id),
+            'following_count' => $this->User_model->count_following($following_id),
             'csrf_token' => $this->security->get_csrf_hash()
         ]);
     }
@@ -79,6 +81,8 @@ class Follow extends CI_Controller {
         echo json_encode([
             'status'  => $result ? 'success' : 'error',
             'action'  => $result ? 'follow' : 'unfollow',
+            'followers_count' => $this->User_model->count_followers($following_id),
+            'following_count' => $this->User_model->count_following($following_id),
             'csrf_token' => $this->security->get_csrf_hash()
         ]);
     }

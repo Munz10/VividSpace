@@ -149,8 +149,8 @@
             <?php endif; ?>
         </div>
         <div class="follow-info">
-            <p><strong><?= $followers_count ?></strong> Followers</p>
-            <p><strong><?= $following_count ?></strong> Following</p>
+            <p><strong id="followers-count"><?= $followers_count ?></strong> Followers</p>
+            <p><strong id="following-count"><?= $following_count ?></strong> Following</p>
         </div>
         <hr>
         <?php if (empty($posts)): ?>
@@ -209,6 +209,12 @@
                         button.removeClass('unfollow').addClass('follow').text('Follow');
                     } else {
                         button.removeClass('follow').addClass('unfollow').text('Unfollow');
+                    }
+                    if (typeof response.followers_count !== 'undefined') {
+                        $('#followers-count').text(response.followers_count);
+                    }
+                    if (typeof response.following_count !== 'undefined') {
+                        $('#following-count').text(response.following_count);
                     }
                 }
             );
