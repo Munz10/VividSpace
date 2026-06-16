@@ -84,10 +84,20 @@
             object-fit: cover;
         }
         .card {
-            background-color: #f8f9fa; 
-            padding: 15px; 
-            border-radius: 10px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-meta {
+            display: flex;
+            gap: 14px;
+            color: #555;
+            font-size: 0.9rem;
+            margin-top: 6px;
+        }
+        .card-meta .heart {
+            color: #e0245e;
         }
     </style>
 </head>
@@ -123,6 +133,10 @@
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($post['caption']); ?></h5>
                         <p class="card-text"><small class="text-muted">Posted by <?= htmlspecialchars($post['author_username']); ?></small></p>
+                        <div class="card-meta">
+                            <span><span class="heart">&#9829;</span> <?= (int) $post['likes_count']; ?></span>
+                            <span>&#128172; <?= (int) $post['comments_count']; ?></span>
+                        </div>
                     </div>
                 </div>
             </div>

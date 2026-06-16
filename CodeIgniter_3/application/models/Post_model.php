@@ -89,7 +89,12 @@ class Post_model extends CI_Model {
         if (empty($user_ids)) {
             return [];
         }
-        $this->db->select('posts.*, users.username as author_username');
+        $this->db->select('
+            posts.*,
+            users.username as author_username,
+            (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) as likes_count,
+            (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) as comments_count
+        ', FALSE);
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.user_id');
         $this->db->where_in('posts.user_id', $user_ids);
