@@ -1,4 +1,5 @@
 /* VividSpace shared styles. View-specific rules stay in each view. */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
 
 html, body {
     background-color: #f8f9fa;
@@ -32,17 +33,36 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     gap: 1rem;
 }
 .logo-and-home {
     display: flex;
     align-items: center;
+    gap: 8px;
 }
-.logo-and-home h1 {
-    margin-right: 10px;
-    margin-bottom: 0;
+.logo-img {
+    height: 42px;
+    width: auto;
+    display: block;
 }
+/* Icon-only header buttons */
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: 1.15rem;
+    line-height: 1;
+    border-radius: 50%;
+}
+/* Dual-state bookmark icon (CSS-driven, no JS icon swap needed) */
+.bm-empty  { display: inline-block; }
+.bm-filled { display: none; }
+.icon-btn.saved .bm-empty  { display: none; }
+.icon-btn.saved .bm-filled { display: inline-block; color: #f5a623; }
 
 /* Profile icon in the page header. */
 .profile-icon {

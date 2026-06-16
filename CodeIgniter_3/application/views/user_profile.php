@@ -102,7 +102,7 @@
                     <div class="col-md-4 mb-3">
                         <div class="post">
                             <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                                <img src="<?= base_url(ltrim($post['image_path'], '/')); ?>" alt="Post Image">
+                                <img src="<?= base_url(ltrim($post['image_path'], '/')); ?>" alt="Post Image" loading="lazy">
                             </a>
                             <div class="post-body">
                                 <p><?= htmlspecialchars($post['caption']); ?></p>

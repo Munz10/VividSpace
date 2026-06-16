@@ -72,9 +72,14 @@ class User_model extends CI_Model {
     }
 
     public function search_users($query) {
+        $this->db->select('id, username, profile_image');
         $this->db->like('username', $query);
-        $query = $this->db->get('users');
-        return $query->result_array();
+        return $this->db->get('users')->result_array();
+    }
+
+    public function delete_user($user_id) {
+        $this->db->where('id', (int) $user_id)->delete('users');
+        return $this->db->affected_rows() > 0;
     }
     
     public function dynamic_user_search($username) {

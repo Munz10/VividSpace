@@ -30,7 +30,7 @@
 <body>
     <div class="container">
         <?php $this->load->view('partials/header'); ?>
-        <div class="form-container">    
+        <div class="form-container">
             <form action="<?= site_url('profile/update'); ?>" method="post" enctype="multipart/form-data" novalidate>
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 <div class="form-group">
@@ -79,6 +79,15 @@
                     </div>
                 <?php endif; ?>
             </form>
+
+            <!-- Danger zone -->
+            <hr>
+            <div class="text-center mt-3">
+                <p class="text-muted mb-1" style="font-size:0.9rem;">Need to leave?</p>
+                <a href="<?= site_url('profile/delete_account'); ?>" class="btn btn-outline-danger btn-sm">
+                    <i class="bi bi-trash"></i> Delete Account
+                </a>
+            </div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

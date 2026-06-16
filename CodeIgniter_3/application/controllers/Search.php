@@ -6,7 +6,7 @@ class Search extends MY_Controller {
         parent::__construct();
         $this->load->helper('url');
         $this->load->model('User_model');
-        // Load other required models or libraries
+        $this->load->model('Post_model');
     }
     public function index() {
         // Optional: Load a search form view
@@ -21,10 +21,21 @@ class Search extends MY_Controller {
             return;
         }
 
-        $data['results'] = $this->User_model->search_users($query);
-        $data['query'] = $query;
+        $data['users']  = $this->User_model->search_users($query);
+        $data['posts']  = $this->Post_model->search_posts($query);
+        $data['query']  = $query;
 
         $this->load->view('search_result', $data);
+    }
+
+    public function hashtag($tag) {
+        $tag = trim($this->uri->segment(3));
+        if (!$tag) { redirect('profile/feed'); return; }
+
+        $data['tag']      = $tag;
+        $data['posts']    = $this->Post_model->get_posts_by_hashtag($tag);
+        $data['has_more'] = count($data['posts']) === 12;
+        $this->load->view('hashtag_posts', $data);
     }
 
     public function dynamicResult() {

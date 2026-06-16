@@ -142,3 +142,21 @@ if (!function_exists('clean_filename')) {
     }
 }
 
+if (!function_exists('linkify_mentions')) {
+    /**
+     * Convert @username mentions in already-escaped text into profile links.
+     * Input must already be htmlspecialchars-escaped; output is safe HTML.
+     */
+    function linkify_mentions($text) {
+        $base = rtrim(site_url('profile/view'), '/') . '/';
+        return preg_replace_callback(
+            '/@([a-zA-Z0-9_]{1,50})/',
+            function($m) use ($base) {
+                $user = htmlspecialchars($m[1], ENT_QUOTES, 'UTF-8');
+                return '<a href="' . $base . $user . '">@' . $user . '</a>';
+            },
+            $text
+        );
+    }
+}
+

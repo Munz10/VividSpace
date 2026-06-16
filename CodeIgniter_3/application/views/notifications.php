@@ -47,7 +47,7 @@
                             $href = $n['entity_id'] ? site_url('post/detail/' . (int) $n['entity_id']) : '#';
                             break;
                         case 'comment':
-                            $icon = '&#128172;';
+                            $icon = '<i class="bi bi-chat"></i>';
                             $text = '<strong>' . htmlspecialchars($n['actor_username']) . '</strong> commented on your post.';
                             $href = $n['entity_id'] ? site_url('post/detail/' . (int) $n['entity_id']) : '#';
                             break;

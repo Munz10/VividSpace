@@ -5,10 +5,10 @@ class Profile extends MY_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Post_model'); 
+        $this->load->model('Post_model');
+        $this->load->model('Bookmark_model');
         $this->load->helper('url');
         $this->load->model('User_model');
-        // Ensure user is logged in
         $this->load->library('session');
         $this->load->library('upload');
         if (!$this->session->userdata('logged_in')) {
@@ -117,9 +117,51 @@ class Profile extends MY_Controller {
             return ['error' => 'Uploaded file is not a valid image.'];
         }
 
+        if (function_exists('imagecreatefromjpeg')) {
+            $this->_resize_image($data['full_path'], $actual_mime, 1280);
+        }
+
         return ['file_name' => $data['file_name']];
     }
     
+    private function _resize_image($path, $mime, $max_width) {
+        switch ($mime) {
+            case 'image/jpeg': $src = imagecreatefromjpeg($path); break;
+            case 'image/png':  $src = imagecreatefrompng($path);  break;
+            case 'image/gif':  $src = imagecreatefromgif($path);  break;
+            default: return;
+        }
+        if (!$src) return;
+
+        $orig_w = imagesx($src);
+        $orig_h = imagesy($src);
+
+        if ($orig_w <= $max_width) {
+            imagedestroy($src);
+            return;
+        }
+
+        $new_w = $max_width;
+        $new_h = (int) round($orig_h * ($max_width / $orig_w));
+        $dst   = imagecreatetruecolor($new_w, $new_h);
+
+        if ($mime === 'image/png') {
+            imagealphablending($dst, false);
+            imagesavealpha($dst, true);
+        }
+
+        imagecopyresampled($dst, $src, 0, 0, 0, 0, $new_w, $new_h, $orig_w, $orig_h);
+
+        switch ($mime) {
+            case 'image/jpeg': imagejpeg($dst, $path, 85); break;
+            case 'image/png':  imagepng($dst, $path, 6);   break;
+            case 'image/gif':  imagegif($dst, $path);       break;
+        }
+
+        imagedestroy($src);
+        imagedestroy($dst);
+    }
+
     public function view($username, $page = 1) {
         $profile = $this->User_model->get_user_by_username($username);
         if (!$profile) {
@@ -244,6 +286,71 @@ class Profile extends MY_Controller {
         redirect('login'); // Redirect to the login page or your application's entry point
     }
     
+    public function saved() {
+        $user_id = $this->session->userdata('user_id');
+        $data['posts']   = $this->Bookmark_model->list_for_user($user_id);
+        $data['profile'] = $this->User_model->get_user_by_id($user_id);
+        $this->load->view('saved_posts', $data);
+    }
+
+    public function feed_more($page = 1) {
+        header('Content-Type: application/json');
+        $user_id  = $this->session->userdata('user_id');
+        $per_page = 12;
+        $page     = max(1, (int) $page);
+        $offset   = ($page - 1) * $per_page;
+
+        $following_ids = $this->User_model->get_following_user_ids($user_id);
+        $posts = !empty($following_ids)
+            ? $this->Post_model->get_posts_by_user_ids($following_ids, $per_page, $offset)
+            : [];
+
+        $html = $this->load->view('partials/feed_cards', ['posts' => $posts], TRUE);
+        echo json_encode([
+            'status'   => 'success',
+            'html'     => $html,
+            'has_more' => count($posts) === $per_page,
+        ]);
+    }
+
+    public function profile_more($page = 1) {
+        header('Content-Type: application/json');
+        $user_id  = $this->session->userdata('user_id');
+        $per_page = 12;
+        $page     = max(1, (int) $page);
+        $offset   = ($page - 1) * $per_page;
+
+        $posts = $this->Post_model->get_posts_by_user_id($user_id, $per_page, $offset);
+        $html  = $this->load->view('partials/profile_cards', ['posts' => $posts], TRUE);
+        echo json_encode([
+            'status'   => 'success',
+            'html'     => $html,
+            'has_more' => count($posts) === $per_page,
+        ]);
+    }
+
+    public function delete_account() {
+        $user_id = (int) $this->session->userdata('user_id');
+
+        if ($this->input->method(TRUE) !== 'POST') {
+            $this->load->view('delete_account');
+            return;
+        }
+
+        $password = (string) $this->input->post('password');
+        $user = $this->db->select('password_hash')->where('id', $user_id)->get('users')->row();
+
+        if (!$user || !password_verify($password, $user->password_hash)) {
+            $this->session->set_flashdata('error', 'Incorrect password.');
+            redirect('profile/delete_account');
+            return;
+        }
+
+        $this->User_model->delete_user($user_id);
+        $this->session->sess_destroy();
+        redirect('login');
+    }
+
     public function delete_post($post_id) {
         $user_id = $this->session->userdata('user_id');
         $deleted = $this->Post_model->delete_post((int) $post_id, (int) $user_id);

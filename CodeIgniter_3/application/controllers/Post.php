@@ -7,6 +7,7 @@ class Post extends MY_Controller {
     parent::__construct();
     $this->load->model('Post_model');
     $this->load->model('Notification_model');
+    $this->load->model('Bookmark_model');
     $this->load->helper('url');
     $this->load->library('session');
 
@@ -23,8 +24,9 @@ class Post extends MY_Controller {
       return;
     }
     $user_id = $this->session->userdata('user_id');
-    $data['is_liked'] = $this->Post_model->has_liked($post_id, $user_id);
-    $data['comments'] = $this->Post_model->get_comments_by_post_id($post_id);
+    $data['is_liked']  = $this->Post_model->has_liked($post_id, $user_id);
+    $data['is_saved']  = $this->Post_model->has_bookmarked($post_id, $user_id);
+    $data['comments']  = $this->Post_model->get_comments_by_post_id($post_id);
     $this->load->view('post_detail', $data);
   }
 
@@ -104,6 +106,42 @@ class Post extends MY_Controller {
     $comments = $this->Post_model->get_comments_by_post_id($post_id);
     $data['comments'] = $comments;
     $this->load->view('partials/comments', $data);
+  }
+
+  public function toggle_bookmark() {
+    header('Content-Type: application/json');
+    $post_id = (int) $this->input->post('post_id');
+    $user_id = (int) $this->session->userdata('user_id');
+    if (!$post_id || !$user_id) {
+      echo json_encode(['status' => 'error', 'message' => 'Invalid request']);
+      return;
+    }
+    $is_saved = $this->Bookmark_model->toggle($user_id, $post_id);
+    echo json_encode([
+      'status'   => 'success',
+      'is_saved' => $is_saved,
+      'csrf_token' => $this->security->get_csrf_hash(),
+    ]);
+  }
+
+  public function modal_content($post_id) {
+    header('Content-Type: application/json');
+    $post = $this->Post_model->get_post_by_id($post_id);
+    if (!$post) {
+      echo json_encode(['status' => 'error']);
+      return;
+    }
+    $user_id  = (int) $this->session->userdata('user_id');
+    $comments = $this->Post_model->get_comments_by_post_id($post_id);
+    $is_liked = $this->Post_model->has_liked($post_id, $user_id);
+    $is_saved = $this->Post_model->has_bookmarked($post_id, $user_id);
+    $html = $this->load->view('partials/post_card', [
+      'post'     => $post,
+      'comments' => $comments,
+      'is_liked' => $is_liked,
+      'is_saved' => $is_saved,
+    ], TRUE);
+    echo json_encode(['status' => 'success', 'html' => $html, 'csrf_token' => $this->security->get_csrf_hash()]);
   }
 
   public function edit($post_id) {

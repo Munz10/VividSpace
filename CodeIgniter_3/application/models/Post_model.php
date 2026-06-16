@@ -152,6 +152,45 @@ class Post_model extends CI_Model {
         return $this->db->affected_rows() >= 0 && $this->is_owner($post_id, $user_id);
     }
 
+    public function get_posts_by_hashtag($tag, $limit = 12, $offset = 0) {
+        $this->db->select('
+            posts.*,
+            users.username as author_username,
+            (SELECT COUNT(*) FROM likes    WHERE likes.post_id    = posts.id) as likes_count,
+            (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) as comments_count
+        ', FALSE);
+        $this->db->from('posts');
+        $this->db->join('users', 'users.id = posts.user_id');
+        $this->db->like('posts.hashtags', $tag);
+        $this->db->order_by('posts.created_at', 'DESC');
+        $this->db->limit($limit, $offset);
+        return $this->db->get()->result_array();
+    }
+
+    public function search_posts($query, $limit = 12) {
+        $this->db->select('
+            posts.*,
+            users.username as author_username,
+            (SELECT COUNT(*) FROM likes    WHERE likes.post_id    = posts.id) as likes_count,
+            (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) as comments_count
+        ', FALSE);
+        $this->db->from('posts');
+        $this->db->join('users', 'users.id = posts.user_id');
+        $this->db->group_start();
+        $this->db->like('posts.caption', $query);
+        $this->db->or_like('posts.hashtags', $query);
+        $this->db->group_end();
+        $this->db->order_by('posts.created_at', 'DESC');
+        $this->db->limit($limit);
+        return $this->db->get()->result_array();
+    }
+
+    public function has_bookmarked($post_id, $user_id) {
+        if (!$user_id) return false;
+        return $this->db->where(['post_id' => $post_id, 'user_id' => $user_id])
+                        ->count_all_results('bookmarks') > 0;
+    }
+
     public function is_owner($post_id, $user_id) {
         $row = $this->db->select('user_id')
                         ->where('id', $post_id)

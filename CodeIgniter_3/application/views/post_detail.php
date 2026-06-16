@@ -16,7 +16,8 @@
         }
         .card-title { margin-bottom: 0.5rem; }
         .card-text { font-size: 0.9rem; margin-right: 0.5rem; display: inline; }
-        .hashtags { color: #3897f0; font-size: 0.9rem; margin-top: 4px; }
+        .hashtags { font-size: 0.9rem; margin-top: 4px; }
+        .hashtag-link { color: #3897f0; margin-right: 4px; }
         .interaction-bar {
             font-size: 1rem;
             margin-bottom: 1rem;
@@ -40,6 +41,7 @@
         .icon-btn .count { font-size: 0.95rem; color: #555; }
         .heart { color: #ccc; }
         .heart.liked { color: #e0245e; }
+        /* bookmark dual-icon handled by app.css */
         .comment-item {
             padding: 6px 0;
             border-bottom: 1px solid #f0f0f0;
@@ -61,10 +63,20 @@
                     </a>
                 </h5>
                 <p class="card-text"><?= esc($post['caption']); ?></p>
-                <?php if (!empty($post['hashtags'])): ?>
-                    <p class="hashtags"><?= esc($post['hashtags']); ?></p>
-                <?php endif; ?>
                 <p class="card-text mt-1"><small class="text-muted"><?= esc($post['created_at']); ?></small></p>
+
+                <!-- Hashtags as clickable links -->
+                <?php if (!empty($post['hashtags'])): ?>
+                    <p class="hashtags">
+                        <?php
+                        $tags = preg_split('/[\s,]+/', $post['hashtags'], -1, PREG_SPLIT_NO_EMPTY);
+                        foreach ($tags as $tag):
+                            $clean = ltrim($tag, '#');
+                        ?>
+                            <a href="<?= site_url('search/hashtag/' . urlencode($clean)); ?>" class="hashtag-link">#<?= esc($clean); ?></a>
+                        <?php endforeach; ?>
+                    </p>
+                <?php endif; ?>
 
                 <!-- Interaction bar -->
                 <div class="interaction-bar mt-2">
@@ -73,8 +85,12 @@
                         <span class="count" id="like-count-<?= $post['id']; ?>"><?= (int) $post['likes_count']; ?></span>
                     </span>
                     <span id="comment-toggle-<?= $post['id']; ?>" class="icon-btn" title="Comment" onclick="toggleCommentForm(<?= $post['id']; ?>);">
-                        &#128172;
+                        <i class="bi bi-chat"></i>
                         <span class="count" id="comment-count-<?= $post['id']; ?>"><?= (int) $post['comments_count']; ?></span>
+                    </span>
+                    <span id="bm-btn-<?= $post['id']; ?>" class="icon-btn <?= !empty($is_saved) ? 'saved' : ''; ?>" title="Save" onclick="toggleBookmark(<?= $post['id']; ?>);">
+                        <i class="bi bi-bookmark bm-empty"></i>
+                        <i class="bi bi-bookmark-fill bm-filled"></i>
                     </span>
                     <?php if ($this->session->userdata('user_id') == $post['user_id']): ?>
                         <a href="<?= site_url('post/edit/' . $post['id']); ?>" class="btn btn-outline-secondary btn-sm">Edit</a>
@@ -90,7 +106,8 @@
                 <div id="comments-container-<?= $post['id']; ?>" class="mt-2">
                     <?php foreach ($comments as $c): ?>
                         <div class="comment-item">
-                            <strong>@<?= htmlspecialchars($c['username']); ?></strong><?= htmlspecialchars($c['content']); ?>
+                            <strong><a href="<?= site_url('profile/view/' . urlencode($c['username'])); ?>">@<?= esc($c['username']); ?></a></strong>
+                            <?= linkify_mentions(esc($c['content'])); ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -145,6 +162,23 @@
             if ($('#comment-section-' + postId).is(':visible')) {
                 $('#comment-content-' + postId).focus();
             }
+        }
+
+        function toggleBookmark(postId) {
+            var $btn = $('#bm-btn-' + postId);
+            if ($btn.hasClass('loading')) return;
+            $btn.addClass('loading');
+            csrfPost(
+                '<?= site_url('post/toggle_bookmark'); ?>',
+                { post_id: postId },
+                function(response) {
+                    $btn.removeClass('loading');
+                    if (response.status === 'success') {
+                        $btn.toggleClass('saved', !!response.is_saved);
+                    }
+                },
+                function() { $btn.removeClass('loading'); }
+            );
         }
 
         function addComment(postId) {

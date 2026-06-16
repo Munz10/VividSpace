@@ -3,25 +3,30 @@
  * Shared page header.
  *
  * Optional variables a controller / view can pass in via $this->load->view():
- *   $show_search   bool  Render the user search field on the right (default true)
- *   $show_create   bool  Render the Create button next to Home (default false)
+ *   $show_search   bool    Render the user search field (default false)
+ *   $show_create   bool    Render the Create button (default false)
  *   $home_url      string  Override the Home link (default profile/feed)
- *   $actions       string  Raw HTML appended to the right side, before the
- *                          profile icon. Use for page-specific buttons such
- *                          as "Edit profile" / "Log out" on the own profile.
+ *   $actions       string  Raw HTML appended to the right side before the profile icon
  */
 
 $show_search = isset($show_search) ? (bool) $show_search : false;
 $show_create = isset($show_create) ? (bool) $show_create : false;
 $home_url    = isset($home_url) && $home_url ? $home_url : site_url('profile/feed');
 $actions     = isset($actions) ? $actions : '';
+$notif_unread_count = isset($notif_unread_count) ? (int) $notif_unread_count : 0;
 ?>
 <div class="header-section">
     <div class="logo-and-home">
-        <h1>VividSpace</h1>
-        <a href="<?= $home_url; ?>" class="btn btn-primary ml-2">Home</a>
+        <a href="<?= $home_url; ?>">
+            <img src="<?= base_url('Images/vividSpace_Intro.png'); ?>" alt="VividSpace" class="logo-img">
+        </a>
+        <a href="<?= $home_url; ?>" class="btn btn-primary btn-icon ml-1" title="Home">
+            <i class="bi bi-house-fill"></i>
+        </a>
         <?php if ($show_create): ?>
-            <a href="<?= site_url('profile/create_post'); ?>" class="btn btn-outline-primary ml-2">Create</a>
+            <a href="<?= site_url('profile/create_post'); ?>" class="btn btn-outline-primary btn-icon" title="Create Post">
+                <i class="bi bi-plus-lg"></i>
+            </a>
         <?php endif; ?>
     </div>
 
@@ -35,11 +40,10 @@ $actions     = isset($actions) ? $actions : '';
         </div>
     <?php endif; ?>
 
-    <div class="d-flex align-items-center" style="gap:14px;">
+    <div class="d-flex align-items-center" style="gap:12px;">
         <?= $actions ?>
         <a href="<?= site_url('notifications'); ?>" class="notif-bell" title="Notifications">
-            &#128276;
-            <?php $notif_unread_count = isset($notif_unread_count) ? (int) $notif_unread_count : 0; ?>
+            <i class="bi bi-bell<?= $notif_unread_count > 0 ? '-fill' : ''; ?>"></i>
             <?php if ($notif_unread_count > 0): ?>
                 <span class="badge"><?= $notif_unread_count > 99 ? '99+' : $notif_unread_count; ?></span>
             <?php endif; ?>
