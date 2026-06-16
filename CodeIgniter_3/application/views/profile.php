@@ -58,16 +58,9 @@
 </head>
 <body>
 <div class="container">
-    <div class="header-section">
-        <div class="logo-and-home">
-            <h1>VividSpace</h1>
-            <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
-        </div>
-        <div>
-            <a href="<?= site_url('profile/edit'); ?>" class="btn btn-secondary">Edit profile</a>
-            <a href="<?= site_url('profile/logout'); ?>" class="btn btn-dark">Log out</a>
-        </div>
-    </div>
+    <?php $this->load->view('partials/header', [
+        'actions' => '<a href="' . site_url('profile/edit') . '" class="btn btn-secondary">Edit profile</a> <a href="' . site_url('profile/logout') . '" class="btn btn-dark">Log out</a>',
+    ]); ?>
 
     <div class="profile-section">
         <div class="profile-info">

@@ -29,17 +29,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header-section">
-            <div class="logo-and-home">
-                <h1>VividSpace</h1>
-                <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
-            </div>
-            <div class="col-6 col-md-8 d-flex justify-content-end">
-                <a href="<?= site_url('profile'); ?>">
-                    <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
-                </a>
-            </div>
-        </div>
+        <?php $this->load->view('partials/header'); ?>
         <div class="form-container">    
             <form action="<?= site_url('profile/update'); ?>" method="post" enctype="multipart/form-data" novalidate>
                 <div class="form-group">

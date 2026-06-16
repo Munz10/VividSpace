@@ -37,15 +37,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="header-section">
-        <div class="logo-and-home">
-            <h1>VividSpace</h1>
-            <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
-        </div>
-        <a href="<?= site_url('profile'); ?>">
-            <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
-        </a>
-    </div>
+    <?php $this->load->view('partials/header'); ?>
     <div class="form-container my-4">
         <h4> Create new post </h4>
         <?php if (!empty($error)): ?>

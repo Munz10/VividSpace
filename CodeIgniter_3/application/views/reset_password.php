@@ -24,15 +24,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header-section">
-            <div class="logo-and-home">
-                <h1>VividSpace</h1>
-                <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary ml-2">Home</a>
-            </div>
-            <a href="<?= site_url('profile'); ?>">
-                <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
-            </a>
-        </div>
+        <?php $this->load->view('partials/header'); ?>
         <h2>Reset Password</h2>
         <form action="<?= site_url('profile/reset_password'); ?>" method="post">
             <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">

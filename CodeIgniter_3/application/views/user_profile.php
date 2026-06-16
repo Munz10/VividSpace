@@ -37,12 +37,6 @@
             border-bottom: 1px solid #ddd;
         }
         .post-body { padding: 10px; }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-        }
         .follow-btn-wrapper {
             text-align: right;
             margin-top: 1rem;
@@ -70,17 +64,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <div class="logo-and-home">
-                <h1>VividSpace</h1>
-                <a href="<?= site_url('profile/feed'); ?>" class="btn btn-primary">Home</a>
-            </div>
-            <div class="profile-icon-container">
-                <a href="<?= site_url('profile'); ?>">
-                    <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
-                </a>
-            </div>
-        </div>
+        <?php $this->load->view('partials/header'); ?>
         <div class="profile-header">
             <div class="spacer"></div>
             <button class="btn follow-btn <?= $is_following ? 'unfollow' : 'follow'; ?>" data-following-id="<?= $user_profile['id']; ?>"

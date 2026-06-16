@@ -29,22 +29,6 @@
             background-color: #e9ecef;
             object-fit: cover;
         }
-        #search-results {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            width: 100%;
-            background-color: #707070;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            z-index: 9999;
-            display: none;
-            padding: 10px;
-        }
-        .search-result {
-            padding: 5px 0;
-            border-bottom: 3px solid #eee;
-            cursor: pointer;
-        }
         .card-img-top {
             width: 100%;
             height: 400px; 
@@ -70,24 +54,7 @@
 </head>
 <body>
 <div class="container">
-    <div class="header-section">
-        <div class="logo-and-home">
-            <h1>VividSpace</h1>
-            <a href="<?= site_url('profile/create_post'); ?>" class="btn btn-primary ml-3">Create</a>
-        </div>
-        <div class="col-12 col-md-6 my-3 my-md-0">
-            <form action="<?= site_url('search/result'); ?>" method="get" class="d-flex">
-                <input type="search" id="search-input" class="form-control flex-grow-1" name="query" placeholder="Search users..." required>
-                <button type="submit" class="btn btn-outline-secondary ml-2">Search</button>
-            </form>
-            <div id="search-results" class="dropdown-results"></div>
-        </div>
-        <div class="col-6 col-md-2 d-flex justify-content-end">
-            <a href="<?= site_url('profile'); ?>">
-                <img src="<?= base_url('Images/user_icon.jpg'); ?>" class="profile-icon" alt="Profile">
-            </a>
-        </div>
-    </div>
+    <?php $this->load->view('partials/header', ['show_search' => true, 'show_create' => true]); ?>
 
     <div class="row mt-4">
     <?php if (!empty($posts)): ?>
@@ -149,47 +116,41 @@
 
 <script>
     $(document).ready(function() {
-        $('#search-input').on('input', function() {
+        var $input = $('#header-search-input');
+        var $results = $('#header-search-results');
+
+        $input.on('input', function() {
             var query = $(this).val();
 
             if (query.trim() === '') {
-                $('#search-results').empty().hide();
+                $results.empty().hide();
                 return;
             }
 
             $.ajax({
                 url: '<?= site_url('search/dynamicResult'); ?>',
                 type: 'get',
-                data:{query: query},
+                data: { query: query },
                 success: function(response) {
-                    console.log('Response:', response); 
-
-                    $('#search-results').empty().show();
-
-                    if (response.results.length > 0) {
-                        $.each(response.results, function(index, result) {
-                            // Use text() instead of HTML concatenation to prevent XSS
-                            var searchResult = $('<div class="search-result"></div>').text(result.username);
-                            searchResult.click(function() {
-                                // Sanitize username before using in URL
-                                var safeUsername = encodeURIComponent(result.username);
-                                window.location.href = '<?= site_url('profile/view/'); ?>' + safeUsername;
-                            });
-                            $('#search-results').append(searchResult);
-                        });
-                    } else {
-                        $('#search-results').text('No results found');
+                    $results.empty().show();
+                    if (response.results.length === 0) {
+                        $('<div class="search-result"></div>').text('No results found').appendTo($results);
+                        return;
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                    $.each(response.results, function(index, result) {
+                        var $row = $('<div class="search-result"></div>').text(result.username);
+                        $row.on('click', function() {
+                            window.location.href = '<?= site_url('profile/view/'); ?>' + encodeURIComponent(result.username);
+                        });
+                        $results.append($row);
+                    });
                 }
             });
         });
 
         $(document).on('click', function(event) {
-            if (!$(event.target).closest('#search-input').length) {
-                $('#search-results').empty().hide();
+            if (!$(event.target).closest('.header-search').length) {
+                $results.empty().hide();
             }
         });
     });
