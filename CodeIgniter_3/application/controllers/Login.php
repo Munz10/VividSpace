@@ -13,7 +13,7 @@ class Login extends CI_Controller {
     public function index() {
         // If already logged in, redirect
         if ($this->session->userdata('logged_in')) {
-            redirect('profile');
+            redirect('profile/feed');
         }
         $this->load->view('login');
     }
@@ -45,7 +45,7 @@ class Login extends CI_Controller {
             echo json_encode([
                 'status' => 'success',
                 'message' => 'Login successful!',
-                'redirect' => site_url('profile'),
+                'redirect' => site_url('profile/feed'),
                 'csrf_token' => $this->security->get_csrf_hash()
             ]);
         } else {
