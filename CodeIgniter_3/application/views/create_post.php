@@ -84,10 +84,16 @@
     </div>
     <div class="form-container my-4">
         <h4> Create new post </h4>
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error); ?></div>
+        <?php elseif ($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($this->session->flashdata('error')); ?></div>
+        <?php endif; ?>
         <form action="<?= site_url('profile/save_post'); ?>" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
             <div class="form-group">
                 <label for="postImage" class="custom-file-upload">Choose file</label>
-                <input type="file" id="postImage" name="post_image" hidden onchange="previewImage(); updateFilename(this.value);">
+                <input type="file" id="postImage" name="post_image" accept="image/jpeg,image/png,image/gif" hidden onchange="previewImage(); updateFilename(this.value);">
                 <span id="file-chosen">No file chosen</span>
             </div>
             <div class="form-group">

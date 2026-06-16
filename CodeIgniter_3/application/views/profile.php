@@ -102,7 +102,7 @@
     <div class="profile-section">
         <div class="profile-info">
             <?php if (!empty($profile['profile_image'])): ?>
-                <img src="<?= base_url(htmlspecialchars($profile['profile_image'])); ?>" alt="Profile Picture" class="profile-pic">
+                <img src="<?= base_url(ltrim(htmlspecialchars($profile['profile_image']), '/')); ?>" alt="Profile Picture" class="profile-pic">
             <?php else: ?>
                 <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="profile-pic">
             <?php endif; ?>
@@ -132,7 +132,7 @@
                 <div class="col-md-4 mb-3">
                     <div class="post">
                         <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                            <img src="<?= base_url() . $post['image_path']; ?>" alt="Post Image">
+                            <img src="<?= base_url(ltrim($post['image_path'], '/')); ?>" alt="Post Image">
                         </a>
                         <div class="post-body">
                             <p><?= htmlspecialchars($post['caption']); ?></p>

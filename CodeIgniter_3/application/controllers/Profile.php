@@ -63,41 +63,61 @@ class Profile extends CI_Controller {
     }
 
     public function save_post() {
-        // Check if there's a file being uploaded
-        if (isset($_FILES['post_image']['name']) && $_FILES['post_image']['name'] != '') {
-            // Configure upload.
-            $config['upload_path'] = './uploads/'; // Ensure you have this directory.
-            $config['allowed_types'] = 'gif|jpg|png';
-            $config['max_size'] = '2048'; // 2MB
-    
-            // Load upload library and initialize configuration.
-            $this->upload->initialize($config); 
-    
-            if (!$this->upload->do_upload('post_image')) {
-                // If the upload fails, display error to user.
-                $error = array('error' => $this->upload->display_errors());
-                $this->load->view('create_post', $error);
-            } else {
-                // File is uploaded successfully. Now save post information to the database.
-                $upload_data = $this->upload->data();
-                $image_path = "/uploads/" . $upload_data['file_name'];
-    
-                // Assuming $this->session->userdata('user_id') returns the ID of the currently logged-in user.
-                $post_data = array(
-                    'user_id' => $this->session->userdata('user_id'),
-                    'caption' => $this->input->post('caption'),
-                    'image_path' => $image_path,
-                    'hashtags' => $this->input->post('hashtags'),
-                    // Include other post data as necessary.
-                );
-    
-                $this->db->insert('posts', $post_data);
-                // Redirect to the profile page where the post will be visible.
-                redirect('profile');
-            }
-        } else {
-            // Handle the case where no file is selected.
+        if (empty($_FILES['post_image']['name'])) {
+            $this->session->set_flashdata('error', 'Please choose an image to upload.');
+            redirect('profile/create_post');
+            return;
         }
+
+        $upload = $this->_handle_image_upload('post_image', FCPATH . 'uploads/');
+        if (isset($upload['error'])) {
+            $this->session->set_flashdata('error', $upload['error']);
+            redirect('profile/create_post');
+            return;
+        }
+
+        $this->db->insert('posts', [
+            'user_id'    => $this->session->userdata('user_id'),
+            'caption'    => $this->input->post('caption'),
+            'image_path' => 'uploads/' . $upload['file_name'],
+            'hashtags'   => $this->input->post('hashtags'),
+        ]);
+
+        redirect('profile');
+    }
+
+    /**
+     * Validates, randomises, and MIME-sniffs an uploaded image.
+     * Returns ['file_name' => ...] on success or ['error' => ...] on failure.
+     */
+    private function _handle_image_upload($field, $upload_path) {
+        $config = [
+            'upload_path'   => $upload_path,
+            'allowed_types' => 'gif|jpg|jpeg|png',
+            'max_size'      => 2048,
+            'encrypt_name'  => TRUE,
+        ];
+        $this->upload->initialize($config);
+
+        if (!$this->upload->do_upload($field)) {
+            return ['error' => trim(strip_tags($this->upload->display_errors()))];
+        }
+
+        $data = $this->upload->data();
+
+        $allowed_mimes = ['image/jpeg', 'image/png', 'image/gif'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $actual_mime = $finfo ? finfo_file($finfo, $data['full_path']) : null;
+        if ($finfo) {
+            finfo_close($finfo);
+        }
+
+        if (!in_array($actual_mime, $allowed_mimes, true)) {
+            @unlink($data['full_path']);
+            return ['error' => 'Uploaded file is not a valid image.'];
+        }
+
+        return ['file_name' => $data['file_name']];
     }
     
     public function view($username, $page = 1) {
@@ -136,26 +156,14 @@ class Profile extends CI_Controller {
             'email' => $this->input->post('email'),
         );
     
-        if (isset($_FILES['profile_image']['name']) && $_FILES['profile_image']['name'] != '') {
-            // Set configuration for file upload
-            $config['upload_path'] = './profile_pics/'; // New directory for profile pictures
-            $config['allowed_types'] = 'gif|jpg|png';
-            $config['max_size'] = '2048'; // 2MB
-
-            $this->upload->initialize($config); 
-        
-            // Configuration and file upload handling logic goes here
-            if (!$this->upload->do_upload('profile_image')) {
-                // Handle error
-                $error = $this->upload->display_errors();
-                $this->session->set_flashdata('error', $error);
+        if (!empty($_FILES['profile_image']['name'])) {
+            $upload = $this->_handle_image_upload('profile_image', FCPATH . 'profile_pics/');
+            if (isset($upload['error'])) {
+                $this->session->set_flashdata('error', $upload['error']);
                 redirect('profile/edit');
-                return; // Stop execution if there is an error
-            } 
-            else {
-                $upload_data = $this->upload->data();
-                $userData['profile_image'] = "/profile_pics/" . $upload_data['file_name']; // Adjust the path accordingly
+                return;
             }
+            $userData['profile_image'] = 'profile_pics/' . $upload['file_name'];
         }
     
         $updateStatus = $this->User_model->update_user($user_id, $userData);

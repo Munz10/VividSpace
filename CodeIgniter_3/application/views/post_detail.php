@@ -97,7 +97,7 @@
         </div>
         <!-- Post Content -->
         <div class="card">
-            <img class="card-img-top" src="<?= esc_url(base_url() . $post['image_path']); ?>" alt="Post Image">
+            <img class="card-img-top" src="<?= esc_url(base_url(ltrim($post['image_path'], '/'))); ?>" alt="Post Image">
             <div class="card-body">
                 <h5 class="card-title">@<?= esc($post['username']); ?></h5>
                 <p class="card-text"><?= esc($post['caption']); ?></p>

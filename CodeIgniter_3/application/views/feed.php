@@ -118,7 +118,7 @@
             <div class="col-md-4 mb-3">
                 <div class="card">
                     <a href="<?= site_url('post/detail/' . $post['id']); ?>">
-                        <img src="<?= base_url() . $post['image_path']; ?>" class="card-img-top" alt="Post Image">
+                        <img src="<?= base_url(ltrim($post['image_path'], '/')); ?>" class="card-img-top" alt="Post Image">
                     </a>
                     <div class="card-body">
                         <h5 class="card-title"><?= htmlspecialchars($post['caption']); ?></h5>
@@ -136,7 +136,7 @@
                         <a href="<?= site_url('profile/view/'.$user['username']); ?>" class="list-group-item list-group-item-action m-2">
                             <div class="text-center">
                                 <?php if (!empty($user['profile_image'])): ?>
-                                    <img src="<?= base_url(htmlspecialchars($user['profile_image'])); ?>" alt="Profile Picture" class="suggested-profile-icon mb-2">
+                                    <img src="<?= base_url(ltrim(htmlspecialchars($user['profile_image']), '/')); ?>" alt="Profile Picture" class="suggested-profile-icon mb-2">
                                 <?php else: ?>
                                     <img src="<?= base_url('Images/default_profile_pic.png'); ?>" alt="Profile Picture" class="suggested-profile-icon mb-2">
                                 <?php endif; ?>
