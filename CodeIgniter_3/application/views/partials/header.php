@@ -18,7 +18,7 @@ $notif_unread_count = isset($notif_unread_count) ? (int) $notif_unread_count : 0
 <div class="header-section">
     <div class="logo-and-home">
         <a href="<?= $home_url; ?>">
-            <img src="<?= base_url('Images/vividSpace_Intro.png'); ?>" alt="VividSpace" class="logo-img">
+            <img src="<?= base_url('Images/vividSpace_Logo.png'); ?>" alt="VividSpace" class="logo-img">
         </a>
         <a href="<?= $home_url; ?>" class="btn btn-primary btn-icon ml-1" title="Home">
             <i class="bi bi-house-fill"></i>

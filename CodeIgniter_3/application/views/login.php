@@ -48,7 +48,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <img src="<?= base_url('Images/vividSpace_Logo.png'); ?>" alt="VividSpace" class="auth-logo">
+    <img src="<?= base_url('Images/vividSpace_Intro.png'); ?>" alt="VividSpace" class="auth-logo">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="alert alert-danger" id="error-msg" style="display: none;"></div>

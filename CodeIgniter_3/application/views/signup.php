@@ -65,7 +65,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <img src="<?= base_url('Images/vividSpace_Logo.png'); ?>" alt="VividSpace" class="auth-logo">
+        <img src="<?= base_url('Images/vividSpace_Intro.png'); ?>" alt="VividSpace" class="auth-logo">
         <form method="post" id="signupForm" name="signupform">
             <div class="errormsg" id="errormsg"></div>
             <div class="form-group">
