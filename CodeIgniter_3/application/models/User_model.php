@@ -167,16 +167,10 @@ class User_model extends CI_Model {
     }
 
     public function update_password($user_id, $new_password) {
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-        
-        // Update the user's password in the database
-        $data = array(
-            'password_hash' => $hashed_password
-        );
         $this->db->where('id', $user_id);
-        $this->db->update('users', $data);
-        
-        // Check if the update was successful
+        $this->db->update('users', [
+            'password_hash' => password_hash($new_password, PASSWORD_DEFAULT),
+        ]);
         return $this->db->affected_rows() > 0;
     }
 }

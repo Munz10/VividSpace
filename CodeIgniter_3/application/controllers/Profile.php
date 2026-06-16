@@ -182,9 +182,58 @@ class Profile extends CI_Controller {
     public function edit() {
         $user_id = $this->session->userdata('user_id');
         $data['profile'] = $this->User_model->get_user_by_id($user_id);
-        
+
         // Load the edit profile view
         $this->load->view('edit_profile', $data);
+    }
+
+    public function reset_password() {
+        $user_id = (int) $this->session->userdata('user_id');
+
+        if ($this->input->method(TRUE) !== 'POST') {
+            $this->load->view('reset_password');
+            return;
+        }
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('old_password', 'Current password', 'required');
+        $this->form_validation->set_rules('new_password', 'New password', 'required|min_length[6]');
+        $this->form_validation->set_rules('confirm_new_password', 'Confirm new password', 'required|matches[new_password]');
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', strip_tags(validation_errors()));
+            redirect('profile/reset_password');
+            return;
+        }
+
+        $old_password = (string) $this->input->post('old_password');
+        $new_password = (string) $this->input->post('new_password');
+
+        $user = $this->db->select('password_hash')
+                         ->where('id', $user_id)
+                         ->get('users')
+                         ->row();
+
+        if (!$user || !password_verify($old_password, $user->password_hash)) {
+            $this->session->set_flashdata('error', 'Current password is incorrect.');
+            redirect('profile/reset_password');
+            return;
+        }
+
+        if (password_verify($new_password, $user->password_hash)) {
+            $this->session->set_flashdata('error', 'New password must be different from the current one.');
+            redirect('profile/reset_password');
+            return;
+        }
+
+        if (!$this->User_model->update_password($user_id, $new_password)) {
+            $this->session->set_flashdata('error', 'Could not update password. Please try again.');
+            redirect('profile/reset_password');
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Password updated successfully.');
+        redirect('profile/edit');
     }
 
     public function logout() {
