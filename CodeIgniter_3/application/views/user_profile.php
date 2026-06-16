@@ -65,6 +65,8 @@
 <body>
     <div class="container">
         <?php $this->load->view('partials/header'); ?>
+        <?php $is_own_profile = ($this->session->userdata('user_id') == $user_profile['id']); ?>
+        <?php if (!$is_own_profile): ?>
         <div class="profile-header">
             <div class="spacer"></div>
             <button class="btn follow-btn <?= $is_following ? 'unfollow' : 'follow'; ?>" data-following-id="<?= $user_profile['id']; ?>"
@@ -73,6 +75,7 @@
             </button>
             <small id="follow-error" class="text-danger ml-2"></small>
         </div>
+        <?php endif; ?>
         <div class="profile-info">
             <?php if (!empty($user_profile['profile_image'])): ?>
                 <img src="<?= base_url(ltrim(htmlspecialchars($user_profile['profile_image']), '/')); ?>" alt="Profile Picture" class="profile-pic">

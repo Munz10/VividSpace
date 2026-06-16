@@ -1,8 +1,29 @@
 /* VividSpace shared styles. View-specific rules stay in each view. */
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css");
 
+/* ── Brand colour palette ── */
+:root {
+    --brand:       #7C3AED;
+    --brand-dark:  #6D28D9;
+    --brand-light: #EDE9FE;
+    --brand-faint: #f5f0ff;
+}
+
+/* Override Bootstrap primary with brand purple */
+.btn-primary,
+.btn-primary:focus { background-color: var(--brand); border-color: var(--brand); }
+.btn-primary:hover,
+.btn-primary:not(:disabled):not(.disabled):active { background-color: var(--brand-dark); border-color: var(--brand-dark); }
+.btn-primary:focus, .btn-primary.focus { box-shadow: 0 0 0 .2rem rgba(124,58,237,.3); }
+.btn-outline-primary { color: var(--brand); border-color: var(--brand); }
+.btn-outline-primary:hover,
+.btn-outline-primary:not(:disabled):not(.disabled):active { background-color: var(--brand); border-color: var(--brand); color: #fff; }
+.btn-outline-primary:focus { box-shadow: 0 0 0 .2rem rgba(124,58,237,.3); }
+a { color: var(--brand); }
+a:hover { color: var(--brand-dark); }
+
 html, body {
-    background-color: #f8f9fa;
+    background-color: #f4f0ff;
 }
 
 body {
@@ -35,6 +56,7 @@ h1 {
     align-items: center;
     padding: 0.75rem 1rem;
     gap: 1rem;
+    border-bottom: 2px solid var(--brand-light);
 }
 .logo-and-home {
     display: flex;
@@ -47,14 +69,37 @@ h1 {
     display: block;
     border-radius: 10px;
 }
-/* Full logo (with text) used on auth pages */
+/* ── Auth pages (login / signup) ── */
+.auth-page {
+    background: linear-gradient(135deg, #0f0024 0%, #1e0054 45%, #2d0b6e 75%, #0f0024 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.auth-card {
+    width: 100%;
+    max-width: 460px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+}
+.auth-brand {
+    background: #0d001f;
+    padding: 28px 24px 22px;
+    text-align: center;
+    border-bottom: 1px solid rgba(124,58,237,0.35);
+}
 .auth-logo {
-    max-width: 220px;
+    max-width: 190px;
     width: 100%;
     height: auto;
-    border-radius: 12px;
-    display: block;
-    margin: 0 auto 24px;
+    border-radius: 10px;
+}
+.auth-form-body {
+    background: #fff;
+    padding: 32px 36px 28px;
 }
 /* Icon-only header buttons */
 .btn-icon {

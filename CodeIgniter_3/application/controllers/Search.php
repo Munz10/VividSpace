@@ -21,7 +21,8 @@ class Search extends MY_Controller {
             return;
         }
 
-        $data['users']  = $this->User_model->search_users($query);
+        $current_user_id = (int) $this->session->userdata('user_id');
+        $data['users']  = $this->User_model->search_users($query, $current_user_id);
         $data['posts']  = $this->Post_model->search_posts($query);
         $data['query']  = $query;
 
@@ -40,8 +41,9 @@ class Search extends MY_Controller {
 
     public function dynamicResult() {
         $query = $this->input->get('query');
-        $data['results'] = $this->User_model->search_users($query);
-        header('Content-Type: application/json'); // Ensure proper JSON header
+        $current_user_id = (int) $this->session->userdata('user_id');
+        $data['results'] = $this->User_model->search_users($query, $current_user_id);
+        header('Content-Type: application/json');
         echo json_encode($data);
     }
 }

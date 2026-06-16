@@ -71,9 +71,12 @@ class User_model extends CI_Model {
         return $query->row_array(); // Return user data as an associative array
     }
 
-    public function search_users($query) {
+    public function search_users($query, $exclude_id = 0) {
         $this->db->select('id, username, profile_image');
         $this->db->like('username', $query);
+        if ($exclude_id) {
+            $this->db->where('id !=', (int) $exclude_id);
+        }
         return $this->db->get('users')->result_array();
     }
 
