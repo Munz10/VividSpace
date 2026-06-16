@@ -149,6 +149,19 @@
         </div>
     <?php endif; ?>
     </div>
+
+    <?php if (!empty($posts) && (($page ?? 1) > 1 || !empty($has_more))): ?>
+        <nav class="mt-3">
+            <ul class="pagination justify-content-center">
+                <?php if (($page ?? 1) > 1): ?>
+                    <li class="page-item"><a class="page-link" href="<?= site_url('profile/feed/' . ($page - 1)); ?>">Previous</a></li>
+                <?php endif; ?>
+                <?php if (!empty($has_more)): ?>
+                    <li class="page-item"><a class="page-link" href="<?= site_url('profile/feed/' . ($page + 1)); ?>">Next</a></li>
+                <?php endif; ?>
+            </ul>
+        </nav>
+    <?php endif; ?>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -16,15 +16,21 @@ class Profile extends CI_Controller {
         }
     }
 
-    public function index() {
+    public function index($page = 1) {
         $user_id = $this->session->userdata('user_id');
+        $per_page = 12;
+        $page = max(1, (int) $page);
+        $offset = ($page - 1) * $per_page;
+
         $data['profile'] = $this->User_model->get_user_by_id($user_id);
-        $data['posts'] = $this->Post_model->get_posts_by_user_id($user_id);
+        $data['posts'] = $this->Post_model->get_posts_by_user_id($user_id, $per_page, $offset);
         $data['followers_count'] = $this->User_model->count_followers($user_id);
         $data['following_count'] = $this->User_model->count_following($user_id);
-        
+        $data['page'] = $page;
+        $data['has_more'] = count($data['posts']) === $per_page;
+
         $this->load->view('profile', $data);
-    }    
+    }
 
     public function get_user_by_id($user_id) {
         $this->db->select('id, username, first_name, last_name, bio, email, profile_image'); // Include profile_image here
@@ -33,13 +39,20 @@ class Profile extends CI_Controller {
         return $query->row_array();
     }
 
-    public function feed() {
+    public function feed($page = 1) {
         $user_id = $this->session->userdata('user_id');
+        $per_page = 12;
+        $page = max(1, (int) $page);
+        $offset = ($page - 1) * $per_page;
+
         $following_ids = $this->User_model->get_following_user_ids($user_id);
+
         $data['posts'] = !empty($following_ids)
-            ? $this->Post_model->get_posts_by_user_ids($following_ids)
+            ? $this->Post_model->get_posts_by_user_ids($following_ids, $per_page, $offset)
             : [];
         $data['suggested_users'] = $this->User_model->get_suggested_users($user_id);
+        $data['page'] = $page;
+        $data['has_more'] = count($data['posts']) === $per_page;
 
         $this->load->view('feed', $data);
     }
@@ -87,34 +100,30 @@ class Profile extends CI_Controller {
         }
     }
     
-    public function view($username) {
-        $data['user_profile'] = $this->User_model->get_user_by_username($username);
-        
-        // Assuming $data['user_profile'] contains the profile you're viewing
-        $follower_id = $this->session->userdata('user_id'); // The current logged-in user
-        $following_id = $data['user_profile']['id']; // The user being viewed
+    public function view($username, $page = 1) {
+        $profile = $this->User_model->get_user_by_username($username);
+        if (!$profile) {
+            show_404();
+            return;
+        }
 
-        $data['first_name'] = $data['user_profile']['first_name'];
-        $data['last_name'] = $data['user_profile']['last_name'];
-        $data['bio'] = $data['user_profile']['bio'];
-        
-        // Check if the current user is following the viewed profile
-        $data['is_following'] = $this->User_model->is_following($follower_id, $following_id);
-        
-        // Get posts for the user
-        // $user_id = $data['user_profile']['id']; // You'll get this after you've set up $data['user_profile']
+        $per_page = 12;
+        $page = max(1, (int) $page);
+        $offset = ($page - 1) * $per_page;
+        $viewed_user_id = (int) $profile['id'];
+        $follower_id = (int) $this->session->userdata('user_id');
 
-        $viewed_user_id = $data['user_profile']['id'];
+        $data['user_profile']    = $profile;
+        $data['first_name']      = $profile['first_name'];
+        $data['last_name']       = $profile['last_name'];
+        $data['bio']             = $profile['bio'];
+        $data['is_following']    = $this->User_model->is_following($follower_id, $viewed_user_id);
         $data['followers_count'] = $this->User_model->count_followers($viewed_user_id);
         $data['following_count'] = $this->User_model->count_following($viewed_user_id);
-        $data['posts'] = $this->Post_model->get_posts_by_user_id($viewed_user_id);
+        $data['posts']           = $this->Post_model->get_posts_by_user_id($viewed_user_id, $per_page, $offset) ?: [];
+        $data['page']            = $page;
+        $data['has_more']        = count($data['posts']) === $per_page;
 
-        // Check if the posts are returned; if not, set it as an empty array
-        if (!$data['posts']) {
-            $data['posts'] = []; // This ensures $posts is always an array
-        }
-    
-        // Now load the view and pass the $data array
         $this->load->view('user_profile', $data);
     }
 

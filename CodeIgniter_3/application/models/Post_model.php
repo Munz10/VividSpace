@@ -7,11 +7,11 @@ class Post_model extends CI_Model {
         parent::__construct();
     }
 
-    // Method to get posts by user ID
-    public function get_posts_by_user_id($user_id) {
+    public function get_posts_by_user_id($user_id, $limit = 12, $offset = 0) {
         $this->db->where('user_id', $user_id);
-        $query = $this->db->get('posts');
-        return $query->result_array(); // Return the result as an array
+        $this->db->order_by('created_at', 'DESC');
+        $this->db->limit($limit, $offset);
+        return $this->db->get('posts')->result_array();
     }
 
     public function get_post_by_id($post_id) {
@@ -72,14 +72,18 @@ class Post_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function get_posts_by_user_ids($user_ids) {
+    public function get_posts_by_user_ids($user_ids, $limit = 12, $offset = 0) {
+        if (empty($user_ids)) {
+            return [];
+        }
         $this->db->select('posts.*, users.username as author_username');
         $this->db->from('posts');
         $this->db->join('users', 'users.id = posts.user_id');
         $this->db->where_in('posts.user_id', $user_ids);
-        $query = $this->db->get();
-        return $query->result_array();
-    }   
+        $this->db->order_by('posts.created_at', 'DESC');
+        $this->db->limit($limit, $offset);
+        return $this->db->get()->result_array();
+    }
     
     public function delete_post($post_id, $user_id) {
         $owner = $this->db->select('user_id, image_path')
