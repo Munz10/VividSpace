@@ -37,16 +37,35 @@ if (!function_exists('esc_attr')) {
 
 if (!function_exists('esc_url')) {
     /**
-     * Escape and validate URL
-     * 
-     * @param string $url The URL to escape
-     * @return string Sanitized URL
+     * Escape and validate URL using a scheme allowlist.
+     *
+     * Returns '' for any URL whose scheme is not http/https/mailto, or for
+     * site-relative URLs that pass through unchanged. Decodes HTML entities
+     * before testing so encoded "javascript:" payloads cannot slip past.
+     *
+     * @param string $url
+     * @return string
      */
     function esc_url($url) {
-        // Remove any dangerous characters
-        $url = strip_tags($url);
-        $url = str_replace(['javascript:', 'data:', 'vbscript:'], '', strtolower($url));
-        return filter_var($url, FILTER_SANITIZE_URL);
+        if ($url === null || $url === '') {
+            return '';
+        }
+
+        $url = trim(html_entity_decode((string) $url, ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+
+        // Site-relative ("/foo", "foo/bar", "?x=1", "#frag") - no scheme to validate.
+        if ($url === '' || $url[0] === '/' || $url[0] === '?' || $url[0] === '#') {
+            return htmlspecialchars($url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+        $allowed = ['http', 'https', 'mailto'];
+
+        if ($scheme === '' || !in_array($scheme, $allowed, true)) {
+            return '';
+        }
+
+        return htmlspecialchars($url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
     }
 }
 
