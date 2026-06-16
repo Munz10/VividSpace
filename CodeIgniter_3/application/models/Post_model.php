@@ -81,26 +81,52 @@ class Post_model extends CI_Model {
         return $query->result_array();
     }   
     
-    public function delete_post($post_id) {
-        // First, delete associated likes
-        $this->db->where('post_id', $post_id);
-        $this->db->delete('likes');
+    public function delete_post($post_id, $user_id) {
+        $owner = $this->db->select('user_id, image_path')
+                          ->where('id', $post_id)
+                          ->get('posts')
+                          ->row_array();
 
-        // Delete associated comments first
-        $this->db->where('post_id', $post_id);
-        $this->db->delete('comments');
-    
-        // Then delete the post
-        $this->db->where('id', $post_id);
-        $this->db->delete('posts');
-    
-        // Check if any rows were affected
-        if ($this->db->affected_rows() > 0) {
-            // Post deleted successfully
-            return true;
-        } else {
-            // Post not found or not deleted
+        if (!$owner || (int) $owner['user_id'] !== (int) $user_id) {
             return false;
         }
+
+        $this->db->where('post_id', $post_id)->delete('likes');
+        $this->db->where('post_id', $post_id)->delete('comments');
+        $this->db->where('id', $post_id)->delete('posts');
+
+        if ($this->db->affected_rows() <= 0) {
+            return false;
+        }
+
+        if (!empty($owner['image_path'])) {
+            $file = FCPATH . ltrim($owner['image_path'], '/');
+            if (is_file($file)) {
+                @unlink($file);
+            }
+        }
+
+        return true;
+    }
+
+    public function update_post($post_id, $user_id, $data) {
+        $allowed = ['caption', 'hashtags'];
+        $clean = array_intersect_key($data, array_flip($allowed));
+        if (empty($clean)) {
+            return false;
+        }
+
+        $this->db->where('id', $post_id);
+        $this->db->where('user_id', $user_id);
+        $this->db->update('posts', $clean);
+        return $this->db->affected_rows() >= 0 && $this->is_owner($post_id, $user_id);
+    }
+
+    public function is_owner($post_id, $user_id) {
+        $row = $this->db->select('user_id')
+                        ->where('id', $post_id)
+                        ->get('posts')
+                        ->row();
+        return $row && (int) $row->user_id === (int) $user_id;
     }
 }

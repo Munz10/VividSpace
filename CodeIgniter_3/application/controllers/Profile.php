@@ -180,21 +180,15 @@ class Profile extends CI_Controller {
     }
     
     public function delete_post($post_id) {
-        // Assuming $post_id is passed from the view or URL parameters
-        $deleted = $this->Post_model->delete_post($post_id);
-    
-        if ($deleted) {
-            // Post deleted successfully
-            $response['success'] = true;
-            redirect('profile');
-        } else {
-            // Post not found or not deleted
-            $response['success'] = false;
+        $user_id = $this->session->userdata('user_id');
+        $deleted = $this->Post_model->delete_post((int) $post_id, (int) $user_id);
+
+        if (!$deleted) {
+            show_error('You do not have permission to delete this post.', 403);
+            return;
         }
-    
-        // Return JSON response
-        header('Content-Type: application/json');
-        echo json_encode($response);
-    }  
+
+        redirect('profile');
+    }
            
 }

@@ -8,9 +8,9 @@ class Post extends CI_Controller {
     $this->load->model('Post_model');
     $this->load->helper('url');
     $this->load->library('session');
-    
-    // Ensure user is logged in for all methods (except detail)
-    if (!$this->session->userdata('logged_in') && !method_exists($this, $_SERVER['REQUEST_METHOD'] . '_' . $this->router->method)) {
+
+    $public = ['detail'];
+    if (!$this->session->userdata('logged_in') && !in_array($this->router->method, $public, true)) {
       redirect('login');
     }
   }
@@ -92,32 +92,37 @@ class Post extends CI_Controller {
     $this->load->view('partials/comments', $data);
   }
 
-  // Method to edit a post (assuming edit permission check in Post_model)
   public function edit($post_id) {
+    $user_id = $this->session->userdata('user_id');
     $post = $this->Post_model->get_post_by_id($post_id);
-    if ($post && $this->Post_model->can_edit_post($post_id)) { // Check edit permission
-      // Load edit form with post data
-      $this->load->view('post_edit', ['post' => $post]);
-    } else {
-      show_404(); // Or handle unauthorized access differently
+
+    if (!$post || !$this->Post_model->is_owner($post_id, $user_id)) {
+      show_error('You do not have permission to edit this post.', 403);
+      return;
     }
+
+    $this->load->view('post_edit', ['post' => $post]);
   }
 
-  // Method to update a post after edit form submission
   public function update() {
-    $post_id = $this->input->post('id');
-    $data = $this->input->post(); // Assuming validation is done in Post_model
+    $user_id = $this->session->userdata('user_id');
+    $post_id = (int) $this->input->post('id');
 
-    if ($this->Post_model->update_post($post_id, $data)) {
-      redirect('post/detail/' . $post_id); // Redirect to updated post detail
+    if (!$post_id || !$this->Post_model->is_owner($post_id, $user_id)) {
+      show_error('You do not have permission to edit this post.', 403);
+      return;
+    }
+
+    $data = [
+      'caption'  => $this->input->post('caption'),
+      'hashtags' => $this->input->post('hashtags'),
+    ];
+
+    if ($this->Post_model->update_post($post_id, $user_id, $data)) {
+      redirect('post/detail/' . $post_id);
     } else {
-      echo json_encode(['error' => 'Unable to update post']); // Or display error message
+      header('Content-Type: application/json');
+      echo json_encode(['error' => 'Unable to update post']);
     }
   }
-
-  // ... Other methods related to posts ...
 }
-
-
-//Centralized Login Check: The __construct now checks if the user is logged in for all methods except detail. This ensures unauthorized access is prevented for actions requiring user authentication.
-//Full Comment Data in Add Comment: In add_comment, you can optionally retrieve the full comment data (including user information) after successful insertion using `$comment = $this->Post_model->get
