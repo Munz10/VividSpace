@@ -104,12 +104,8 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins and AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
         function toggleLike(postId) {
@@ -133,10 +129,8 @@
                 dataType: 'json',
                 success: function(response) {
                     if (response.comment) {
-                        // Append new comment and clear the input field
                         $('#comment-section-' + postId).append('<p>' + response.comment.content + '</p>');
                         $('#comment-content-' + postId).val('');
-                        // Update comment count
                         $('#comment-count-' + postId).text(parseInt($('#comment-count-' + postId).text(), 10) + 1);
                     }
                 }
@@ -147,27 +141,8 @@
             $('#comment-section-' + postId).toggle();
         }
 
-        public function delete_post($post_id) {
-            // First, delete associated likes
-            $this->db->where('post_id', $post_id);
-            $this->db->delete('likes');
-
-            // First, delete associated likes
-            $this->db->where('post_id', $post_id);
-            $this->db->delete('comments');
-
-            // Then delete the post
-            $this->db->where('id', $post_id);
-            $this->db->delete('posts');
-
-            // Check if any rows were affected
-            if ($this->db->affected_rows() > 0) {
-                // Post deleted successfully
-                return true;
-            } else {
-                // Post not found or not deleted
-                return false;
-            }
+        function showComments(postId) {
+            $('#comments-container-' + postId).toggle();
         }
     </script>
 </body>
