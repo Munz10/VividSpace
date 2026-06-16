@@ -1,341 +1,241 @@
-# VividSpace - Project Structure
+# VividSpace — Project Structure
 
-## 📁 Complete Directory Structure
+## Complete File Tree
 
 ```
 VividSpace/
-├── README.md                                    # Main project documentation
-│
+├── README.md
 └── CodeIgniter_3/
-    ├── index.php                                # Application entry point
+    ├── index.php                                  # CI entry point
+    ├── PROJECT_STRUCTURE.md                       # This file
     │
-    ├── application/                             # Main application code
-    │   ├── config/                              # Configuration files
-    │   │   ├── config.php                       # Base URL, CSRF settings
-    │   │   ├── database.php                     # Database configuration
-    │   │   ├── autoload.php                     # Auto-load helpers
-    │   │   └── routes.php                       # URL routing
+    ├── application/
+    │   ├── config/
+    │   │   ├── config.php                         # Base URL, CSRF, session
+    │   │   ├── database.php                       # DB credentials
+    │   │   ├── autoload.php                       # Auto-loaded helpers & libraries
+    │   │   └── routes.php                         # URL routing
     │   │
-    │   ├── controllers/                         # Controllers (MVC)
-    │   │   ├── Welcome.php                      # Default controller
-    │   │   ├── LandingPage.php                  # Public landing page
-    │   │   ├── Login.php                        # ✅ User authentication
-    │   │   ├── Signup.php                       # User registration
-    │   │   ├── Profile.php                      # User profile & feed
-    │   │   ├── Post.php                         # Post management
-    │   │   ├── Follow.php                       # Follow/unfollow system
-    │   │   ├── Search.php                       # User search
-    │   │   ├── Test_csrf.php                    # 🧪 CSRF testing
-    │   │   └── Test_xss.php                     # 🧪 XSS testing
+    │   ├── core/
+    │   │   └── MY_Controller.php                  # Base controller; injects notif_unread_count
     │   │
-    │   ├── models/                              # Models (MVC)
-    │   │   ├── User_model.php                   # User database operations
-    │   │   └── Post_model.php                   # Post database operations
+    │   ├── controllers/
+    │   │   ├── LandingPage.php                    # Public landing page
+    │   │   ├── Login.php                          # Auth: login, logout, process
+    │   │   ├── Signup.php                         # Registration + live username/email check
+    │   │   ├── Profile.php                        # Own profile, feed, edit, save post,
+    │   │   │                                      #   infinite-scroll endpoints, delete account
+    │   │   ├── Post.php                           # Create, edit, delete, like, comment,
+    │   │   │                                      #   bookmark, modal content endpoint
+    │   │   ├── Follow.php                         # do_follow, do_unfollow
+    │   │   ├── Search.php                         # Full search, hashtag page, live autocomplete
+    │   │   ├── Notifications.php                  # List + mark-read
+    │   │   ├── Welcome.php                        # Default CI controller (redirects)
+    │   │   ├── Test_csrf.php                      # Dev: CSRF test tool
+    │   │   └── Test_xss.php                       # Dev: XSS test tool
     │   │
-    │   ├── views/                               # Views (MVC)
-    │   │   ├── landing_page.php                 # Public homepage
-    │   │   ├── login.php                        # ✅ Login form
-    │   │   ├── signup.php                       # Registration form
-    │   │   ├── profile.php                      # User profile page
-    │   │   ├── user_profile.php                 # Other users' profiles
-    │   │   ├── edit_profile.php                 # Profile editing
-    │   │   ├── feed.php                         # User feed
-    │   │   ├── create_post.php                  # Post creation
-    │   │   ├── post_detail.php                  # Post details
-    │   │   ├── search_form.php                  # Search interface
-    │   │   ├── search_result.php                # Search results
-    │   │   ├── test_csrf.php                    # 🧪 CSRF test interface
-    │   │   └── test_xss.php                     # 🧪 XSS test interface
+    │   ├── models/
+    │   │   ├── User_model.php                     # Users, follows, search (excludes self)
+    │   │   ├── Post_model.php                     # Posts, likes, comments, hashtag queries
+    │   │   ├── Bookmark_model.php                 # toggle(), list_for_user()
+    │   │   └── Notification_model.php             # create(), list_for_user(), mark_read()
     │   │
-    │   ├── helpers/                             # Helper functions
-    │   │   └── xss_helper.php                   # 🔒 XSS protection functions
+    │   ├── views/
+    │   │   ├── partials/
+    │   │   │   ├── header.php                     # Shared header (logo, nav, search, bell)
+    │   │   │   ├── post_card.php                  # Full interactive post card
+    │   │   │   ├── feed_cards.php                 # Minimal HTML cards — appended by feed IS
+    │   │   │   └── profile_cards.php              # Minimal HTML cards — appended by profile IS
+    │   │   │
+    │   │   ├── landing_page.php                   # Public homepage
+    │   │   ├── login.php                          # Login (dark auth-card layout)
+    │   │   ├── signup.php                         # Registration (dark auth-card layout)
+    │   │   ├── profile.php                        # Own profile + post grid + infinite scroll
+    │   │   ├── user_profile.php                   # Another user's profile (no follow btn for self)
+    │   │   ├── edit_profile.php                   # Edit bio, name, profile pic; Delete account link
+    │   │   ├── delete_account.php                 # Password-confirmed account deletion
+    │   │   ├── feed.php                           # Followed-users feed + infinite scroll + modal
+    │   │   ├── create_post.php                    # New post upload form
+    │   │   ├── post_detail.php                    # Full post page (like, comment, bookmark)
+    │   │   ├── post_edit.php                      # Edit caption/hashtags
+    │   │   ├── search_result.php                  # People + posts results (self excluded)
+    │   │   ├── hashtag_posts.php                  # Posts by hashtag + modal
+    │   │   ├── saved_posts.php                    # Bookmarked posts + modal
+    │   │   ├── notifications.php                  # Notification list
+    │   │   ├── reset_password.php                 # Password reset form
+    │   │   ├── search_form.php                    # Standalone search form (minimal)
+    │   │   ├── test_csrf.php                      # Dev: CSRF test UI
+    │   │   └── test_xss.php                       # Dev: XSS test UI
     │   │
-    │   └── libraries/                           # Custom libraries
-    │       └── REST_Controller.php              # REST API support
+    │   └── helpers/
+    │       └── xss_helper.php                     # esc(), sanitize_input(), linkify_mentions()
     │
-    ├── assets/                                  # Frontend assets
+    ├── assets/
+    │   ├── css/
+    │   │   └── app.css                            # Shared styles + Bootstrap Icons CDN import
     │   └── js/
-    │       └── csrf-ajax.js                     # 🔒 CSRF-protected AJAX helper
+    │       └── csrf-ajax.js                       # csrfPost() — injects CSRF token into AJAX
     │
-    ├── docs/                                    # 📚 Documentation
-    │   ├── CSRF_IMPLEMENTATION_GUIDE.md         # CSRF how-to
-    │   ├── CSRF_TESTING_GUIDE.md                # CSRF testing
-    │   ├── XSS_PROTECTION_GUIDE.md              # XSS protection guide
-    │   ├── SECURITY_FIXES_SUMMARY.md            # All security fixes
-    │   └── LOGIN_FIX_SUMMARY.md                 # Login improvements
+    ├── Images/
+    │   ├── vividSpace_Logo.png                    # Icon only — app header
+    │   ├── vividSpace_Intro.png                   # Logo + "VIVIDSpace" name — login/signup
+    │   ├── default_profile_pic.png                # Fallback avatar
+    │   └── user_icon.jpg                          # Fallback header profile icon
     │
-    ├── uploads/                                 # 📸 User post images
-    │   └── (user uploaded images)
-    │
-    ├── profile_pics/                            # 👤 User profile pictures
-    │   └── (profile images)
-    │
-    ├── Images/                                  # 🖼️ Static images
-    │   └── (app images)
-    │
-    └── system/                                  # ⚙️ CodeIgniter core files
-        └── (don't modify)
+    ├── uploads/                                   # User post images (runtime)
+    ├── profile_pics/                              # User profile pictures (runtime)
+    ├── docs/                                      # Developer documentation
+    └── system/                                    # CodeIgniter 3 core — do not modify
 ```
 
 ---
 
-## 🎯 File Organization by Purpose
+## File Roles by Area
 
-### 🔐 Security Files
-| File | Purpose | Status |
-|------|---------|--------|
-| `config/config.php` | CSRF settings | ✅ Configured |
-| `helpers/xss_helper.php` | XSS protection | ✅ Active |
-| `assets/js/csrf-ajax.js` | AJAX security | ✅ Working |
+### Security
+| File | Role |
+|------|------|
+| `config/config.php` | CSRF token name, session encryption key |
+| `helpers/xss_helper.php` | Input sanitisation + output escaping functions |
+| `assets/js/csrf-ajax.js` | Attaches CSRF token to every AJAX POST |
+| `core/MY_Controller.php` | Base controller; all protected routes extend this |
 
-### 🔑 Authentication Files
-| File | Purpose | Status |
-|------|---------|--------|
-| `controllers/Login.php` | Login logic | ✅ Working |
-| `controllers/Signup.php` | Registration | ✅ Working |
-| `views/login.php` | Login form | ✅ CSRF Protected |
-| `views/signup.php` | Signup form | ✅ Working |
-| `models/User_model.php` | User operations | ✅ BCrypt enabled |
+### Authentication
+| File | Role |
+|------|------|
+| `controllers/Login.php` | Validate credentials, regenerate session ID |
+| `controllers/Signup.php` | Create user, live AJAX username/email checks |
+| `views/login.php` | Auth-card layout with branded dark header |
+| `views/signup.php` | Auth-card layout with branded dark header |
+| `models/User_model.php` | BCrypt verify, insert user, search (exclude self) |
 
-### 📱 Core Application Files
-| File | Purpose |
-|------|---------|
-| `controllers/Profile.php` | Profile & feed management |
-| `controllers/Post.php` | Post CRUD operations |
-| `controllers/Follow.php` | Social connections |
-| `controllers/Search.php` | User search |
-| `models/Post_model.php` | Post database operations |
+### Social graph
+| File | Role |
+|------|------|
+| `controllers/Follow.php` | do_follow / do_unfollow — returns updated counts |
+| `models/User_model.php` | is_following(), follow(), unfollow() |
+| `views/user_profile.php` | Follow/Unfollow button hidden for own profile |
 
-### 🧪 Testing & Development Files
-| File | Purpose | URL |
-|------|---------|-----|
-| `controllers/Test_csrf.php` | CSRF testing | `/test_csrf` |
-| `controllers/Test_xss.php` | XSS testing | `/test_xss` |
-| `views/test_csrf.php` | CSRF test UI | - |
-| `views/test_xss.php` | XSS test UI | - |
+### Posts & interactions
+| File | Role |
+|------|------|
+| `controllers/Post.php` | like, comment, bookmark, modal_content endpoints |
+| `models/Post_model.php` | get_posts, search_posts, like/unlike, add_comment |
+| `models/Bookmark_model.php` | toggle(), list_for_user() |
+| `views/partials/post_card.php` | Dual-icon like/bookmark, comment form, hashtag links |
 
-### 📚 Documentation Files
-| File | Purpose |
-|------|---------|
-| `README.md` | Main documentation |
-| `docs/CSRF_IMPLEMENTATION_GUIDE.md` | CSRF how-to |
-| `docs/CSRF_TESTING_GUIDE.md` | CSRF testing |
-| `docs/XSS_PROTECTION_GUIDE.md` | XSS guide |
-| `docs/SECURITY_FIXES_SUMMARY.md` | Security summary |
-| `docs/LOGIN_FIX_SUMMARY.md` | Login fixes |
+### Feed & discovery
+| File | Role |
+|------|------|
+| `controllers/Profile.php` | feed(), feed_more(), profile_more() (AJAX endpoints) |
+| `views/feed.php` | Infinite scroll + Bootstrap modal |
+| `views/profile.php` | Infinite scroll + Bootstrap modal |
+| `views/partials/feed_cards.php` | HTML fragment returned by `feed_more` |
+| `views/partials/profile_cards.php` | HTML fragment returned by `profile_more` |
 
----
+### Notifications
+| File | Role |
+|------|------|
+| `core/MY_Controller.php` | Loads unread count, injects into all views |
+| `controllers/Notifications.php` | List + mark all read |
+| `models/Notification_model.php` | create(), list_for_user(), mark_all_read() |
+| `views/notifications.php` | Notification list page |
+| `views/partials/header.php` | Bell icon with badge |
 
-## 📊 Statistics
-
-### Code Files
-- **Controllers**: 10 files
-- **Models**: 2 files
-- **Views**: 15+ files
-- **Helpers**: 1 file (XSS protection)
-- **Assets**: 1 file (CSRF AJAX)
-
-### Documentation
-- **Guides**: 5 comprehensive guides
-- **README**: Complete project overview
-- **Structure**: This file
-
-### Security Implementation
-- **CSRF Protection**: ✅ 100% coverage
-- **XSS Prevention**: ✅ All user inputs
-- **Password Security**: ✅ BCrypt hashing
-- **SQL Injection**: ✅ Query Builder
+### Search
+| File | Role |
+|------|------|
+| `controllers/Search.php` | result(), hashtag(), dynamicResult() |
+| `models/User_model.php` | search_users($query, $exclude_id) |
+| `models/Post_model.php` | search_posts($query), get_posts_by_hashtag($tag) |
+| `views/search_result.php` | People + posts sections |
+| `views/hashtag_posts.php` | Grid of posts for one hashtag |
 
 ---
 
-## 🗂️ File Relationships
+## Key Design Patterns
 
-### Authentication Flow
-```
-Login.php (Controller)
-    ↓
-User_model.php (Verify password)
-    ↓
-login.php (View - with CSRF)
-    ↓
-csrf-ajax.js (Security helper)
+### Shared header injection
+`MY_Controller::__construct()` loads `Notification_model`, counts unread for the session user, and calls `$this->load->vars(['notif_unread_count' => $n])`. Any view that calls `$this->load->view('partials/header')` automatically gets the correct count.
+
+### CSRF-safe AJAX
+```javascript
+csrfPost(url, payload, successCallback, errorCallback);
+// csrfPost() reads ci_csrf_token from the page cookie and adds it to payload.
 ```
 
-### Post Creation Flow
-```
-Profile.php (Controller)
-    ↓
-Post_model.php (Sanitize & Save)
-    ↓
-create_post.php (View)
-    ↓
-xss_helper.php (Input sanitization)
+### Dual-icon stateful buttons (like / bookmark)
+Two `<i>` elements sit inside the button. CSS shows/hides them based on `.liked` / `.saved` classes on the parent button. JS only needs to toggle those classes — no icon class manipulation.
+
+```css
+.heart-empty  { display: inline-block; }
+.heart-filled { display: none; }
+.icon-btn.liked .heart-empty  { display: none; }
+.icon-btn.liked .heart-filled { display: inline-block; }
 ```
 
-### Security Layer
-```
-All POST Requests
-    ↓
-CSRF Validation (Automatic)
-    ↓
-Input Sanitization (Models)
-    ↓
-Database Storage
-    ↓
-Output Escaping (Views)
-    ↓
-Display to User
-```
+### Infinite scroll
+A sentinel `<div id="*-sentinel">` sits at the bottom of the post grid. An Intersection Observer fires when it enters the viewport, calls `csrfPost(endpoint + '/' + page, {}, ...)`, and appends the returned HTML. Observer disconnects when the server returns an empty fragment.
+
+### Post modal
+`post/modal_content/{id}` renders `partials/post_card.php` to a string via `$this->load->view(..., TRUE)` and returns JSON. JS injects `res.html` into `#modal-post-body`.
 
 ---
 
-## 🎨 View Templates
+## Request Flows
 
-### Public Pages
-- `landing_page.php` - Homepage for visitors
-- `login.php` - Login form
-- `signup.php` - Registration form
-
-### Authenticated Pages
-- `profile.php` - User's own profile
-- `user_profile.php` - Other users' profiles
-- `edit_profile.php` - Profile editing
-- `feed.php` - Personalized feed
-- `create_post.php` - Post creation
-- `post_detail.php` - Individual post view
-
-### Testing Pages
-- `test_csrf.php` - CSRF security testing
-- `test_xss.php` - XSS prevention testing
-
----
-
-## 🔄 Request Flow
-
-### 1. User Visits Site
+### Login
 ```
-index.php → Welcome.php → landing_page.php
+login.php  →(AJAX)→  Login::process()  →  User_model::login()
+                                        →  session regenerate
+                                        →  redirect to feed
 ```
 
-### 2. User Logs In
+### Create post
 ```
-login.php (View)
-    ↓ (POST with CSRF token)
-Login.php (Controller)
-    ↓
-User_model.php (Verify)
-    ↓
-Create Session
-    ↓
-Redirect to Profile
+create_post.php  →(POST)→  Profile::save_post()
+                         →  sanitize_input()
+                         →  GD resize
+                         →  Post_model::insert()
+                         →  redirect to profile
 ```
 
-### 3. User Creates Post
+### Like a post
 ```
-create_post.php (View)
-    ↓ (POST with CSRF token)
-Profile.php::save_post()
-    ↓
-sanitize_input() (XSS Helper)
-    ↓
-Database Insert
-    ↓
-Redirect to Profile
+icon-btn click  →  toggleLike(postId)
+               →  csrfPost('post/toggle_like', {post_id})
+               →  Post_model::toggle_like()
+               →  Notification_model::create()  (if liked)
+               →  JSON {is_liked, count}
+               →  $btn.toggleClass('liked', is_liked)
 ```
 
-### 4. User Views Feed
+### Infinite scroll (feed)
 ```
-Profile.php::feed()
-    ↓
-Post_model::get_posts_by_user_ids()
-    ↓
-esc() (XSS Helper for output)
-    ↓
-feed.php (Display)
+Intersection Observer fires
+  →  csrfPost('profile/feed_more/' + page, {})
+  →  Profile::feed_more()  →  Post_model::get_feed_posts($uid, $page)
+  →  load_view('partials/feed_cards', data, TRUE)
+  →  JSON {status, html}
+  →  append html to #feed-grid
 ```
 
 ---
 
-## 🧹 Clean Up Summary
+## Statistics
 
-### ✅ Removed Files (No Longer Needed)
-- `controllers/Fix_accounts.php` - Passwords already reset
-- `views/fix_accounts.php` - No longer needed
-- `controllers/Test_account.php` - Development only
-- `views/test_account.php` - Development only
-- `controllers/Simple_login.php` - Duplicate
-- `views/simple_login.php` - Duplicate
-
-### ✅ Organized Files
-- All documentation moved to `/docs/`
-- Test files clearly labeled with `Test_` prefix
-- Security helpers in dedicated directory
-
----
-
-## 📝 Maintenance Notes
-
-### Files You Should Modify
-- `application/controllers/*.php` - Add new features
-- `application/models/*.php` - Database operations
-- `application/views/*.php` - UI changes
-- `assets/js/` - JavaScript functionality
-
-### Files You Should NOT Modify
-- `system/` - CodeIgniter core
-- `index.php` - Entry point (unless you know what you're doing)
-
-### Files You Can Safely Remove (Production)
-- `controllers/Test_csrf.php`
-- `controllers/Test_xss.php`
-- `views/test_csrf.php`
-- `views/test_xss.php`
-- `docs/` folder (keep for reference)
+| Area | Count |
+|------|-------|
+| Controllers | 11 |
+| Models | 4 |
+| Views (main) | 18 |
+| View partials | 4 |
+| Helpers | 1 |
+| Core extensions | 1 |
+| JS assets | 1 |
+| CSS assets | 1 |
+| DB tables | 7 |
 
 ---
 
-## 🔐 Security Implementation Locations
-
-### CSRF Protection
-- **Config**: `config/config.php` (line 460)
-- **Helper**: `assets/js/csrf-ajax.js`
-- **Views**: All forms use helper or `form_open()`
-
-### XSS Prevention
-- **Helper**: `helpers/xss_helper.php`
-- **Auto-loaded**: `config/autoload.php` (line 92)
-- **Models**: Input sanitization in `User_model`, `Post_model`
-- **Views**: Output escaping with `esc()` function
-
-### Password Security
-- **Model**: `User_model::insert_user()` (line 12-39)
-- **Verification**: `User_model::login()` (line 41-40)
-- **Algorithm**: BCrypt (PASSWORD_BCRYPT)
-
----
-
-## 🎯 Quick Navigation
-
-### Development
-- Start here: `application/controllers/Welcome.php`
-- Add features: `application/controllers/`
-- Database: `application/models/`
-- UI: `application/views/`
-
-### Testing
-- CSRF: `/index.php/test_csrf`
-- XSS: `/index.php/test_xss`
-- Login: `/index.php/login`
-
-### Documentation
-- Main: `/README.md`
-- Security: `/docs/SECURITY_FIXES_SUMMARY.md`
-- CSRF: `/docs/CSRF_IMPLEMENTATION_GUIDE.md`
-- XSS: `/docs/XSS_PROTECTION_GUIDE.md`
-
----
-
-**Project Status**: ✅ Clean & Organized  
-**Security Status**: 🔒 Production Ready  
-**Last Updated**: December 2025
-
+**Last updated:** June 2026

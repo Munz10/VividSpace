@@ -225,6 +225,34 @@ csrfPost(url, {data: value}, successCallback);
 
 ---
 
+---
+
+## Fix #6: Session Fixation Prevention (COMPLETE)
+
+Calling `session_regenerate_id(true)` on successful login prevents session fixation attacks where an attacker sets a known session ID before the user logs in.
+
+**File modified:** `application/controllers/Login.php`
+
+---
+
+## Fix #7: Self-follow / Self-search Prevention (COMPLETE)
+
+- `Follow::do_follow()` rejects requests where `follower_id === following_id`.
+- `User_model::search_users()` accepts an `$exclude_id` parameter; `Search::result()` and `Search::dynamicResult()` pass the current session user ID so the logged-in user never appears in their own search results.
+- `user_profile.php` hides the Follow/Unfollow button when `session user_id == viewed profile id`.
+
+**Files modified:** `controllers/Follow.php`, `controllers/Search.php`, `models/User_model.php`, `views/user_profile.php`
+
+---
+
+## Fix #8: @mention XSS in Comments (COMPLETE)
+
+`linkify_mentions()` receives already-HTML-escaped comment text and replaces `@username` with an `<a>` tag. Because the input is pre-escaped, user-supplied content can never inject raw HTML through the mention conversion step.
+
+**File added:** `helpers/xss_helper.php` (`linkify_mentions` function)
+
+---
+
 ## 🚀 Recommended Next Steps (Optional)
 
 ### Short-term (Nice to have):
@@ -284,7 +312,7 @@ For questions about these security implementations:
 
 ---
 
-**Last Updated:** December 2025  
+**Last Updated:** June 2026  
 **Security Audit:** PASSED ✅  
 **Production Ready:** YES ✅
 
