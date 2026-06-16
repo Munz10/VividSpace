@@ -99,6 +99,11 @@
                         </a>
                         <div class="post-body">
                             <p><?= htmlspecialchars($post['caption']); ?></p>
+                            <div class="card-meta">
+                                <span><span class="heart">&#9829;</span> <?= (int) $post['likes_count']; ?></span>
+                                <span>&#128172; <?= (int) $post['comments_count']; ?></span>
+                                <a href="<?= site_url('post/edit/' . $post['id']); ?>" class="ml-auto text-secondary" style="font-size:0.85rem;">Edit</a>
+                            </div>
                         </div>
                     </div>
                 </div>

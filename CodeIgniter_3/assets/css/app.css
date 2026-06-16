@@ -114,6 +114,16 @@ h1 {
     line-height: 1.2;
 }
 
+/* Like/comment counts shown under post thumbnails. */
+.card-meta {
+    display: flex;
+    gap: 14px;
+    color: #555;
+    font-size: 0.9rem;
+    margin-top: 6px;
+}
+.card-meta .heart { color: #e0245e; }
+
 /* Generic horizontal rule used on profile pages. */
 .app-divider {
     margin: 2rem;

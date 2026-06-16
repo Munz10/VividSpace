@@ -8,10 +8,18 @@ class Post_model extends CI_Model {
     }
 
     public function get_posts_by_user_id($user_id, $limit = 12, $offset = 0) {
-        $this->db->where('user_id', $user_id);
-        $this->db->order_by('created_at', 'DESC');
+        $this->db->select('
+            posts.*,
+            users.username,
+            (SELECT COUNT(*) FROM likes    WHERE likes.post_id    = posts.id) as likes_count,
+            (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) as comments_count
+        ');
+        $this->db->from('posts');
+        $this->db->join('users', 'users.id = posts.user_id');
+        $this->db->where('posts.user_id', $user_id);
+        $this->db->order_by('posts.created_at', 'DESC');
         $this->db->limit($limit, $offset);
-        return $this->db->get('posts')->result_array();
+        return $this->db->get()->result_array();
     }
 
     public function get_post_by_id($post_id) {

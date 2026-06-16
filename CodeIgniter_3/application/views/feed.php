@@ -40,16 +40,6 @@
             border-radius: 10px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .card-meta {
-            display: flex;
-            gap: 14px;
-            color: #555;
-            font-size: 0.9rem;
-            margin-top: 6px;
-        }
-        .card-meta .heart {
-            color: #e0245e;
-        }
     </style>
 </head>
 <body>
