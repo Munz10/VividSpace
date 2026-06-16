@@ -8,12 +8,7 @@ class User_model extends CI_Model {
         $this->load->database();
     }
 
-    //Hashing During User Registration
     public function insert_user($userData) {
-        // Sanitize text fields to prevent XSS
-        // Note: Username is validated by form validation, not sanitized
-        // Usernames should only contain alphanumeric and underscore characters
-        
         if (isset($userData['first_name'])) {
             $userData['first_name'] = sanitize_input($userData['first_name']);
         }
@@ -23,39 +18,39 @@ class User_model extends CI_Model {
         if (isset($userData['email'])) {
             $userData['email'] = filter_var($userData['email'], FILTER_SANITIZE_EMAIL);
         }
-        
-        // Hash the password if it hasn't been hashed yet
-        // Check if password is provided (not already hashed as password_hash)
-        if (isset($userData['password']) && !isset($userData['password_hash'])) {
-            $userData['password_hash'] = password_hash($userData['password'], PASSWORD_BCRYPT);
-            unset($userData['password']); // Remove plain text password
-        } elseif (isset($userData['password'])) {
-            // If both exist, remove plain password and keep the hash
+
+        if (isset($userData['password'])) {
+            $userData['password_hash'] = password_hash($userData['password'], PASSWORD_DEFAULT);
             unset($userData['password']);
         }
-        // If only password_hash exists (already hashed by controller), use it as-is
-      
+
         $insert = $this->db->insert('users', $userData);
         if (!$insert) {
-          log_message('error', 'Database insert failed: ' . $this->db->error()['message']);
-          return false;
+            log_message('error', 'Database insert failed: ' . $this->db->error()['message']);
+            return false;
         }
-        return $this->db->insert_id(); // Return the ID of the inserted user
-      }      
-    
+        return $this->db->insert_id();
+    }
+
     public function login($username, $password) {
         $this->db->where('username', $username);
         $query = $this->db->get('users');
 
-        if ($query->num_rows() == 1) {
-            $user_info = $query->row();
-            // Verify the password hash
-            if (password_verify($password, $user_info->password_hash)) {
-                return $user_info; // Return the user's data
-            }
+        if ($query->num_rows() != 1) {
+            return false;
         }
 
-        return false; // The user does not exist or password is wrong
+        $user_info = $query->row();
+        if (!password_verify($password, $user_info->password_hash)) {
+            return false;
+        }
+
+        if (password_needs_rehash($user_info->password_hash, PASSWORD_DEFAULT)) {
+            $this->db->where('id', $user_info->id)
+                     ->update('users', ['password_hash' => password_hash($password, PASSWORD_DEFAULT)]);
+        }
+
+        return $user_info;
     }
 
     public function checkUser($username)
