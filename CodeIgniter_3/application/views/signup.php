@@ -55,6 +55,11 @@
             border-radius: 5px;
             margin-bottom: 15px;
         }
+        .field-hint {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 4px;
+        }
     </style>
 </head>
 <body>
@@ -65,6 +70,7 @@
             <div class="form-group">
                 <label for="username">Username<span class="required"></span></label>
                 <input type="text" class="form-control" name="username" id="username" placeholder="Username" onkeyup="checkusername(); checkinputs();" required />
+                <div class="field-hint">3-50 characters. Letters, numbers, and underscores only.</div>
             </div>
             <div class="form-group">
                 <label for="first_name">First Name</label>
@@ -77,10 +83,12 @@
             <div class="form-group">
                 <label for="email">Email<span class="required"></span></label>
                 <input type="email" class="form-control" name="email" id="email" placeholder="Email" onkeyup="checkinputs(); validateemail();" required />
+                <div class="field-hint">We'll never share your email.</div>
             </div>
             <div class="form-group">
                 <label for="password">Password<span class="required"></span></label>
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" onkeyup="checkinputs();" required>
+                <div class="field-hint">At least 6 characters.</div>
             </div>
             <button type="submit" id="createUser" class="btn btn-dark" disabled="disabled">Signup</button>
             <p class="mt-3"> Have an account? <a href="<?= site_url('login'); ?>">Login</a></p>
@@ -99,7 +107,9 @@
             var e = document.forms["signupform"]["email"].value;
             var p = document.forms["signupform"]["password"].value;
             var hasError = document.getElementById("errormsg").textContent !== "";
-            document.getElementById('createUser').disabled = !(u && e && p && !hasError);
+            var usernameOk = u.length >= 3 && u.length <= 50;
+            var passwordOk = p.length >= 6;
+            document.getElementById('createUser').disabled = !(usernameOk && e && passwordOk && !hasError);
         }
 
         function validateemail() {
